@@ -1,0 +1,39 @@
+import { Button, SxProps } from '@mui/material'
+import React from 'react'
+
+type CommonButtonProps = {
+  onClick: () => void
+  label: string
+  color?: string
+  type?: 'submit' | 'button' | 'reset'
+  variant?: 'text' | 'outlined' | 'contained';
+  disabled?: boolean
+  textColor?: string
+  sx?: SxProps
+  icon?: React.ReactNode
+}
+
+export default function CommonButton({ type, label, onClick, color = 'primary', variant = 'contained', disabled = false, sx, icon }: CommonButtonProps) {
+  return (
+    <Button
+      onClick={onClick}
+      variant={variant}
+      disabled={disabled}
+      type={type}
+      sx={{
+        width: '100%',
+        borderRadius: 25,
+        color: color,
+        textTransform: 'none',
+        display: 'flex',
+        justifyContent: 'justify-content',
+        gap: '10px',
+        alignItems: 'center',
+        ...sx,
+      }}
+    >
+      {label}
+      {icon}
+    </Button>
+  )
+}

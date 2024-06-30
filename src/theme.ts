@@ -7,6 +7,16 @@ export const lightTheme = createTheme({
   typography: {
     fontFamily: 'DM Sans, Arial',
   },
+  components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontFamily: 'DM Sans, Arial',
+          color: '#1D2939'
+        }
+      }
+    }
+  },
   palette: {
     mode: 'light',
     primary: {
