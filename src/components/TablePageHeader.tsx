@@ -6,10 +6,11 @@ import CommonButton from './CommonButton'
 import { Add } from '@mui/icons-material'
 
 type TablePageHeaderProps = {
-  title: string
+  title: string;
+  handleAdd?: () => void;
 }
 
-export default function TablePageHeader({ title }: TablePageHeaderProps) {
+export default function TablePageHeader({ title, handleAdd }: TablePageHeaderProps) {
   return (
     <Box
       sx={{
@@ -35,17 +36,19 @@ export default function TablePageHeader({ title }: TablePageHeaderProps) {
       >
         <SearchField />
         <FilterButton />
-        <CommonButton
-          label={`${title} Ekle`}
-          onClick={() => console.log('Yeni Ekle')}
-          variant='contained'
-          sx={{
-            color: 'white',
-            width: '150px',
-            whiteSpace: 'nowrap',
-          }}
-          icon={<Add />}
-        />
+        {handleAdd && (
+          <CommonButton
+            label={`${title} Ekle`}
+            onClick={handleAdd}
+            variant='contained'
+            sx={{
+              color: 'white',
+              width: '150px',
+              whiteSpace: 'nowrap',
+            }}
+            icon={<Add />}
+          />
+        )}
       </Box>
     </Box>
   )

@@ -13,6 +13,7 @@ import AuthProvider from './contexts/AuthProvider';
 import Guard from './components/Guard';
 import Layout from './components/Layout';
 import Sellers from './views/admin/Sellers';
+import SellerAddEdit from './views/admin/SellerAddEdit';
 
 const App = () => {
 
@@ -31,6 +32,8 @@ const App = () => {
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/admin/jewelers" element={<Sellers />} />
+                    <Route path="/admin/jewelers/new" element={<SellerAddEdit />} />
+                    <Route path="/admin/jewelers/:id/edit" element={<SellerAddEdit />} />
                   </Routes>
                 </Layout>
               </Guard>

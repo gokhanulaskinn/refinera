@@ -3,6 +3,7 @@ import React from 'react'
 import CustomTableHead from './CustomTableHead'
 import { TableDataType } from '../utils/types';
 import CustomTableBody from './CustomTableBody';
+import CustomPaper from './CustomPaper';
 
 type CustomTableProps = {
   data: TableDataType;
@@ -10,14 +11,7 @@ type CustomTableProps = {
 
 export default function CustomTable({ data }: CustomTableProps) {
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        borderRadius: '16px',
-        px: 5,
-        py: 3
-      }}
-    >
+    <CustomPaper>
       <TableContainer>
         <Table>
           <CustomTableHead
@@ -28,6 +22,7 @@ export default function CustomTable({ data }: CustomTableProps) {
           />
         </Table>
       </TableContainer>
-    </Paper>
+    </CustomPaper>
+
   )
 }
