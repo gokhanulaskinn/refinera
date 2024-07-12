@@ -62,6 +62,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
             required
             placeholder='E-posta adresinizi giriniz'
             onChange={(e) => setEmail(e.target.value)}
+            borderEnabled
           />
           <TextInput
             label="Parola"
@@ -70,6 +71,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
             value={password}
             required
             onChange={(e) => setPassword(e.target.value)}
+            borderEnabled
           />
         </Box>
 

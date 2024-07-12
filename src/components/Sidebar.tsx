@@ -27,6 +27,16 @@ export default function Sidebar() {
         background: theme.palette.secondary.main,
         display: 'flex',
         flexDirection: 'column',
+        height: '100vh',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        zIndex: 1,
+        overflowY: 'auto',
+        //hide scrollbar
+        '&::-webkit-scrollbar': {
+          display: 'none'
+        },
       }}
     >
       <Box
@@ -93,12 +103,12 @@ export default function Sidebar() {
             to='/admin/suppliers'
             selected={loc.pathname === '/admin/suppliers'}
           />
-          <SidebarListItem
+          {/* <SidebarListItem
             label='Sözleşmeler'
             Icon={Contracts}
             to='/admin/contracts'
             selected={loc.pathname === '/admin/contracts'}
-          />
+          /> */}
           <SidebarListItem
             label='Banka Hesapları'
             Icon={Banks}

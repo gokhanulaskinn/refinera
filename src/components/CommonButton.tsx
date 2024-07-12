@@ -11,15 +11,17 @@ type CommonButtonProps = {
   textColor?: string
   sx?: SxProps
   icon?: React.ReactNode
+  size?: 'small' | 'medium' | 'large'
 }
 
-export default function CommonButton({ type, label, onClick, color = 'primary', variant = 'contained', disabled = false, sx, icon }: CommonButtonProps) {
+export default function CommonButton({ size, type, label, onClick, color = 'primary', variant = 'contained', disabled = false, sx, icon }: CommonButtonProps) {
   return (
     <Button
       onClick={onClick}
       variant={variant}
       disabled={disabled}
       type={type}
+      size={size}
       sx={{
         width: '100%',
         borderRadius: 25,

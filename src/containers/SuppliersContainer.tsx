@@ -6,17 +6,17 @@ import { TableDataType } from '../utils/types'
 import CustomTablePagination from '../components/CustomTablePagination'
 import { useNavigate } from 'react-router-dom'
 
-export default function SellersContainer() {
+export default function SuppliersContainer() {
 
   const tableData: TableDataType = {
     head: [
       {
         id: 'name',
-        label: 'Kuyumcu Adı'
+        label: 'Toptancı Adı'
       },
       {
         id: 'owner',
-        label: 'Kuyumcu Sahibi'
+        label: 'Toptancı Sahibi'
       },
       {
         id: 'email',
@@ -38,7 +38,7 @@ export default function SellersContainer() {
     body: [
       {
         rowData: [
-          { value: 'Cevher Kuyumculuk', type: 'text' },
+          { value: 'Harem Altın', type: 'text' },
           { value: 'Can Hitay', type: 'text' },
           { value: 'admin@refinera.com', type: 'text' },
           { value: '905555555555', type: 'text' },
@@ -79,7 +79,7 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Altın Yolu', type: 'text' },
+          { value: 'Külçe Altın', type: 'text' },
           { value: 'Ayşe Yılmaz', type: 'text' },
           { value: 'ayse@altyolu.com', type: 'text' },
           { value: '905554443322', type: 'text' },
@@ -120,7 +120,7 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Gümüş Dünyası', type: 'text' },
+          { value: 'E Altın', type: 'text' },
           { value: 'Mehmet Kaya', type: 'text' },
           { value: 'mehmet@gumusdunyasi.com', type: 'text' },
           { value: '905553331122', type: 'text' },
@@ -161,7 +161,7 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Pırlanta Merkezi', type: 'text' },
+          { value: 'Toptan Altın', type: 'text' },
           { value: 'Selin Demir', type: 'text' },
           { value: 'selin@pirlantamerkezi.com', type: 'text' },
           { value: '905552221133', type: 'text' },
@@ -370,7 +370,7 @@ export default function SellersContainer() {
   const nav = useNavigate()
 
   const handleAddSeller = () => {
-    nav('/admin/jewelers/new');
+    nav('/admin/suppliers/new');
   }
 
   return (
@@ -382,7 +382,7 @@ export default function SellersContainer() {
       }}
     >
       <TablePageHeader
-        title='Kuyumcu'
+        title='Toptancı'
         handleAdd={handleAddSeller}
       />
       <CustomTable

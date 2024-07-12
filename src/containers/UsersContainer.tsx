@@ -6,17 +6,13 @@ import { TableDataType } from '../utils/types'
 import CustomTablePagination from '../components/CustomTablePagination'
 import { useNavigate } from 'react-router-dom'
 
-export default function SellersContainer() {
+export default function UsersContainer() {
 
   const tableData: TableDataType = {
     head: [
       {
         id: 'name',
-        label: 'Kuyumcu Adı'
-      },
-      {
-        id: 'owner',
-        label: 'Kuyumcu Sahibi'
+        label: 'Ad Soyad'
       },
       {
         id: 'email',
@@ -25,6 +21,10 @@ export default function SellersContainer() {
       {
         id: 'phone',
         label: 'Telefon Numarası'
+      },
+      {
+        id: 'permission',
+        label: 'Yetki'
       },
       {
         id: 'status',
@@ -38,10 +38,10 @@ export default function SellersContainer() {
     body: [
       {
         rowData: [
-          { value: 'Cevher Kuyumculuk', type: 'text' },
           { value: 'Can Hitay', type: 'text' },
           { value: 'admin@refinera.com', type: 'text' },
           { value: '905555555555', type: 'text' },
+          { value: 'admin', type: 'text' },
           {
             value: 'Aktif',
             id: 'active',
@@ -79,10 +79,10 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Altın Yolu', type: 'text' },
           { value: 'Ayşe Yılmaz', type: 'text' },
           { value: 'ayse@altyolu.com', type: 'text' },
           { value: '905554443322', type: 'text' },
+          { value: 'admin', type: 'text' },
           {
             value: 'Pasif',
             id: 'passive',
@@ -120,10 +120,10 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Gümüş Dünyası', type: 'text' },
           { value: 'Mehmet Kaya', type: 'text' },
           { value: 'mehmet@gumusdunyasi.com', type: 'text' },
           { value: '905553331122', type: 'text' },
+          { value: 'admin', type: 'text' },
           {
             value: 'Aktif',
             id: 'active',
@@ -161,10 +161,10 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Pırlanta Merkezi', type: 'text' },
           { value: 'Selin Demir', type: 'text' },
           { value: 'selin@pirlantamerkezi.com', type: 'text' },
           { value: '905552221133', type: 'text' },
+          { value: 'admin', type: 'text' },
           {
             value: 'Pasif',
             id: 'passive',
@@ -202,10 +202,10 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Mücevherat', type: 'text' },
           { value: 'Ahmet Çelik', type: 'text' },
           { value: 'ahmet@mucevherat.com', type: 'text' },
           { value: '905551110000', type: 'text' },
+          { value: 'admin', type: 'text' },
           {
             value: 'Aktif',
             id: 'active',
@@ -243,10 +243,10 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Zümrüt ve Yakut', type: 'text' },
           { value: 'Nihal Aslan', type: 'text' },
           { value: 'nihal@zumrutyakut.com', type: 'text' },
           { value: '905559998877', type: 'text' },
+          { value: 'admin', type: 'text' },
           {
             value: 'Pasif',
             id: 'passive',
@@ -284,10 +284,10 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Altın Merkezi', type: 'text' },
           { value: 'Eren Sarı', type: 'text' },
           { value: 'eren@altinmerkezi.com', type: 'text' },
           { value: '905558887766', type: 'text' },
+          { value: 'admin', type: 'text' },
           {
             value: 'Aktif',
             id: 'active',
@@ -325,10 +325,10 @@ export default function SellersContainer() {
       },
       {
         rowData: [
-          { value: 'Gümüş Takı', type: 'text' },
           { value: 'Cem Kara', type: 'text' },
           { value: 'cem@gumustaki.com', type: 'text' },
           { value: '905557776655', type: 'text' },
+          { value: 'admin', type: 'text' },
           {
             value: 'Pasif',
             id: 'passive',
@@ -369,8 +369,8 @@ export default function SellersContainer() {
 
   const nav = useNavigate()
 
-  const handleAddSeller = () => {
-    nav('/admin/jewelers/new');
+  const handleAddUser = () => {
+    nav('/admin/users/new');
   }
 
   return (
@@ -382,8 +382,8 @@ export default function SellersContainer() {
       }}
     >
       <TablePageHeader
-        title='Kuyumcu'
-        handleAdd={handleAddSeller}
+        title='Kullanıcı'
+        handleAdd={handleAddUser}
       />
       <CustomTable
         data={tableData}

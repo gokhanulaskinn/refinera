@@ -10,12 +10,14 @@ type TextInputProps = {
   rows?: number
   placeholder?: string
   type?: string
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  value?: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   sx?: SxProps
+  backgroundColor?: string
+  borderEnabled?: boolean
 }
 
-export default function TextInput({ label, placeholder, type, value, onChange, required, multiline, rows, sx }: TextInputProps) {
+export default function TextInput({ borderEnabled, backgroundColor, label, placeholder, type, value, onChange, required, multiline, rows, sx }: TextInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const theme = useTheme();
@@ -35,13 +37,18 @@ export default function TextInput({ label, placeholder, type, value, onChange, r
           width: '100%',
           '& .MuiOutlinedInput-root': {
             borderRadius: '60px',
+            backgroundColor: backgroundColor,
+
             '& fieldset': {
               borderColor: '#9AA6A7',
+              borderWidth: borderEnabled ? 1 : 0,
             },
             '&:hover fieldset': {
+              borderWidth: borderEnabled ? 1 : 0,
               borderColor: '#9AA6A7',
             },
             '&.Mui-focused fieldset': {
+              borderWidth: borderEnabled ? 1 : 0,
               borderColor: '#9AA6A7',
             },
             '& input:-webkit-autofill': {
