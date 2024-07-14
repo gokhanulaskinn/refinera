@@ -9,6 +9,7 @@ type AuthStateType = {
   token: string;
   exp?: Date;
   role: string;
+  setRole: (role: string) => void,
   login: (token: string) => void,
   logout: () => void,
   initialAuthDone: boolean
@@ -18,6 +19,7 @@ const initialAuthState: AuthStateType = {
   token: "",
   exp: undefined,
   role: '',
+  setRole: (role: string) => { },
   login: (token: string) => { },
   logout: () => { },
   initialAuthDone: false,
@@ -40,12 +42,12 @@ export default function AuthProvider({ children }: AuthContextProps) {
   const [token, setToken] = useState('');
   const [initialAuthDone, setInitialAuthDone] = useState(false);
   const [exp, setExp] = useState<Date>();
-  const [role, setRole] = useState<string>('');
+  const [role, setRole] = useState<string>('admin');
 
   const login = (token: string, refreshTkn?: string) => {
     try {
       setExp(new Date(getExp(token) * 1000));
-      setRole(getRole(token));
+      // setRole(getRole(token));
       setToken(token);
     } catch (e) {
       logout();
@@ -75,6 +77,7 @@ export default function AuthProvider({ children }: AuthContextProps) {
       value={{
         exp,
         role,
+        setRole,
         token,
         login,
         logout,

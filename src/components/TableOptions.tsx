@@ -1,15 +1,9 @@
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
+import { TableBodyRowType, TableRowCellType } from '../utils/types';
 
 type TableOptionsType = {
-  cell: {
-    value: string;
-    type: 'text' | 'options' | 'actions';
-    id?: string;
-    onSelected?: (id: string) => void;
-    variant?: { id: string; label: string; bgColor?: string; textColor?: string }[];
-    actions?: { name: string; action: any }[];
-  };
+  cell: TableRowCellType;
 };
 
 export default function TableOptions({ cell }: TableOptionsType) {

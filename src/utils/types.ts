@@ -7,12 +7,14 @@ export type TableDataType = {
 }
 
 export type TableBodyRowType = {
-  rowData: {
-    value: string;
-    type: 'text' | 'options' | 'actions';
-    id?: string;
-    onSelected?: (id: string) => void;
-    variant?: { id: string; label: string, bgColor?: string, textColor?: string }[];
-    actions?: { name: string, action: any }[];
-  }[]
+  rowData: TableRowCellType[]
+}
+
+export type TableRowCellType = {
+  value: string | string[];
+  type: 'text' | 'options' | 'actions' | 'badge';
+  id?: string;
+  onSelected?: (id: string) => void;
+  variant?: { id: string; label: string, bgColor?: string, textColor?: string }[];
+  actions?: { name: string, action: any }[];
 }

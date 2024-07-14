@@ -1,10 +1,11 @@
 import { Box } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
 import TablePageHeader from '../components/TablePageHeader'
 import CustomTable from '../components/CustomTable'
 import { TableDataType } from '../utils/types'
 import CustomTablePagination from '../components/CustomTablePagination'
 import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../contexts/AuthProvider'
 
 export default function UsersContainer() {
 
@@ -367,10 +368,12 @@ export default function UsersContainer() {
     ]
   }
 
+  const { role } = useContext(AuthContext);
+
   const nav = useNavigate()
 
   const handleAddUser = () => {
-    nav('/admin/users/new');
+    nav(`/${role}/users/new`);
   }
 
   return (

@@ -21,6 +21,8 @@ import AddEditUser from './views/common/UserAddEdit';
 import UserAddEdit from './views/common/UserAddEdit';
 import Banks from './views/common/Banks';
 import BankAddEdit from './views/common/BankAddEdit';
+import LastUsers from './views/admin/LastUsers';
+import ComissionRates from './views/admin/ComissionRates';
 
 const App = () => {
 
@@ -50,6 +52,23 @@ const App = () => {
                     <Route path="/admin/banks" element={<Banks />} />
                     <Route path="/admin/banks/new" element={<BankAddEdit />} />
                     <Route path="/admin/banks/:id/edit" element={<BankAddEdit />} />
+                    <Route path="/admin/last-users" element={<LastUsers />} />
+                    <Route path="/admin/pos-rates" element={<ComissionRates />} />
+
+                    <Route path="/seller/banks" element={<Banks />} />
+                    <Route path="/seller/banks/new" element={<BankAddEdit />} />
+                    <Route path="/seller/banks/:id/edit" element={<BankAddEdit />} />
+                    <Route path="/seller/users" element={<Users />} />
+                    <Route path="/seller/users/new" element={<UserAddEdit />} />
+                    <Route path="/seller/users/:id/edit" element={<UserAddEdit />} />
+
+                    <Route path="/supplier/banks" element={<Banks />} />
+                    <Route path="/supplier/banks/new" element={<BankAddEdit />} />
+                    <Route path="/supplier/banks/:id/edit" element={<BankAddEdit />} />
+                    <Route path="/supplier/users" element={<Users />} />
+                    <Route path="/supplier/users/new" element={<UserAddEdit />} />
+                    <Route path="/supplier/users/:id/edit" element={<UserAddEdit />} />
+
                   </Routes>
                 </Layout>
               </Guard>

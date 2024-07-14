@@ -10,6 +10,7 @@ export default function SidebarAddButton({ label, onClick }: SidebarAddButtonPro
   return (
     <Button
       variant='contained'
+      onClick={onClick}
       sx={{
         textTransform: 'none',
         display: 'flex',
