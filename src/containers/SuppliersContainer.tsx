@@ -382,7 +382,9 @@ export default function SuppliersContainer() {
       }}
     >
       <TablePageHeader
-        title='Toptancı'
+        title='Toptancı Listesi'
+        addText='Yeni Toptancı Ekle'
+        handleFilter={() => { }}
         handleAdd={handleAddSeller}
       />
       <CustomTable

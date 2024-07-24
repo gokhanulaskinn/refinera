@@ -76,7 +76,10 @@ export default function ComissionRatesContainer() {
           gap: '1rem',
         }}
       >
-        <TablePageHeader title="Pos Komisyon Oranları" />
+        <TablePageHeader
+          title="Pos Komisyon Oranları"
+          handleFilter={() => { }}
+        />
         <BasicTabs
           value={value}
           handleChange={handleChange}

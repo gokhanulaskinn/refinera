@@ -7,10 +7,12 @@ import { Add } from '@mui/icons-material'
 
 type TablePageHeaderProps = {
   title: string;
+  handleFilter?: () => void;
   handleAdd?: () => void;
+  addText?: string;
 }
 
-export default function TablePageHeader({ title, handleAdd }: TablePageHeaderProps) {
+export default function TablePageHeader({ title, handleAdd, handleFilter, addText }: TablePageHeaderProps) {
   return (
     <Box
       sx={{
@@ -25,7 +27,7 @@ export default function TablePageHeader({ title, handleAdd }: TablePageHeaderPro
           fontWeight: 400,
         }}
       >
-        {title} Listesi
+        {title}
       </Typography>
       <Box
         sx={{
@@ -35,10 +37,12 @@ export default function TablePageHeader({ title, handleAdd }: TablePageHeaderPro
         }}
       >
         <SearchField />
-        <FilterButton />
+        {handleFilter && (
+          <FilterButton />
+        )}
         {handleAdd && (
           <CommonButton
-            label={`${title} Ekle`}
+            label={addText!}
             onClick={handleAdd}
             variant='contained'
             sx={{

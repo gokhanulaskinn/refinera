@@ -195,6 +195,12 @@ export default function Sidebar() {
               selected={loc.pathname === '/seller'}
             />
             <SidebarListItem
+              label='Ürünler'
+              Icon={Suppliers}
+              to='/seller/products'
+              selected={loc.pathname === '/seller/products'}
+            />
+            <SidebarListItem
               label='Toptancılar'
               Icon={Suppliers}
               to='/seller/suppliers'
@@ -263,7 +269,7 @@ export default function Sidebar() {
               to='/supplier/reports'
               selected={loc.pathname === '/supplier/reports'}
             />
-        
+
             <SidebarListItem
               label='Kullanıcılar'
               Icon={Users}

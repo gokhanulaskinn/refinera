@@ -10,7 +10,7 @@ type TextInputProps = {
   rows?: number
   placeholder?: string
   type?: string
-  value?: string
+  value?: any
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   sx?: SxProps
   backgroundColor?: string
@@ -70,7 +70,7 @@ export default function TextInput({ borderEnabled, backgroundColor, label, place
         </Typography>
         <TextField
           placeholder={placeholder}
-          type={type === 'password' && showPassword ? 'text' : type}
+          type={(type === 'password' && showPassword) ? 'text' : type}
           value={value}
           onChange={onChange}
           required={required}

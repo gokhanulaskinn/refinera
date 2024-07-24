@@ -28,7 +28,7 @@ export default function CommonButton({ size, type, label, onClick, color = 'prim
         color: color,
         textTransform: 'none',
         display: 'flex',
-        justifyContent: 'justify-content',
+        justifyContent: icon ? 'space-between' : 'center',
         gap: '10px',
         alignItems: 'center',
         ...sx,

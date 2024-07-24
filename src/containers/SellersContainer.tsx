@@ -382,7 +382,9 @@ export default function SellersContainer() {
       }}
     >
       <TablePageHeader
-        title='Kuyumcu'
+        title='Kuyumcu Listesi'
+        addText='Kuyumcu Ekle'
+        handleFilter={() => { }}
         handleAdd={handleAddSeller}
       />
       <CustomTable

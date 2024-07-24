@@ -12,20 +12,18 @@ type TabPanelProps = {
 export default function BasicTabs({ value, handleChange, tabs }: TabPanelProps) {
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          {tabs.map((tab, index) => (
-            <Tab
-              key={index}
-              label={tab}
-              sx={{
-                textTransform: 'none',
-              }}
-            />
-          ))}
-        </Tabs>
-      </Box>
+    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+        {tabs.map((tab, index) => (
+          <Tab
+            key={index}
+            label={tab}
+            sx={{
+              textTransform: 'none',
+            }}
+          />
+        ))}
+      </Tabs>
     </Box>
   );
 }

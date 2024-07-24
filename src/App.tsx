@@ -23,6 +23,9 @@ import Banks from './views/common/Banks';
 import BankAddEdit from './views/common/BankAddEdit';
 import LastUsers from './views/admin/LastUsers';
 import ComissionRates from './views/admin/ComissionRates';
+import SellerSuppliers from './views/seller/SellerSuppliers';
+import GetPayment from './views/seller/GetPayment';
+import SellerProducts from './views/seller/SellerProducts';
 
 const App = () => {
 
@@ -61,6 +64,9 @@ const App = () => {
                     <Route path="/seller/users" element={<Users />} />
                     <Route path="/seller/users/new" element={<UserAddEdit />} />
                     <Route path="/seller/users/:id/edit" element={<UserAddEdit />} />
+                    <Route path="/seller/suppliers" element={<SellerSuppliers />} />
+                    <Route path="/seller/products" element={<SellerProducts />} />
+                    <Route path="/seller/get-payment" element={<GetPayment />} />
 
                     <Route path="/supplier/banks" element={<Banks />} />
                     <Route path="/supplier/banks/new" element={<BankAddEdit />} />

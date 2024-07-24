@@ -91,6 +91,7 @@ export default function LastUsersContainer() {
     >
       <TablePageHeader
         title='Son Kullanıcılar'
+        handleFilter={() => { }}
       />
       <CustomTable
         data={tableData}

@@ -92,7 +92,9 @@ export default function BanksContainer() {
       }}
     >
       <TablePageHeader
-        title='Banka'
+        title='Banka Listesi'
+        addText='Yeni Banka Ekle'
+        handleFilter={() => { }}
         handleAdd={handleAddBank}
       />
       <CustomTable

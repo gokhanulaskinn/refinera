@@ -385,8 +385,10 @@ export default function UsersContainer() {
       }}
     >
       <TablePageHeader
-        title='Kullanıcı'
+        title='Kullanıcı Listesi'
+        addText='Kullanıcı Ekle'
         handleAdd={handleAddUser}
+        handleFilter={() => { }}
       />
       <CustomTable
         data={tableData}
