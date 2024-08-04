@@ -3,13 +3,23 @@ import React from 'react'
 import TextInput from './TextInput'
 import CommonButton from './CommonButton';
 import CommonSelect from './CommonSelect';
+import { User } from '../utils/types';
 
-type UserFormProps = {
-  onSubmit: () => void
+type UserProfileFormProps = {
+  user: User;
+  onSubmit: (values: any) => void
 }
 
-export default function UserForm({ onSubmit }: UserFormProps) {
+export default function UserProfileForm({ onSubmit, user }: UserProfileFormProps) {
   const theme = useTheme();
+
+  const [values, setValues] = React.useState<Partial<User>>({
+    first_name: user.first_name,
+    email: user.email,
+    phone: user.phone,
+  })
+
+  console.log(values);
 
   return (
     <Box>
@@ -17,6 +27,8 @@ export default function UserForm({ onSubmit }: UserFormProps) {
         <Grid item xs={12} md={6}>
           <TextInput
             label="Ad"
+            value={values.first_name}
+            onChange={(e) => setValues({ ...values, first_name: e.target.value })}
             backgroundColor='#F2F4F7'
           />
         </Grid>
@@ -29,34 +41,25 @@ export default function UserForm({ onSubmit }: UserFormProps) {
         <Grid item xs={12} md={6}>
           <TextInput
             label="E-posta"
+            value={values.email}
+            onChange={(e) => setValues({ ...values, email: e.target.value })}
             backgroundColor='#F2F4F7'
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextInput
             label="Telefon"
+            value={values.phone}
+            onChange={(e) => setValues({ ...values, phone: e.target.value })}
             backgroundColor='#F2F4F7'
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextInput
-            label="TC Kimlik No"
+            label="Password"
+            type='password'
+            autocomplete='new-password'
             backgroundColor='#F2F4F7'
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-        <CommonSelect
-            label='Çalıştığı Birim'
-            backgroundColor='#F2F4F7'
-            items={[
-              { value: '1', label: 'Satış' },
-              { value: '2', label: 'Pazarlama' },
-              { value: '3', label: 'İnsan Kaynakları' },
-              { value: '4', label: 'Muhasebe' },
-              { value: '5', label: 'Bilgi İşlem' },
-              { value: '6', label: 'Yönetim' },
-            ]}
-            onChange={(e) => console.log(e.target.value)}
           />
         </Grid>
       </Grid>
@@ -78,7 +81,7 @@ export default function UserForm({ onSubmit }: UserFormProps) {
         />
         <CommonButton
           label='Kaydet'
-          onClick={() => onSubmit()}
+          type='submit'
           sx={{
             width: '100px',
             color: 'white',

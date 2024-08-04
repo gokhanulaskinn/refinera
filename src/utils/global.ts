@@ -28,3 +28,9 @@ export const formatDate = (date: string): string => {
 
   return new Date(date).toLocaleDateString('tr-TR', options);
 }
+
+export const companyTypes = [
+  { value: 'LIMITED', label: 'Limited' },
+  { value: 'ANONYMOUS', label: 'Anonim' },
+  { value: 'JOINT_STOCK', label: 'Sermaye Ortaklığı' },
+]

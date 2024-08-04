@@ -1,13 +1,28 @@
 import { Box } from '@mui/material'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import TablePageHeader from '../components/TablePageHeader'
 import CustomTable from '../components/CustomTable'
-import { TableDataType } from '../utils/types'
+import { ApiList, Supplier, TableDataType } from '../utils/types'
 import CustomTablePagination from '../components/CustomTablePagination'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthProvider'
+import useSWR from 'swr'
+import { baseUrl, fetcher } from '../utils/global'
 
 export default function BanksContainer() {
+
+
+  const [recordPerPage, setRecordPerPage] = useState(10);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('')
+
+  const { data: suppliers, isLoading, error } = useSWR<ApiList<Supplier>>(
+    `${baseUrl}/bankaccounts?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}`,
+    (url: string) => fetcher(url));
+
+  useEffect(() => {
+    setPage(1);
+  }, [recordPerPage, search])
 
   const tableData: TableDataType = {
     head: [
@@ -96,6 +111,7 @@ export default function BanksContainer() {
         addText='Yeni Banka Ekle'
         handleFilter={() => { }}
         handleAdd={handleAddBank}
+        handleSearch={setSearch}
       />
       <CustomTable
         data={tableData}

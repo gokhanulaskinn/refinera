@@ -13,11 +13,12 @@ type TextInputProps = {
   value?: any
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   sx?: SxProps
+  autocomplete?: string
   backgroundColor?: string
   borderEnabled?: boolean
 }
 
-export default function TextInput({ borderEnabled, backgroundColor, label, placeholder, type, value, onChange, required, multiline, rows, sx }: TextInputProps) {
+export default function TextInput({ autocomplete, borderEnabled, backgroundColor, label, placeholder, type, value, onChange, required, multiline, rows, sx }: TextInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const theme = useTheme();
@@ -77,6 +78,7 @@ export default function TextInput({ borderEnabled, backgroundColor, label, place
           multiline={multiline}
           rows={rows}
           InputProps={{
+            autoComplete: autocomplete,
             endAdornment: type === 'password' ? (
               <InputAdornment position="end">
                 <IconButton

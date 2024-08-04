@@ -26,6 +26,7 @@ import ComissionRates from './views/admin/ComissionRates';
 import SellerSuppliers from './views/seller/SellerSuppliers';
 import GetPayment from './views/seller/GetPayment';
 import SellerProducts from './views/seller/SellerProducts';
+import UserProfile from './views/common/UserProfile';
 
 const App = () => {
 
@@ -44,6 +45,7 @@ const App = () => {
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/admin/jewelers" element={<Sellers />} />
+                    <Route path="/admin/profile" element={<UserProfile />} />
                     <Route path="/admin/jewelers/new" element={<SellerAddEdit />} />
                     <Route path="/admin/jewelers/:id/edit" element={<SellerAddEdit />} />
                     <Route path="/admin/suppliers" element={<Suppliers />} />
@@ -67,6 +69,7 @@ const App = () => {
                     <Route path="/seller/suppliers" element={<SellerSuppliers />} />
                     <Route path="/seller/products" element={<SellerProducts />} />
                     <Route path="/seller/get-payment" element={<GetPayment />} />
+                    <Route path="/seller/profile" element={<UserProfile />} />
 
                     <Route path="/supplier/banks" element={<Banks />} />
                     <Route path="/supplier/banks/new" element={<BankAddEdit />} />
@@ -74,6 +77,7 @@ const App = () => {
                     <Route path="/supplier/users" element={<Users />} />
                     <Route path="/supplier/users/new" element={<UserAddEdit />} />
                     <Route path="/supplier/users/:id/edit" element={<UserAddEdit />} />
+                    <Route path="/supplier/suppliers" element={<SellerSuppliers />} />
 
                   </Routes>
                 </Layout>

@@ -23,7 +23,10 @@ export default function SellerSuppliersContainer() {
 
   return (
     <Box>
-      <TablePageHeader title="Has Altın Al" />
+      <TablePageHeader 
+      title="Has Altın Al"
+      handleSearch={(searchText) => console.log(searchText)}
+      />
       <BasicTabs
         value={supplier}
         handleChange={handleChangeSupplier}

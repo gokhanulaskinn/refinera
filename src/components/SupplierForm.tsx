@@ -2,6 +2,7 @@ import { Box, Grid, useTheme } from '@mui/material'
 import React from 'react'
 import TextInput from './TextInput'
 import CommonButton from './CommonButton';
+import CommonSelect from './CommonSelect';
 
 type SupplierFormProps = {
   onSubmit: () => void
@@ -50,9 +51,17 @@ export default function SupplierForm({ onSubmit }: SupplierFormProps) {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextInput
-            label="Şirket Türü"
+          <CommonSelect
+            label='Şirket Türü'
             backgroundColor='#F2F4F7'
+            items={[
+              { value: '1', label: 'Anonim' },
+              { value: '2', label: 'Limited' },
+              { value: '3', label: 'Kooperatif' },
+              { value: '4', label: 'Kolektif' },
+              { value: '5', label: 'Komandit' },
+            ]}
+            onChange={(e) => console.log(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} md={6}>

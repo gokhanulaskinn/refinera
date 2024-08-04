@@ -2,7 +2,7 @@ import { Button, SxProps } from '@mui/material'
 import React from 'react'
 
 type CommonButtonProps = {
-  onClick: () => void
+  onClick?: () => void
   label: string
   color?: string
   type?: 'submit' | 'button' | 'reset'

@@ -4,9 +4,16 @@ import CommonButton from './CommonButton'
 
 type PaymentFinishProps = {
   handleFinish(): void;
+  price: number;
+  canFinish: boolean
+  comissionFee: number;
+  totalPrice: number;
 }
 
-export default function PaymentFinish({ handleFinish }: PaymentFinishProps) {
+export default function PaymentFinish({ handleFinish, price, canFinish, comissionFee, totalPrice }: PaymentFinishProps) {
+
+  const comissionRate = 0.025;
+
   return (
     <Box>
       <Box>
@@ -25,7 +32,7 @@ export default function PaymentFinish({ handleFinish }: PaymentFinishProps) {
             fontWeight: 500
           }}
         >
-          12.976,50 TL
+          {price.toFixed(2)} TL
         </Typography>
       </Box>
       <Box>
@@ -44,7 +51,7 @@ export default function PaymentFinish({ handleFinish }: PaymentFinishProps) {
             fontWeight: 500
           }}
         >
-          200,00 TL
+          {comissionFee.toFixed(2)} TL
         </Typography>
       </Box>
       <Box>
@@ -64,7 +71,7 @@ export default function PaymentFinish({ handleFinish }: PaymentFinishProps) {
             fontWeight: 500
           }}
         >
-          13.976,50 TL
+          {totalPrice.toFixed(2)} TL
         </Typography>
       </Box>
       <Box
@@ -78,13 +85,14 @@ export default function PaymentFinish({ handleFinish }: PaymentFinishProps) {
         <CommonButton
           label="Siparişi Tamamla"
           color='white'
+          disabled={!canFinish}
           onClick={() => handleFinish()}
           icon={<ArrowForwardIos />}
         />
         <CommonButton
           label="Ödeme Linki Paylaş"
           color='white'
-          onClick={() => handleFinish()}
+          onClick={() => { }}
           icon={<ArrowForwardIos />}
           sx={{
             background: '#9AA6A7'

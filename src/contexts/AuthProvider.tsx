@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from 'react';
+import { UserRole } from "../utils/types";
 
 type AuthContextProps = {
   children: React.ReactNode;
@@ -42,12 +43,19 @@ export default function AuthProvider({ children }: AuthContextProps) {
   const [token, setToken] = useState('');
   const [initialAuthDone, setInitialAuthDone] = useState(false);
   const [exp, setExp] = useState<Date>();
-  const [role, setRole] = useState<string>('admin');
+  const [role, setRole] = useState<string>('');
 
   const login = (token: string, refreshTkn?: string) => {
     try {
       setExp(new Date(getExp(token) * 1000));
-      // setRole(getRole(token));
+      const role = getRole(token);
+      if (role === UserRole.SUPERADMIN) {
+        setRole('admin');
+      } else if (role === UserRole.JEWELER_OWNER || role === UserRole.JEWELER_EMPLOYEE) {
+        setRole('seller');
+      } else if (role === UserRole.SUPPLIER_OWNER || role === UserRole.SUPPLIER_EMPLOYEE) {
+        setRole('supplier');
+      }
       setToken(token);
     } catch (e) {
       logout();

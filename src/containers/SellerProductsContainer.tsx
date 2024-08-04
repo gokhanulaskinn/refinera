@@ -37,7 +37,10 @@ export default function SellerProductsContainer() {
 
   return (
     <Box>
-      <TablePageHeader title="Ürünler" />
+      <TablePageHeader 
+      title="Ürünler"
+      handleSearch={(searchText) => console.log(searchText)}
+      />
       <BasicTabs
         value={variant}
         handleChange={handleChangeVariant}

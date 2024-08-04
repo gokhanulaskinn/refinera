@@ -79,6 +79,7 @@ export default function ComissionRatesContainer() {
         <TablePageHeader
           title="Pos Komisyon Oranları"
           handleFilter={() => { }}
+        handleSearch={(searchText) => console.log(searchText)}
         />
         <BasicTabs
           value={value}

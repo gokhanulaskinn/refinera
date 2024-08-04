@@ -1,377 +1,104 @@
-import { Box } from '@mui/material'
-import React from 'react'
-import TablePageHeader from '../components/TablePageHeader'
-import CustomTable from '../components/CustomTable'
-import { TableDataType } from '../utils/types'
-import CustomTablePagination from '../components/CustomTablePagination'
-import { useNavigate } from 'react-router-dom'
+import { Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import TablePageHeader from '../components/TablePageHeader';
+import CustomTable from '../components/CustomTable';
+import { ApiList, Jeweler, TableBodyRowType, TableDataType } from '../utils/types';
+import CustomTablePagination from '../components/CustomTablePagination';
+import { useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
+import { baseUrl, fetcher } from '../utils/global';
 
 export default function SellersContainer() {
 
-  const tableData: TableDataType = {
+  const [recordPerPage, setRecordPerPage] = useState(10);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [tableData, setTableData] = useState<TableDataType>({
     head: [
-      {
-        id: 'name',
-        label: 'Kuyumcu Adı'
-      },
-      {
-        id: 'owner',
-        label: 'Kuyumcu Sahibi'
-      },
-      {
-        id: 'email',
-        label: 'E-Posta'
-      },
-      {
-        id: 'phone',
-        label: 'Telefon Numarası'
-      },
-      {
-        id: 'status',
-        label: 'Durum'
-      },
-      {
-        id: 'actions',
-        label: 'İşlemler'
-      }
+      { id: 'name', label: 'Kuyumcu Adı' },
+      { id: 'owner', label: 'Kuyumcu Sahibi' },
+      { id: 'email', label: 'E-Posta' },
+      { id: 'phone', label: 'Telefon Numarası' },
+      { id: 'status', label: 'Durum' },
+      { id: 'actions', label: 'İşlemler' }
     ],
-    body: [
-      {
-        rowData: [
-          { value: 'Cevher Kuyumculuk', type: 'text' },
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'admin@refinera.com', type: 'text' },
-          { value: '905555555555', type: 'text' },
-          {
-            value: 'Aktif',
-            id: 'active',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Altın Yolu', type: 'text' },
-          { value: 'Ayşe Yılmaz', type: 'text' },
-          { value: 'ayse@altyolu.com', type: 'text' },
-          { value: '905554443322', type: 'text' },
-          {
-            value: 'Pasif',
-            id: 'passive',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Gümüş Dünyası', type: 'text' },
-          { value: 'Mehmet Kaya', type: 'text' },
-          { value: 'mehmet@gumusdunyasi.com', type: 'text' },
-          { value: '905553331122', type: 'text' },
-          {
-            value: 'Aktif',
-            id: 'active',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Pırlanta Merkezi', type: 'text' },
-          { value: 'Selin Demir', type: 'text' },
-          { value: 'selin@pirlantamerkezi.com', type: 'text' },
-          { value: '905552221133', type: 'text' },
-          {
-            value: 'Pasif',
-            id: 'passive',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Mücevherat', type: 'text' },
-          { value: 'Ahmet Çelik', type: 'text' },
-          { value: 'ahmet@mucevherat.com', type: 'text' },
-          { value: '905551110000', type: 'text' },
-          {
-            value: 'Aktif',
-            id: 'active',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Zümrüt ve Yakut', type: 'text' },
-          { value: 'Nihal Aslan', type: 'text' },
-          { value: 'nihal@zumrutyakut.com', type: 'text' },
-          { value: '905559998877', type: 'text' },
-          {
-            value: 'Pasif',
-            id: 'passive',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Altın Merkezi', type: 'text' },
-          { value: 'Eren Sarı', type: 'text' },
-          { value: 'eren@altinmerkezi.com', type: 'text' },
-          { value: '905558887766', type: 'text' },
-          {
-            value: 'Aktif',
-            id: 'active',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Gümüş Takı', type: 'text' },
-          { value: 'Cem Kara', type: 'text' },
-          { value: 'cem@gumustaki.com', type: 'text' },
-          { value: '905557776655', type: 'text' },
-          {
-            value: 'Pasif',
-            id: 'passive',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-    ]
-  }
+    body: []
+  });
 
-  const nav = useNavigate()
+  const { data: users, isLoading, error } = useSWR<ApiList<Jeweler>>(
+    `${baseUrl}/jewelers?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}`,
+    (url: string) => fetcher(url)
+  );
+
+  const convertData = (data: ApiList<Jeweler>) => {
+    const bodyData: TableBodyRowType[] = data.results.map((jeweler) => ({
+      rowData: [
+        { value: jeweler.companyName || '', type: 'text' },
+        { value: jeweler.companyName || '', type: 'text' },
+        { value: jeweler.email || '', type: 'text' },
+        { value: jeweler.phone || '', type: 'text' },
+        {
+          value: jeweler.status === 'ACTIVE' ? 'Aktif' : 'Pasif',
+          id: jeweler.status || '',
+          type: 'options',
+          onSelected: (id: any) => console.log(id),
+          variant: [
+            {
+              id: 'ACTIVE',
+              label: 'Aktif',
+              bgColor: '#1CBA761A',
+              textColor: '#1CBA76'
+            },
+            {
+              id: 'INACTIVE',
+              label: 'Pasif',
+              bgColor: '#C438251A',
+              textColor: '#D43D28'
+            }
+          ]
+        },
+        {
+          value: '',
+          type: 'actions',
+          actions: [
+            {
+              name: 'Düzenle',
+              action: () => console.log('Düzenle')
+            },
+            {
+              name: 'Sil',
+              action: () => console.log('Sil')
+            }
+          ]
+        }
+      ]
+    }));
+
+    setTableData((prev) => ({
+      ...prev,
+      body: bodyData
+    }));
+  };
+
+  useEffect(() => {
+    if (users) convertData(users);
+    else {
+      setTableData((prev) => ({
+        ...prev,
+        body: []
+      }));
+    }
+  }, [users]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [recordPerPage, search]);
+
+  const nav = useNavigate();
 
   const handleAddSeller = () => {
     nav('/admin/jewelers/new');
-  }
+  };
 
   return (
     <Box
@@ -382,15 +109,14 @@ export default function SellersContainer() {
       }}
     >
       <TablePageHeader
-        title='Kuyumcu Listesi'
-        addText='Kuyumcu Ekle'
+        title="Kuyumcu Listesi"
+        addText="Kuyumcu Ekle"
         handleFilter={() => { }}
         handleAdd={handleAddSeller}
+        handleSearch={setSearch}
       />
-      <CustomTable
-        data={tableData}
-      />
+      <CustomTable data={tableData} />
       <CustomTablePagination />
     </Box>
-  )
+  );
 }

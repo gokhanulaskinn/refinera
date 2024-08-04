@@ -1,4 +1,4 @@
-import { Box, Fab, List, useTheme } from '@mui/material'
+import { Box, Fab, IconButton, List, useTheme } from '@mui/material'
 import bigLogo from '../assets/images/big-logo.svg'
 import React, { useContext } from 'react'
 import SidebarAddButton from './SidebarAddButton';
@@ -15,13 +15,14 @@ import { ReactComponent as LastUsers } from '../assets/icons/profile-tick.svg';
 import { ReactComponent as Setting } from '../assets/icons/setting.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthProvider';
+import { Logout } from '@mui/icons-material';
 
 export default function Sidebar() {
 
   const theme = useTheme();
   const loc = useLocation();
   const nav = useNavigate();
-  const { role } = useContext(AuthContext);
+  const { role, logout } = useContext(AuthContext);
 
   return (
     <Box
@@ -302,9 +303,13 @@ export default function Sidebar() {
           mb: 3
         }}
       >
+        <IconButton onClick={() => { logout() }}>
+          <Logout sx={{ color: 'white' }} />
+        </IconButton>
         <Fab
           color='primary'
           size='small'
+          onClick={() => nav(`${role}/profile`)}
         >
           <Setting
             style={{

@@ -18,7 +18,8 @@ export default function Guard({ children }: GuardProps) {
   useEffect(() => {
     if (!initialAuthDone) return;
     if (!exp && !nonAuthRoutes.includes(loc.pathname)) {
-      nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+      // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+      nav('/login', { replace: true });
     }
 
     if (exp && nonAuthRoutes.includes(loc.pathname)) {
@@ -35,13 +36,15 @@ export default function Guard({ children }: GuardProps) {
     if (exp) {
       if (exp < new Date()) {
         if (!nonAuthRoutes.includes(loc.pathname)) {
-          nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+          // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+          nav('/login', { replace: true });
           logout!();
         }
       }
     } else {
       if (!nonAuthRoutes.includes(loc.pathname)) {
-        nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+        // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+        nav('/login', { replace: true });
         logout!();
       }
     }

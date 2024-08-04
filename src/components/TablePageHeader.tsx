@@ -10,9 +10,11 @@ type TablePageHeaderProps = {
   handleFilter?: () => void;
   handleAdd?: () => void;
   addText?: string;
+  handleSearch: (searchText: string) => void;
 }
 
-export default function TablePageHeader({ title, handleAdd, handleFilter, addText }: TablePageHeaderProps) {
+export default function TablePageHeader({ title, handleAdd, handleFilter, addText, handleSearch }: TablePageHeaderProps) {
+
   return (
     <Box
       sx={{
@@ -36,7 +38,9 @@ export default function TablePageHeader({ title, handleAdd, handleFilter, addTex
           gap: '10px',
         }}
       >
-        <SearchField />
+        <SearchField
+          handleSearch={handleSearch}
+        />
         {handleFilter && (
           <FilterButton />
         )}

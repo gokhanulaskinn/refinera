@@ -389,6 +389,7 @@ export default function UsersContainer() {
         addText='Kullanıcı Ekle'
         handleAdd={handleAddUser}
         handleFilter={() => { }}
+        handleSearch={(searchText) => console.log(searchText)}
       />
       <CustomTable
         data={tableData}
