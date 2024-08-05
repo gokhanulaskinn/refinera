@@ -6,7 +6,7 @@ type GuardProps = {
   children: React.ReactNode;
 }
 
-const nonAuthRoutes = ['/login'];
+const nonAuthRoutes = ['/login', '/seller/get-payment/finish'];
 
 export default function Guard({ children }: GuardProps) {
 

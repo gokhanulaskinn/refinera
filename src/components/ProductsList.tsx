@@ -11,56 +11,56 @@ export default function ProductsList() {
       id: 1,
       description: '1 gr 24 Ayar',
       name: 'Külçe Altın',
-      price: '2.689, 32 TL',
+      price: '0 TL',
       image: kulce
     },
     {
       id: 2,
       description: '2,5 gr 24 Ayar',
       name: 'Külçe Altın',
-      price: '6.723, 31 TL',
+      price: '0 TL',
       image: kulce
     },
     {
       id: 3,
       description: '5 gr 24 Ayar',
       name: 'Külçe Altın',
-      price: '13.446, 62 TL',
+      price: '0 TL',
       image: kulce
     },
     {
       id: 4,
       description: '10 gr 24 Ayar',
       name: 'Külçe Altın',
-      price: '26.893, 24 TL',
+      price: '0 TL',
       image: kulce
     },
     {
       id: 5,
       description: '20 gr 24 Ayar',
       name: 'Külçe Altın',
-      price: '53.786, 48 TL',
+      price: '0 TL',
       image: kulce
     },
     {
       id: 6,
       description: '50 gr 24 Ayar',
       name: 'Külçe Altın',
-      price: '134.466, 20 TL',
+      price: '0 TL',
       image: kulce
     },
     {
       id: 7,
       description: '100 gr 24 Ayar',
       name: 'Külçe Altın',
-      price: '268.932, 40 TL',
+      price: '0 TL',
       image: kulce
     },
     {
       id: 8,
       description: '1 gr 24 Ayar',
       name: 'Gram Altın',
-      price: '2.689, 32 TL',
+      price: '0 TL',
       image: gram
     },
   ]

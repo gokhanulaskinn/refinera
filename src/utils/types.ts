@@ -67,6 +67,7 @@ export interface Jeweler {
   status?: Status;
   taxNumber?: string;
   branches: Branch[];
+  comissionRate: number;
   users: User[];
   bankAccounts: BankAccount[];
   createdAt: Date;
@@ -137,6 +138,15 @@ export interface PaymentInput {
   cardAccountHolderName: string,
 }
 
+export interface PaymentRes {
+  referenceNo: string;
+  transactionId: string;
+  form3d: string;
+}
+
+export interface ConstantsType {
+  comissionRate: number;
+}
 
 // export type User = {
 //   id?: string;
@@ -163,6 +173,7 @@ export type TableDataType = {
 }
 
 export type TableBodyRowType = {
+  id?: string;
   rowData: TableRowCellType[]
 }
 

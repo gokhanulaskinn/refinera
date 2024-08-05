@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from 'react';
-import { UserRole } from "../utils/types";
+import { User, UserRole } from "../utils/types";
+import { getUser } from "../services/commonServices";
 
 type AuthContextProps = {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ type AuthStateType = {
   setRole: (role: string) => void,
   login: (token: string) => void,
   logout: () => void,
+  user?: User,
   initialAuthDone: boolean
 }
 
@@ -20,6 +22,7 @@ const initialAuthState: AuthStateType = {
   token: "",
   exp: undefined,
   role: '',
+  user: undefined,
   setRole: (role: string) => { },
   login: (token: string) => { },
   logout: () => { },
@@ -33,6 +36,11 @@ function getExp(token: string) {
   return jsonPayload.exp;
 };
 
+function getId(token: string) {
+  var jsonPayload: { sub: string } = jwtDecode(token);
+  return jsonPayload.sub;
+};
+
 function getRole(token: string) {
   var jsonPayload: { role: string } = jwtDecode(token);
   return jsonPayload.role;
@@ -44,8 +52,9 @@ export default function AuthProvider({ children }: AuthContextProps) {
   const [initialAuthDone, setInitialAuthDone] = useState(false);
   const [exp, setExp] = useState<Date>();
   const [role, setRole] = useState<string>('');
+  const [user, setUser] = useState<User>();
 
-  const login = (token: string, refreshTkn?: string) => {
+  const login = async (token: string, refreshTkn?: string) => {
     try {
       setExp(new Date(getExp(token) * 1000));
       const role = getRole(token);
@@ -57,6 +66,9 @@ export default function AuthProvider({ children }: AuthContextProps) {
         setRole('supplier');
       }
       setToken(token);
+      const res = await getUser(token, getId(token));
+      setUser(res);
+      console.log('token', token);
     } catch (e) {
       logout();
     } finally {
@@ -69,6 +81,7 @@ export default function AuthProvider({ children }: AuthContextProps) {
     setExp(undefined);
     setRole('');
     setToken('');
+    setUser(undefined);
   }
 
   useEffect(() => {
@@ -87,6 +100,7 @@ export default function AuthProvider({ children }: AuthContextProps) {
         role,
         setRole,
         token,
+        user,
         login,
         logout,
         initialAuthDone,

@@ -4,9 +4,14 @@ import CommonButton from './CommonButton';
 import { Add } from '@mui/icons-material';
 import { ReactComponent as EqualIcon } from '../assets/icons/equals-cirlce.svg';
 
-export default function ComissionCalculation() {
+type ComissionCalculationProps = {
+  baseComission: number;
+  canSetRate?: boolean;
+  onSubmit: (rate: number) => void;
+}
 
-  const [base, setBase] = React.useState(0);
+export default function ComissionCalculation({ baseComission, canSetRate, onSubmit }: ComissionCalculationProps) {
+
   const [rate, setRate] = React.useState(0);
   const theme = useTheme();
 
@@ -20,8 +25,8 @@ export default function ComissionCalculation() {
       }}
     >
       <Cell
-        value={base}
-        onChange={setBase}
+        value={baseComission}
+        onChange={() => { }}
         label="Baz Oranı"
         rightIcon={
           <Add />
@@ -43,7 +48,7 @@ export default function ComissionCalculation() {
         }
       />
       <Cell
-        value={base + rate}
+        value={baseComission + rate}
         onChange={() => { }}
         label="POS Komisyon Oranı"
         sx={{
@@ -51,8 +56,9 @@ export default function ComissionCalculation() {
         }}
         button={
           <CommonButton
-            onClick={() => { }}
+            onClick={() => { onSubmit(rate) }}
             label='Komisyon Oranı Belirle'
+            disabled={!canSetRate}
             color='white'
             sx={{
               borderRadius: '24px',

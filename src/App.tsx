@@ -27,6 +27,7 @@ import SellerSuppliers from './views/seller/SellerSuppliers';
 import GetPayment from './views/seller/GetPayment';
 import SellerProducts from './views/seller/SellerProducts';
 import UserProfile from './views/common/UserProfile';
+import CloseIframePage from './views/common/CloseIframePage';
 
 const App = () => {
 
@@ -39,6 +40,7 @@ const App = () => {
             <Router>
               <Routes>
                 <Route path="/login" element={<Login />} />
+                <Route path="/seller/get-payment/finish" element={<CloseIframePage />} />
               </Routes>
               <Guard>
                 <Layout>

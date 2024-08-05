@@ -1,7 +1,8 @@
-const token = localStorage.getItem('token');
+
 export const baseUrl = '/api';
 
 export const fetcher = async (url: string) => {
+  const token = localStorage.getItem('token');
   const response = await fetch(url, {
     method: 'GET',
     headers: {

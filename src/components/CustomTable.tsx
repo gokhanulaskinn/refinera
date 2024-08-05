@@ -7,9 +7,12 @@ import CustomPaper from './CustomPaper';
 
 type CustomTableProps = {
   data: TableDataType;
+  selectable?: boolean;
+  selectedIds?: string[];
+  setSelectedIds?: (ids: string[]) => void;
 }
 
-export default function CustomTable({ data }: CustomTableProps) {
+export default function CustomTable({ data, selectable, selectedIds, setSelectedIds }: CustomTableProps) {
   return (
     <CustomPaper>
       <TableContainer>
@@ -19,6 +22,9 @@ export default function CustomTable({ data }: CustomTableProps) {
           />
           <CustomTableBody
             body={data.body}
+            selectable={selectable}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
           />
         </Table>
       </TableContainer>

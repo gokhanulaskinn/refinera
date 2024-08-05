@@ -40,7 +40,7 @@ export default function CardInfo({ cardInfo, setCardInfo }: CardInfoProps) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextInput
-            label='TKCN'
+            label='Kart Sahibi TCKN / Pasaport Numarası'
             value={cardInfo.customerIdentity}
             onChange={(e) => setCardInfo({ ...cardInfo, customerIdentity: e.target.value })}
             backgroundColor='#F2F4F7'

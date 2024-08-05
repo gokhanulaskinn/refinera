@@ -20,8 +20,8 @@ export default function SellerProductsContainer() {
 
   const suppliers = [
     'Harem Altın',
-    'İAR',
-    'Nadir'
+    // 'İAR',
+    // 'Nadir'
   ]
 
   const [variant, setVariant] = React.useState(0);

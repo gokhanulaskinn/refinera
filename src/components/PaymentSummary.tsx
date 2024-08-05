@@ -33,7 +33,7 @@ export default function PaymentSummary() {
       <CommonButton
         onClick={() => { nav(`/seller/get-payment?price=${price}`) }}
         color='white'
-        label='Alış Verişi Tamamla'
+        label='Alışverişi Tamamla'
         icon={<ArrowForwardIos />}
       />
     </Paper>
