@@ -91,7 +91,7 @@ export default function Sidebar() {
         >
           <SidebarAddButton
             label='Altın Sat'
-            onClick={() => nav('/seller/products')}
+            onClick={() => nav('/seller')}
           />
           <SidebarAddButton
             label='Has Altın Al'

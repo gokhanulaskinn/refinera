@@ -1,6 +1,6 @@
 export type ApiList<T> = {
   results: T[],
-  count: number,
+  total: number,
 };
 
 export enum Status {
@@ -27,8 +27,8 @@ export interface User {
   email: string;
   phone?: string;
   status: Status;
-  first_name?: string;
-  last_name?: string;
+  firstName?: string;
+  lastName?: string;
   identity: string;
   password: string;
   createdAt: Date;
@@ -136,6 +136,56 @@ export interface PaymentInput {
   cardExpiry: string,
   cardCvv: string,
   cardAccountHolderName: string,
+}
+
+
+// {
+//   "id": "clzgv0q5k0001ievais5kqit4",
+//   "amount": 103,
+//   "totalAmount": null,
+//   "transactionOwner": "Mehmet Fatih BUÇAK",
+//   "cardholderName": "Mehmet BUÇAK",
+//   "email": null,
+//   "phone": "5345649909",
+//   "transactionId": null,
+//   "referenceId": null,
+//   "status": "WAITING",
+//   "jewelerId": "clzg1e7oj000213yrbb7zaybi",
+//   "createdAt": "2024-08-05T10:39:48.585Z",
+//   "updatedAt": "2024-08-05T10:39:48.585Z",
+//   "jeweler": {
+//       "id": "clzg1e7oj000213yrbb7zaybi",
+//       "firstName": "Mustafa",
+//       "lastName": "Cevher",
+//       "companyName": "Cevher Kuyumculuk Lmt. Şti.",
+//       "companyTableName": "Cevher Kuyumculuk",
+//       "email": "test1@kuyumcu.com",
+//       "phone": "05321234567",
+//       "status": "ACTIVE",
+//       "companyType": "LIMITED",
+//       "taxOffice": "Alemdağ",
+//       "taxNumber": "12341234",
+//       "comissionRate": 0,
+//       "createdAt": "2024-08-04T20:50:29.347Z",
+//       "updatedAt": "2024-08-04T20:50:29.347Z"
+//   }
+// }
+
+export interface Transaction {
+  id: string;
+  amount: number;
+  totalAmount: number;
+  transactionOwner: string;
+  cardholderName: string;
+  email: string;
+  phone: string;
+  transactionId: string;
+  referenceId: string;
+  status: Status;
+  jewelerId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  jeweler: Jeweler;
 }
 
 export interface PaymentRes {

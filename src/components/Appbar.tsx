@@ -12,7 +12,7 @@ import { AuthContext } from '../contexts/AuthProvider';
 export default function Appbar() {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { role, setRole } = React.useContext(AuthContext);
+  const { role, setRole, user } = React.useContext(AuthContext);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -20,7 +20,6 @@ export default function Appbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
 
   return (
     <AppBar
@@ -38,7 +37,7 @@ export default function Appbar() {
             fontWeight: 400,
             fontSize: '18px',
           }}>
-          Merhaba, Can Hitay
+          Merhaba, {user?.firstName} {user?.lastName}
         </Typography>
         <Box>
           <Button

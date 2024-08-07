@@ -56,7 +56,7 @@ export default function GetPaymentContainer() {
     try {
       const res = await paymentCreate({
         ...cardInfo,
-        amount: totalPrice * 100,
+        amount: price * 100,
       });
       if (res.form3d) {
         setIframe(res.form3d);

@@ -14,7 +14,7 @@ export default function UserProfileForm({ onSubmit, user }: UserProfileFormProps
   const theme = useTheme();
 
   const [values, setValues] = React.useState<Partial<User>>({
-    first_name: user.first_name,
+    firstName: user.firstName,
     email: user.email,
     phone: user.phone,
   })
@@ -27,8 +27,8 @@ export default function UserProfileForm({ onSubmit, user }: UserProfileFormProps
         <Grid item xs={12} md={6}>
           <TextInput
             label="Ad"
-            value={values.first_name}
-            onChange={(e) => setValues({ ...values, first_name: e.target.value })}
+            value={values.firstName}
+            onChange={(e) => setValues({ ...values, firstName: e.target.value })}
             backgroundColor='#F2F4F7'
           />
         </Grid>

@@ -28,6 +28,7 @@ import GetPayment from './views/seller/GetPayment';
 import SellerProducts from './views/seller/SellerProducts';
 import UserProfile from './views/common/UserProfile';
 import CloseIframePage from './views/common/CloseIframePage';
+import SellerReport from './views/seller/SellerReport';
 
 const App = () => {
 
@@ -62,6 +63,7 @@ const App = () => {
                     <Route path="/admin/last-users" element={<LastUsers />} />
                     <Route path="/admin/pos-rates" element={<ComissionRates />} />
 
+                    <Route path="/seller" element={<SellerProducts />} />
                     <Route path="/seller/banks" element={<Banks />} />
                     <Route path="/seller/banks/new" element={<BankAddEdit />} />
                     <Route path="/seller/banks/:id/edit" element={<BankAddEdit />} />
@@ -69,9 +71,10 @@ const App = () => {
                     <Route path="/seller/users/new" element={<UserAddEdit />} />
                     <Route path="/seller/users/:id/edit" element={<UserAddEdit />} />
                     <Route path="/seller/suppliers" element={<SellerSuppliers />} />
-                    <Route path="/seller/products" element={<SellerProducts />} />
+                    {/* <Route path="/seller/products" element={<SellerProducts />} /> */}
                     <Route path="/seller/get-payment" element={<GetPayment />} />
                     <Route path="/seller/profile" element={<UserProfile />} />
+                    <Route path="/seller/reports" element={<SellerReport />} />
 
                     <Route path="/supplier/banks" element={<Banks />} />
                     <Route path="/supplier/banks/new" element={<BankAddEdit />} />

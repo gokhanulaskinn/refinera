@@ -7,9 +7,17 @@ import CustomTablePagination from '../components/CustomTablePagination';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { baseUrl, fetcher } from '../utils/global';
+import DeleteDialog from '../components/DeleteDialog';
+import { deleteSeller } from '../services/seller/SellerServices';
+import { useAlert } from '../hooks/useAlert';
 
 export default function SellersContainer() {
 
+  const nav = useNavigate();
+  const showSnackBar = useAlert();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedJeweler, setSelectedJeweler] = useState<Jeweler>();
+  const [total, setTotal] = useState(0);
   const [recordPerPage, setRecordPerPage] = useState(10);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -67,7 +75,10 @@ export default function SellersContainer() {
             },
             {
               name: 'Sil',
-              action: () => console.log('Sil')
+              action: () => {
+                // setDeleteDialogOpen(true);
+                // setSelectedJeweler(jeweler);
+              }
             }
           ]
         }
@@ -94,11 +105,22 @@ export default function SellersContainer() {
     setPage(1);
   }, [recordPerPage, search]);
 
-  const nav = useNavigate();
 
   const handleAddSeller = () => {
     nav('/admin/jewelers/new');
   };
+
+  const handleDeleteSeller = async () => {
+    try {
+      const res = await deleteSeller(selectedJeweler?.id || '');
+      showSnackBar('Kuyumcu başarıyla silindi', 'success');
+    } catch (err) {
+      console.log(err)
+      showSnackBar('Kuyumcu silinirken bir hata oluştu', 'error');
+    } finally {
+      setDeleteDialogOpen(false);
+    }
+  }
 
   return (
     <Box
@@ -117,6 +139,14 @@ export default function SellersContainer() {
       />
       <CustomTable data={tableData} />
       <CustomTablePagination />
+      <DeleteDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onSubmit={() => handleDeleteSeller()}
+        title='Kuyumcu Sil'
+        content='Kuyumcu silmek istediğinize emin misiniz?'
+      />
+
     </Box>
   );
 }

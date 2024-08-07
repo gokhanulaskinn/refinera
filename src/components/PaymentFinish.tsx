@@ -1,6 +1,7 @@
 import { ArrowForwardIos } from '@mui/icons-material'
 import { Box, Typography } from '@mui/material'
 import CommonButton from './CommonButton'
+import { formatMoney } from '../utils/global';
 
 type PaymentFinishProps = {
   handleFinish(): void;
@@ -32,7 +33,7 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
             fontWeight: 500
           }}
         >
-          {price.toFixed(2)} TL
+          {formatMoney(price.toFixed(2))} TL
         </Typography>
       </Box>
       <Box>
@@ -51,7 +52,7 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
             fontWeight: 500
           }}
         >
-          {comissionFee.toFixed(2)} TL
+          {formatMoney(comissionFee.toFixed(2))} TL
         </Typography>
       </Box>
       <Box>
@@ -71,7 +72,7 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
             fontWeight: 500
           }}
         >
-          {totalPrice.toFixed(2)} TL
+          {formatMoney(totalPrice.toFixed(2))} TL
         </Typography>
       </Box>
       <Box

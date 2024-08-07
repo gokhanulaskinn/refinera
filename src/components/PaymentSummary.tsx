@@ -4,10 +4,11 @@ import CommonButton from './CommonButton'
 import { Add, ArrowForward, ArrowForwardIos, ArrowRight, ArrowRightAltOutlined } from '@mui/icons-material'
 import TextInput from './TextInput';
 import { useNavigate } from 'react-router-dom';
+import MoneyInput from './MoneyInput';
 
 export default function PaymentSummary() {
 
-  const [price, setPrice] = React.useState<number>(0);
+  const [price, setPrice] = React.useState<number>();
   const nav = useNavigate();
 
   return (
@@ -23,12 +24,11 @@ export default function PaymentSummary() {
       <Typography>
         Toplam Ücreti Giriniz
       </Typography>
-      <TextInput
+      <MoneyInput
         label=''
-        value={price || null}
-        type='number'
+        value={price?.toString() || ''}
         backgroundColor='#F2F4F7'
-        onChange={(e) => setPrice(parseFloat(e.target.value))}
+        onChange={(value: string) => value ? setPrice(parseFloat(value)) : setPrice(undefined)}
       />
       <CommonButton
         onClick={() => { nav(`/seller/get-payment?price=${price}`) }}

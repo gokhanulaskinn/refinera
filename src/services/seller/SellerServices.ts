@@ -30,3 +30,17 @@ export const checkPaymentStatus = async (values: any) => {
 
   return handleResponse(response);
 }
+
+
+export const deleteSeller = async (id: string) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/jewelers/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  return handleResponse(response);
+}

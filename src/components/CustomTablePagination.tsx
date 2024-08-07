@@ -11,12 +11,26 @@ const List = styled('ul')({
   margin: 0,
   display: 'flex',
 });
-export default function CustomTablePagination() {
 
+type CustomTablePaginationProps = {
+  total?: number;
+  page?: number;
+  onPageChange?: (page: number) => void;
+};
+
+export default function CustomTablePagination({ total = 10, page = 1, onPageChange }: CustomTablePaginationProps) {
   const theme = useTheme();
+  const [currentPage, setCurrentPage] = React.useState(page);
 
   const { items } = usePagination({
-    count: 10,
+    count: total,
+    page: currentPage,
+    onChange: (event, newPage) => {
+      setCurrentPage(newPage);
+      if (onPageChange) {
+        onPageChange(newPage);
+      }
+    },
   });
 
   return (
@@ -36,7 +50,7 @@ export default function CustomTablePagination() {
           let children = null;
 
           if (type === 'start-ellipsis' || type === 'end-ellipsis') {
-            children =
+            children = (
               <Box
                 sx={{
                   width: '40px',
@@ -50,7 +64,7 @@ export default function CustomTablePagination() {
               >
                 ...
               </Box>
-              ;
+            );
           } else if (type === 'page') {
             children = (
               <Box
@@ -65,6 +79,12 @@ export default function CustomTablePagination() {
                   backgroundColor: selected ? 'primary.main' : '#9AA6A71A',
                   cursor: 'pointer',
                   color: selected ? 'white' : theme.palette.text.secondary,
+                }}
+                onClick={() => {
+                  setCurrentPage(page as number);
+                  if (onPageChange) {
+                    onPageChange(page as number);
+                  }
                 }}
               >
                 {page}
@@ -87,6 +107,19 @@ export default function CustomTablePagination() {
                   cursor: 'pointer',
                   userSelect: 'none',
                   border: 'none',
+                }}
+                onClick={() => {
+                  if (type === 'previous') {
+                    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+                    if (onPageChange) {
+                      onPageChange(Math.max(currentPage - 1, 1));
+                    }
+                  } else if (type === 'next') {
+                    setCurrentPage((prevPage) => Math.min(prevPage + 1, total));
+                    if (onPageChange) {
+                      onPageChange(Math.min(currentPage + 1, total));
+                    }
+                  }
                 }}
               >
                 {type === 'previous' &&

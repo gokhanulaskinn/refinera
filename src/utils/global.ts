@@ -30,6 +30,23 @@ export const formatDate = (date: string): string => {
   return new Date(date).toLocaleDateString('tr-TR', options);
 }
 
+export const formatMoney = (value: string) => {
+  // Ondalık kısmı ayır
+  const parts = value.split('.');
+  const integerPart = parts[0].replace(/\D/g, ''); // Tam sayı kısmından tüm rakam olmayan karakterleri kaldır
+  const decimalPart = parts[1] ? parts[1].replace(/\D/g, '') : ''; // Ondalık kısmı temizle
+
+  // Tam sayı kısmını 1000'lik gruplara ayır ve nokta ile ayır
+  const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  // Eğer ondalık kısım varsa, tam sayı kısmına ondalık kısmı ekle
+  return decimalPart ? `${formattedIntegerPart},${decimalPart}` : formattedIntegerPart;
+};
+
+export const removeFormat = (value: string) => {
+  return value.replace(/\./g, '');
+};
+
 export const companyTypes = [
   { value: 'LIMITED', label: 'Limited' },
   { value: 'ANONYMOUS', label: 'Anonim' },
