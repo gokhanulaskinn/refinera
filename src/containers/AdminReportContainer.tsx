@@ -3,12 +3,11 @@ import React, { useEffect } from 'react'
 import ReportCardBig from '../components/ReportCardBig'
 import { baseUrl, fetcher, formatMoney } from '../utils/global';
 import useSWR from 'swr';
-import { set } from 'lodash';
 
-export default function SellerResportContainer() {
-
+export default function AdminReportContainer() {
   const theme = useTheme();
   const [totalRevenue, setTotalRevenue] = React.useState(0);
+  const [totalProfit, setTotalProfit] = React.useState(0);
 
   const { data, isLoading, error } = useSWR<any>(
     `${baseUrl}/reports`,
@@ -16,8 +15,11 @@ export default function SellerResportContainer() {
   );
 
   useEffect(() => {
+    if(!data) return;
     const price = (data?.totalRevenue / 100).toString();
     setTotalRevenue(parseFloat(price));
+    const profit = (data?.totalProfit / 100).toString();
+    setTotalProfit(parseFloat(profit));
   }, [data])
 
 
@@ -39,8 +41,13 @@ export default function SellerResportContainer() {
         }}
       >
         <ReportCardBig
+          label="Toplam Gerçekleşen Kar"
+          badgeColor={theme.palette.primary.main}
+          price={totalProfit.toFixed(2)}
+        />
+        <ReportCardBig
           label="Toplam Gerçekleşen Ciro"
-          badgeColor={theme.palette.secondary.main}
+          badgeColor={theme.palette.primary.main}
           price={totalRevenue.toFixed(2)}
         />
       </Box>

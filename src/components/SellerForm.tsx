@@ -1,5 +1,5 @@
 import { Box, Grid, Typography, useTheme } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import TextInput from './TextInput'
 import CommonButton from './CommonButton';
 import CommonSelect from './CommonSelect';
@@ -8,10 +8,12 @@ import { companyTypes } from '../utils/global';
 import CreditCardNumberInput from './CreditCardNumberInput';
 
 type SellerFormProps = {
-  onSubmit: (values: JewelerInput) => void
+  onSubmit: (values: JewelerInput) => void;
+  initialValues?: Jeweler;
+  isEdit?: boolean;
 }
 
-export default function SellerForm({ onSubmit }: SellerFormProps) {
+export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFormProps) {
 
   const [values, setValues] = React.useState<JewelerInput>({
     firstName: '',
@@ -28,6 +30,26 @@ export default function SellerForm({ onSubmit }: SellerFormProps) {
     iban: '',
     bankName: ''
   })
+
+  useEffect(() => {
+    if (initialValues) {
+      setValues({
+        firstName: '',
+        lastName: '',
+        companyName: initialValues.companyName,
+        companyType: initialValues.companyType,
+        taxOffice: initialValues.taxOffice,
+        taxNumber: initialValues.taxNumber,
+        email: initialValues.email,
+        identity: '',
+        phone: initialValues.phone,
+        companyTableName: initialValues.companyTableName,
+        accountHolder: '',
+        iban: '',
+        bankName: ''
+      })
+    }
+  }, [initialValues])
 
 
   // const [values, setValues] = React.useState<JewelerInput>({
@@ -64,33 +86,39 @@ export default function SellerForm({ onSubmit }: SellerFormProps) {
               backgroundColor='#F2F4F7'
             />
           </Grid>
-          <Grid item xs={12} md={6}>
-            <TextInput
-              label="Mağaza Sahibi TC Kimlik Numarası"
-              required
-              value={values.identity}
-              onChange={(e) => setValues({ ...values, identity: e.target.value })}
-              backgroundColor='#F2F4F7'
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextInput
-              label="Mağaza Sahibi Adı"
-              required
-              value={values.firstName}
-              onChange={(e) => setValues({ ...values, firstName: e.target.value })}
-              backgroundColor='#F2F4F7'
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextInput
-              label="Mağaza Sahibi Soyadı"
-              required
-              value={values.lastName}
-              onChange={(e) => setValues({ ...values, lastName: e.target.value })}
-              backgroundColor='#F2F4F7'
-            />
-          </Grid>
+          {!isEdit && (
+            <Grid item xs={12} md={6}>
+              <TextInput
+                label="Mağaza Sahibi TC Kimlik Numarası"
+                required
+                value={values.identity}
+                onChange={(e) => setValues({ ...values, identity: e.target.value })}
+                backgroundColor='#F2F4F7'
+              />
+            </Grid>
+          )}
+          {!isEdit && (
+            <Grid item xs={12} md={6}>
+              <TextInput
+                label="Mağaza Sahibi Adı"
+                required
+                value={values.firstName}
+                onChange={(e) => setValues({ ...values, firstName: e.target.value })}
+                backgroundColor='#F2F4F7'
+              />
+            </Grid>
+          )}
+          {!isEdit && (
+            <Grid item xs={12} md={6}>
+              <TextInput
+                label="Mağaza Sahibi Soyadı"
+                required
+                value={values.lastName}
+                onChange={(e) => setValues({ ...values, lastName: e.target.value })}
+                backgroundColor='#F2F4F7'
+              />
+            </Grid>
+          )}
           <Grid item xs={12} md={6}>
             <TextInput
               label="E-Posta Adresi"
@@ -146,35 +174,39 @@ export default function SellerForm({ onSubmit }: SellerFormProps) {
               backgroundColor='#F2F4F7'
             />
           </Grid>
-          <Typography variant='h6' sx={{ mt: 2, width: '100%' }}>Banka Bilgileri</Typography>
-          <Grid item xs={12} md={12}>
-            <TextInput
-              label="Banka Tercihi"
-              required
-              value={values.bankName}
-              onChange={(e) => setValues({ ...values, bankName: e.target.value })}
-              backgroundColor='#F2F4F7'
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextInput
-              required
-              label="Hesap Sahibi"
-              value={values.accountHolder}
-              onChange={(e) => setValues({ ...values, accountHolder: e.target.value })}
-              backgroundColor='#F2F4F7'
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <CreditCardNumberInput
-              label="IBAN Numarası"
-              required
-              inputType='iban'
-              value={values.iban || ''}
-              onChange={(value) => setValues({ ...values, iban: value.replaceAll(' ', '') })}
-              backgroundColor='#F2F4F7'
-            />
-          </Grid>
+          {!isEdit && (
+            <>
+              <Typography variant='h6' sx={{ mt: 2, width: '100%' }}>Banka Bilgileri</Typography>
+              <Grid item xs={12} md={12}>
+                <TextInput
+                  label="Banka Tercihi"
+                  required
+                  value={values.bankName}
+                  onChange={(e) => setValues({ ...values, bankName: e.target.value })}
+                  backgroundColor='#F2F4F7'
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextInput
+                  required
+                  label="Hesap Sahibi"
+                  value={values.accountHolder}
+                  onChange={(e) => setValues({ ...values, accountHolder: e.target.value })}
+                  backgroundColor='#F2F4F7'
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <CreditCardNumberInput
+                  label="IBAN Numarası"
+                  required
+                  inputType='iban'
+                  value={values.iban || ''}
+                  onChange={(value) => setValues({ ...values, iban: value.replaceAll(' ', '') })}
+                  backgroundColor='#F2F4F7'
+                />
+              </Grid>
+            </>
+          )}
         </Grid>
         <Box
           sx={{

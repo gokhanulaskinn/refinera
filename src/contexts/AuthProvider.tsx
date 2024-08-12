@@ -68,7 +68,6 @@ export default function AuthProvider({ children }: AuthContextProps) {
       setToken(token);
       const res = await getUser(token, getId(token));
       setUser(res);
-      console.log('token', token);
     } catch (e) {
       logout();
     } finally {

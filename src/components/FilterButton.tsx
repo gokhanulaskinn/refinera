@@ -1,13 +1,18 @@
 import { Button, useTheme } from '@mui/material'
 import { ReactComponent as FilterIcon } from '../assets/icons/filter-square.svg'
 
-export default function FilterButton() {
+type FilterButtonProps = {
+  filterClick: (e: any) => void
+}
+
+export default function FilterButton({ filterClick }: FilterButtonProps) {
 
   const theme = useTheme();
 
   return (
     <Button
       variant='contained'
+      onClick={filterClick}
       sx={{
         borderRadius: '55px',
         background: theme.palette.background.paper,

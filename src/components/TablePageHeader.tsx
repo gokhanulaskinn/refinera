@@ -7,7 +7,7 @@ import { Add } from '@mui/icons-material'
 
 type TablePageHeaderProps = {
   title: string;
-  handleFilter?: () => void;
+  handleFilter?: (e: any) => void;
   handleAdd?: () => void;
   addText?: string;
   handleSearch: (searchText: string) => void;
@@ -42,7 +42,9 @@ export default function TablePageHeader({ title, handleAdd, handleFilter, addTex
           handleSearch={handleSearch}
         />
         {handleFilter && (
-          <FilterButton />
+          <FilterButton
+            filterClick={handleFilter}
+          />
         )}
         {handleAdd && (
           <CommonButton

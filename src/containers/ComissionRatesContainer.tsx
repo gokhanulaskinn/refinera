@@ -10,7 +10,7 @@ import useSWR, { mutate } from 'swr';
 import { baseUrl, fetcher } from '../utils/global';
 import { set } from 'lodash';
 import { useAlert } from '../hooks/useAlert';
-import { setComissionRate } from '../services/admin/AdminServices';
+import { setComissionRate, updateBaseCommissionRate } from '../services/admin/AdminServices';
 
 export default function ComissionRatesContainer() {
 
@@ -38,8 +38,8 @@ export default function ComissionRatesContainer() {
   });
   const [selectedJewelers, setSelectedJewelers] = React.useState<string[]>([]);
 
-  const { data, isLoading, error } = useSWR<ConstantsType>(
-    `${baseUrl}/constants`,
+  const { data } = useSWR<ConstantsType>(
+    `${baseUrl}/configuration?key=commissionRate`,
     (url: string) => fetcher(url)
   );
 
@@ -48,11 +48,15 @@ export default function ComissionRatesContainer() {
     (url: string) => fetcher(url)
   );
 
-  const handleSubmit = async (rate: number) => {
+  const handleSubmit = async (rate: number, base: number) => {
     try {
       const res = await setComissionRate(selectedJewelers, rate);
+      if (constans?.commissionRate !== base.toString()) {
+        await updateBaseCommissionRate(base);
+      }
       showSnacbar('İşlem başarılı', 'success');
       mutate(`${baseUrl}/jewelers?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}`);
+      mutate(`${baseUrl}/configuration?key=commissionRate`);
     } catch (err) {
       showSnacbar('Bir hata oluştu', 'error');
     }
@@ -88,9 +92,9 @@ export default function ComissionRatesContainer() {
       rowData: [
         { value: jeweler.companyName || '', type: 'text' },
         { value: 'Ozan', type: 'text' },
-        { value: constans?.comissionRate.toString() || '0', type: 'badge' },
+        { value: constans?.commissionRate.toString() || '0', type: 'badge' },
         { value: jeweler.comissionRate.toString() || '0', type: 'badge' },
-        { value: ((constans?.comissionRate || 0) + jeweler.comissionRate).toString() || '0', type: 'badge' }
+        { value: ((parseFloat(constans?.commissionRate || '0')) + jeweler.comissionRate).toString() || '0', type: 'badge' }
       ]
     }));
 
@@ -180,7 +184,7 @@ export default function ComissionRatesContainer() {
           tabs={tabs}
         />
         <ComissionCalculation
-          baseComission={constans.comissionRate}
+          baseComission={parseFloat(constans.commissionRate)}
           canSetRate={selectedJewelers.length > 0}
           onSubmit={handleSubmit}
         />

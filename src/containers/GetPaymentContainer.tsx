@@ -119,7 +119,7 @@ export default function GetPaymentContainer() {
         clearInterval(interval);
         showSnacbar('Durum sorgulamada hata', 'error');
       }
-    }, 1000); // 1 saniyede bir durum sorgulama
+    }, 3000); // 1 saniyede bir durum sorgulama
   };
 
   useEffect(() => {

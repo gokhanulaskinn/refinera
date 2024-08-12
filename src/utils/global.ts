@@ -1,3 +1,4 @@
+import { UserRole } from "./types";
 
 export const baseUrl = '/api';
 
@@ -52,3 +53,22 @@ export const companyTypes = [
   { value: 'ANONYMOUS', label: 'Anonim' },
   { value: 'JOINT_STOCK', label: 'Sermaye Ortaklığı' },
 ]
+
+export const getRoleName = (role: UserRole) => {
+  switch (role) {
+    case 'SUPERADMIN':
+      return 'Süper Admin';
+    case 'SUPERADMIN_EMPLOYEE':
+      return 'Çalışan';
+    case 'JEWELER_OWNER':
+      return 'Admin';
+    case 'JEWELER_EMPLOYEE':
+      return 'Çalışan';
+    case 'SUPPLIER_OWNER':
+      return 'Admin';
+    case 'SUPPLIER_EMPLOYEE':
+      return 'Çalışan';
+    default:
+      return '';
+  }
+}

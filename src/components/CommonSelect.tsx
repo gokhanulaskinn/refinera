@@ -58,7 +58,7 @@ export default function CommonSelect({ borderEnabled, backgroundColor, label, va
           {label}
         </Typography>
         <Select
-          value={value}
+          value={value || ''}
           onChange={handleChange}
           displayEmpty
           required={required}

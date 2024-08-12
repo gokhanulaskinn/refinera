@@ -1,28 +1,72 @@
 import { Box, Grid, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import CustomPaper from '../components/CustomPaper'
 import SellerForm from '../components/SellerForm'
 import SubmitFormDialog from '../components/SubmitFormDialog'
 import { useNavigate } from 'react-router-dom'
-import { JewelerInput } from '../utils/types'
+import { Jeweler, JewelerInput } from '../utils/types'
 import { useAlert } from '../hooks/useAlert'
-import { createJeweler } from '../services/admin/AdminServices'
+import { createJeweler, getJeweler, updateJeweler } from '../services/admin/AdminServices'
 
-export default function SellerAddEditContainer() {
+type SellerAddEditContainerProps = {
+  id?: string
+}
+
+export default function SellerAddEditContainer({ id }: SellerAddEditContainerProps) {
 
   const [open, setOpen] = React.useState(false);
+  const [isSuccessful, setIsSuccessful] = React.useState(false);
+  const [title, setTitle] = React.useState('');
+  const [content, setContent] = React.useState('');
   const nav = useNavigate();
   const showSnackbar = useAlert();
+  const [jeweler, setJeweler] = React.useState<Jeweler>();
 
   const handleSubmit = async (values: JewelerInput) => {
     try {
-      const res = await createJeweler(values);
-      showSnackbar('Kuyumcu başarıyla eklendi!', 'success');
+      if (id) {
+        delete values.accountHolder;
+        delete values.bankName;
+        delete values.iban;
+        delete values.identity;
+        delete values.firstName;
+        delete values.lastName;
+        const res = await updateJeweler(id, values);
+        showSnackbar('Kuyumcu başarıyla güncellendi!', 'success');
+        nav('/admin/jewelers');
+      } else {
+        const res = await createJeweler(values);
+        setTitle('Kuyumcu Başarıyla Eklendi!');
+        setContent('Kuyumcu ekleme işleminiz başarılı olmuştur. Kullanıcıyı liste sayfasından kontrol edebilirsiniz.');
+        setOpen(true);
+      }
     } catch (e) {
-      showSnackbar('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+      if (id) {
+        showSnackbar('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+      } else {
+        setTitle('Kuyumcu Eklenirken Bir Hata Oluştu!');
+        setContent('Kuyumcu eklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+        setOpen(true);
+      }
       console.log(e);
     }
   }
+
+  const fetchJeweler = async (id: string) => {
+    try {
+      const res = await getJeweler(id);
+      setJeweler(res);
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    if (id) {
+      fetchJeweler(id);
+    }
+  }, [id])
 
   return (
     <Box>
@@ -41,6 +85,8 @@ export default function SellerAddEditContainer() {
       >
         <SellerForm
           onSubmit={handleSubmit}
+          initialValues={jeweler}
+          isEdit={Boolean(id)}
         />
       </CustomPaper>
       <SubmitFormDialog

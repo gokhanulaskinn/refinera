@@ -1,372 +1,112 @@
 import { Box } from '@mui/material'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import TablePageHeader from '../components/TablePageHeader'
 import CustomTable from '../components/CustomTable'
-import { TableDataType } from '../utils/types'
+import { ApiList, Status, TableBodyRowType, TableDataType, User } from '../utils/types'
 import CustomTablePagination from '../components/CustomTablePagination'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthProvider'
+import { baseUrl, fetcher, getRoleName } from '../utils/global'
+import useSWR, { mutate } from 'swr'
+import { useAlert } from '../hooks/useAlert'
+import { updateUser } from '../services/commonServices'
+import BasicMenu from '../components/BasicMenu'
 
 export default function UsersContainer() {
 
-  const tableData: TableDataType = {
+  const showSnackBar = useAlert();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const [total, setTotal] = useState(0);
+  const [recordPerPage, setRecordPerPage] = useState(10);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [tableData, setTableData] = useState<TableDataType>({
     head: [
-      {
-        id: 'name',
-        label: 'Ad Soyad'
-      },
-      {
-        id: 'email',
-        label: 'E-Posta'
-      },
-      {
-        id: 'phone',
-        label: 'Telefon Numarası'
-      },
-      {
-        id: 'permission',
-        label: 'Yetki'
-      },
-      {
-        id: 'status',
-        label: 'Durum'
-      },
-      {
-        id: 'actions',
-        label: 'İşlemler'
-      }
+      { id: 'name', label: 'Ad Soyad' },
+      { id: 'email', label: 'E-Posta' },
+      { id: 'phone', label: 'Telefon Numarası' },
+      { id: 'permission', label: 'Yetki' },
+      { id: 'status', label: 'Durum' },
+      { id: 'actions', label: 'İşlemler' }
     ],
-    body: [
-      {
-        rowData: [
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'admin@refinera.com', type: 'text' },
-          { value: '905555555555', type: 'text' },
-          { value: 'admin', type: 'text' },
-          {
-            value: 'Aktif',
-            id: 'active',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
+    body: []
+  });
+
+  const { data: users, isLoading, error } = useSWR<ApiList<User>>(
+    `${baseUrl}/users?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}${statusFilter ? `&status=${statusFilter}` : ''}`,
+    (url: string) => fetcher(url)
+  );
+
+  const convertData = (data: ApiList<User>) => {
+    const bodyData: TableBodyRowType[] = data.results.map((user) => ({
+      rowData: [
+        { value: `${user.firstName || ''} ${user.lastName || ''}`, type: 'text' },
+        { value: user.email || '', type: 'text' },
+        { value: user.phone || '', type: 'text' },
+        { value: getRoleName(user.role || ''), type: 'text' },
+        {
+          value: user.status === 'ACTIVE' ? 'Aktif' : 'Pasif',
+          id: user.status || '',
+          type: 'options',
+          onSelected: (id: any) => {
+            user.status !== id &&
+              handleUpdateStatus(user.id || '', id)
           },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
+          variant: [
+            {
+              id: 'ACTIVE',
+              label: 'Aktif',
+              bgColor: '#1CBA761A',
+              textColor: '#1CBA76'
+            },
+            {
+              id: 'INACTIVE',
+              label: 'Pasif',
+              bgColor: '#C438251A',
+              textColor: '#D43D28'
+            }
+          ]
+        },
+        {
+          value: '',
+          type: 'actions',
+          actions: [
+            {
+              name: 'Düzenle',
+              action: () => nav(`/${role}/users/${user.id}/edit`)
+            },
+            {
+              name: 'Sil',
+              action: () => {
+                handleUpdateStatus(user.id || '', Status.INACTIVE)
               }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Ayşe Yılmaz', type: 'text' },
-          { value: 'ayse@altyolu.com', type: 'text' },
-          { value: '905554443322', type: 'text' },
-          { value: 'admin', type: 'text' },
-          {
-            value: 'Pasif',
-            id: 'passive',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Mehmet Kaya', type: 'text' },
-          { value: 'mehmet@gumusdunyasi.com', type: 'text' },
-          { value: '905553331122', type: 'text' },
-          { value: 'admin', type: 'text' },
-          {
-            value: 'Aktif',
-            id: 'active',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Selin Demir', type: 'text' },
-          { value: 'selin@pirlantamerkezi.com', type: 'text' },
-          { value: '905552221133', type: 'text' },
-          { value: 'admin', type: 'text' },
-          {
-            value: 'Pasif',
-            id: 'passive',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Ahmet Çelik', type: 'text' },
-          { value: 'ahmet@mucevherat.com', type: 'text' },
-          { value: '905551110000', type: 'text' },
-          { value: 'admin', type: 'text' },
-          {
-            value: 'Aktif',
-            id: 'active',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Nihal Aslan', type: 'text' },
-          { value: 'nihal@zumrutyakut.com', type: 'text' },
-          { value: '905559998877', type: 'text' },
-          { value: 'admin', type: 'text' },
-          {
-            value: 'Pasif',
-            id: 'passive',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Eren Sarı', type: 'text' },
-          { value: 'eren@altinmerkezi.com', type: 'text' },
-          { value: '905558887766', type: 'text' },
-          { value: 'admin', type: 'text' },
-          {
-            value: 'Aktif',
-            id: 'active',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Cem Kara', type: 'text' },
-          { value: 'cem@gumustaki.com', type: 'text' },
-          { value: '905557776655', type: 'text' },
-          { value: 'admin', type: 'text' },
-          {
-            value: 'Pasif',
-            id: 'passive',
-            type: 'options',
-            variant: [
-              {
-                id: 'active',
-                label: 'Aktif',
-                bgColor: '#1CBA761A',
-                textColor: '#1CBA76'
-              },
-              {
-                id: 'passive',
-                label: 'Pasif',
-                bgColor: '#C438251A',
-                textColor: '#D43D28'
-              }
-            ]
-          },
-          {
-            value: '',
-            type: 'actions',
-            actions: [
-              {
-                name: 'Düzenle',
-                action: () => console.log('Düzenle')
-              },
-              {
-                name: 'Sil',
-                action: () => console.log('Sil')
-              }
-            ]
-          }
-        ]
-      },
-    ]
+            }
+          ]
+        }
+      ]
+    }));
+
+    setTableData({
+      head: tableData.head,
+      body: bodyData
+    });
   }
+
+  useEffect(() => {
+    if (users) {
+      convertData(users);
+      const totalCount = users.total;
+      const totalPage = Math.ceil(totalCount / recordPerPage);
+      setTotal(totalPage);
+    } else {
+      setTableData({
+        head: tableData.head,
+        body: []
+      });
+    }
+  }, [users])
 
   const { role } = useContext(AuthContext);
 
@@ -374,6 +114,40 @@ export default function UsersContainer() {
 
   const handleAddUser = () => {
     nav(`/${role}/users/new`);
+  }
+
+  const handleUpdateStatus = async (id: string, status: Status) => {
+    try {
+      const res = await updateUser(id, { status });
+      mutate(`${baseUrl}/users?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}${statusFilter ? `&status=${statusFilter}` : ''}`);
+      showSnackBar('Kullanıcı durumu başarıyla güncellendi', 'success');
+    } catch (e) {
+      showSnackBar('Kullanıcı durumu güncellenirken bir hata oluştu', 'error');
+      console.log(e)
+    }
+  }
+
+  const handleFilterSelect = (item: string) => {
+    if (item === 'Aktif Kullanıcılar') {
+      setStatusFilter('ACTIVE');
+    } else if (item === 'Pasif Kullanıcılar') {
+      setStatusFilter('INACTIVE');
+    } else {
+      setStatusFilter('');
+    }
+    setAnchorEl(null);
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  }
+
+  const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleChangeRole = (role: string) => {
+    console.log(role);
   }
 
   return (
@@ -388,13 +162,26 @@ export default function UsersContainer() {
         title='Kullanıcı Listesi'
         addText='Kullanıcı Ekle'
         handleAdd={handleAddUser}
-        handleFilter={() => { }}
+        handleFilter={handleFilterClick}
         handleSearch={(searchText) => console.log(searchText)}
       />
       <CustomTable
         data={tableData}
       />
-      <CustomTablePagination />
+      {total > 1 && (
+        <CustomTablePagination
+          total={total}
+          page={page}
+          onPageChange={(page) => setPage(page)}
+        />
+      )}
+      <BasicMenu
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        items={['Hepsi', 'Aktif Kullanıcılar', 'Pasif Kullanıcılar']}
+        onSelected={handleFilterSelect}
+      />
     </Box>
   )
 }

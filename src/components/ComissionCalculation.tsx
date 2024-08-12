@@ -7,13 +7,14 @@ import { ReactComponent as EqualIcon } from '../assets/icons/equals-cirlce.svg';
 type ComissionCalculationProps = {
   baseComission: number;
   canSetRate?: boolean;
-  onSubmit: (rate: number) => void;
+  comissionRate?: number;
+  onSubmit: (rate: number, base: number) => void;
 }
 
-export default function ComissionCalculation({ baseComission, canSetRate, onSubmit }: ComissionCalculationProps) {
+export default function ComissionCalculation({ baseComission, canSetRate, onSubmit, comissionRate }: ComissionCalculationProps) {
 
-  const [rate, setRate] = React.useState(0);
-  const theme = useTheme();
+  const [rate, setRate] = React.useState(comissionRate || 0);
+  const [base, setBase] = React.useState(baseComission);
 
   return (
     <Paper
@@ -25,8 +26,8 @@ export default function ComissionCalculation({ baseComission, canSetRate, onSubm
       }}
     >
       <Cell
-        value={baseComission}
-        onChange={() => { }}
+        value={base}
+        onChange={setBase}
         label="Baz Oranı"
         rightIcon={
           <Add />
@@ -48,15 +49,16 @@ export default function ComissionCalculation({ baseComission, canSetRate, onSubm
         }
       />
       <Cell
-        value={baseComission + rate}
+        value={base + rate}
         onChange={() => { }}
         label="POS Komisyon Oranı"
         sx={{
           flex: 1,
+          minWidth: '250px',
         }}
         button={
           <CommonButton
-            onClick={() => { onSubmit(rate) }}
+            onClick={() => { onSubmit(rate, base) }}
             label='Komisyon Oranı Belirle'
             disabled={!canSetRate}
             color='white'

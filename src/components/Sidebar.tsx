@@ -125,7 +125,7 @@ export default function Sidebar() {
         >
           <List>
             <SidebarListItem
-              label='Anaysayfa'
+              label='Anasayfa'
               Icon={Home}
               to='/admin'
               selected={loc.pathname === '/admin'}
@@ -190,7 +190,7 @@ export default function Sidebar() {
         >
           <List>
             <SidebarListItem
-              label='Anaysayfa'
+              label='Anasayfa'
               Icon={Home}
               to='/seller'
               selected={loc.pathname === '/seller'}
@@ -253,7 +253,7 @@ export default function Sidebar() {
         >
           <List>
             <SidebarListItem
-              label='Anaysayfa'
+              label='Anasayfa'
               Icon={Home}
               to='/supplier'
               selected={loc.pathname === '/supplier'}

@@ -1,34 +1,35 @@
 // src/App.tsx
 
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import 'dayjs/locale/tr';
 import { SnackbarProvider } from 'notistack';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { lightTheme } from './theme';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Login from './views/Login';
-import Home from './views/Home';
-import AuthProvider from './contexts/AuthProvider';
 import Guard from './components/Guard';
 import Layout from './components/Layout';
-import Sellers from './views/admin/Sellers';
-import SellerAddEdit from './views/admin/SellerAddEdit';
-import Suppliers from './views/admin/Suppliers';
-import SupplierAddEdit from './views/admin/SupplierAddEdit';
-import Users from './views/common/Users';
-import AddEditUser from './views/common/UserAddEdit';
-import UserAddEdit from './views/common/UserAddEdit';
-import Banks from './views/common/Banks';
-import BankAddEdit from './views/common/BankAddEdit';
-import LastUsers from './views/admin/LastUsers';
+import AuthProvider from './contexts/AuthProvider';
+import { lightTheme } from './theme';
+import Login from './views/Login';
 import ComissionRates from './views/admin/ComissionRates';
-import SellerSuppliers from './views/seller/SellerSuppliers';
+import LastUsers from './views/admin/LastUsers';
+import SellerAddEdit from './views/admin/SellerAddEdit';
+import Sellers from './views/admin/Sellers';
+import SupplierAddEdit from './views/admin/SupplierAddEdit';
+import Suppliers from './views/admin/Suppliers';
+import BankAddEdit from './views/common/BankAddEdit';
+import Banks from './views/common/Banks';
+import CloseIframePage from './views/common/CloseIframePage';
+import Root from './views/common/Root';
+import UserAddEdit from './views/common/UserAddEdit';
+import UserProfile from './views/common/UserProfile';
+import Users from './views/common/Users';
 import GetPayment from './views/seller/GetPayment';
 import SellerProducts from './views/seller/SellerProducts';
-import UserProfile from './views/common/UserProfile';
-import CloseIframePage from './views/common/CloseIframePage';
 import SellerReport from './views/seller/SellerReport';
+import SellerSuppliers from './views/seller/SellerSuppliers';
+import AdminReport from './views/admin/AdminReport';
+import SellerBranches from './views/seller/SellerBranches';
 
 const App = () => {
 
@@ -46,7 +47,7 @@ const App = () => {
               <Guard>
                 <Layout>
                   <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Root />} />
                     <Route path="/admin/jewelers" element={<Sellers />} />
                     <Route path="/admin/profile" element={<UserProfile />} />
                     <Route path="/admin/jewelers/new" element={<SellerAddEdit />} />
@@ -55,6 +56,7 @@ const App = () => {
                     <Route path="/admin/suppliers/new" element={<SupplierAddEdit />} />
                     <Route path="/admin/suppliers/:id/edit" element={<SupplierAddEdit />} />
                     <Route path="/admin/users" element={<Users />} />
+                    <Route path="/admin/reports" element={<AdminReport />} />
                     <Route path="/admin/users/new" element={<UserAddEdit />} />
                     <Route path="/admin/users/:id/edit" element={<UserAddEdit />} />
                     <Route path="/admin/banks" element={<Banks />} />
@@ -71,6 +73,7 @@ const App = () => {
                     <Route path="/seller/users/new" element={<UserAddEdit />} />
                     <Route path="/seller/users/:id/edit" element={<UserAddEdit />} />
                     <Route path="/seller/suppliers" element={<SellerSuppliers />} />
+                    <Route path="/seller/branches" element={<SellerBranches />} />
                     {/* <Route path="/seller/products" element={<SellerProducts />} /> */}
                     <Route path="/seller/get-payment" element={<GetPayment />} />
                     <Route path="/seller/profile" element={<UserProfile />} />

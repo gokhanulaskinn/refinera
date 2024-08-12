@@ -10,6 +10,7 @@ export enum Status {
 
 export enum UserRole {
   SUPERADMIN = "SUPERADMIN",
+  SUPERADMIN_EMPLOYEE = "SUPERADMIN_EMPLOYEE",
   JEWELER_OWNER = "JEWELER_OWNER",
   JEWELER_EMPLOYEE = "JEWELER_EMPLOYEE",
   SUPPLIER_OWNER = "SUPPLIER_OWNER",
@@ -58,8 +59,10 @@ export interface Branch {
 
 export interface Jeweler {
   id: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
   companyName?: string;
+  companyTableName?: string;
   companyType?: CompanyType;
   taxOffice?: string;
   email?: string;
@@ -120,7 +123,9 @@ export interface BankAccount {
   id: string;
   bankName: string;
   iban: string;
+  accountHolder: string;
   jeweler?: Jeweler;
+  isMain: boolean;
   supplier?: Supplier;
   jewelerId?: string;
   supplierId?: string;
@@ -195,7 +200,7 @@ export interface PaymentRes {
 }
 
 export interface ConstantsType {
-  comissionRate: number;
+  commissionRate: string;
 }
 
 // export type User = {

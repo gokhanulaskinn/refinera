@@ -19,8 +19,8 @@ export default function LastUsersContainer() {
     head: [
       { id: 'name', label: 'İşlem Sahibi' },
       { id: 'owner', label: 'Kart Sahibi' },
-      { id: 'section', label: 'Satış Yapan Mağaza' },
       { id: 'phone', label: 'Telefon Numarası' },
+      { id: 'section', label: 'Satış Yapan Mağaza' },
       { id: 'detail', label: 'Detay' }
     ],
     body: []
@@ -36,9 +36,9 @@ export default function LastUsersContainer() {
       rowData: [
         { value: transaction.transactionOwner || '', type: 'text' },
         { value: transaction.cardholderName || '', type: 'text' },
-        { value: transaction.jeweler.companyName || '', type: 'text' },
         { value: transaction.phone || '', type: 'text' },
-        { value: [formatMoney(((transaction.amount/100).toFixed(2) || '')) + ' TL'], type: 'badge' }
+        { value: transaction.jeweler.companyName || '', type: 'text' },
+        { value: [formatMoney(((transaction.amount / 100).toFixed(2) || '')) + ' TL'], type: 'badge' }
       ]
     })
     );
@@ -56,80 +56,6 @@ export default function LastUsersContainer() {
     }
   }, [data])
 
-
-  const tableDatas: TableDataType = {
-    head: [
-      {
-        id: 'name',
-        label: 'İşlem Sahibi'
-      },
-      {
-        id: 'owner',
-        label: 'Kart Sahibi'
-      },
-      {
-        id: 'section',
-        label: 'Satış Yapan Mağaza'
-      },
-      {
-        id: 'phone',
-        label: 'Telefon Numarası'
-      },
-      {
-        id: 'detail',
-        label: 'Detay'
-      },
-    ],
-    body: [
-      {
-        rowData: [
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Karahan Kuyumculuk', type: 'text' },
-          { value: '905555555555', type: 'text' },
-          { value: ['12.000t'], type: 'badge' }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Karahan Kuyumculuk', type: 'text' },
-          { value: '905555555555', type: 'text' },
-          { value: ['12.000t'], type: 'badge' }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Karahan Kuyumculuk', type: 'text' },
-          { value: '905555555555', type: 'text' },
-          { value: ['12.000t'], type: 'badge' }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Karahan Kuyumculuk', type: 'text' },
-          { value: '905555555555', type: 'text' },
-          { value: ['12.000t'], type: 'badge' }
-        ]
-      },
-      {
-        rowData: [
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Can Hitay', type: 'text' },
-          { value: 'Karahan Kuyumculuk', type: 'text' },
-          { value: '905555555555', type: 'text' },
-          { value: ['12.000t'], type: 'badge' }
-        ]
-      },
-
-    ]
-  }
-
   return (
     <Box
       sx={{
@@ -141,16 +67,18 @@ export default function LastUsersContainer() {
       <TablePageHeader
         title='Son Kullanıcılar'
         handleFilter={() => { }}
-        handleSearch={(searchText) => console.log(searchText)}
+        handleSearch={setSearch}
       />
       <CustomTable
         data={tableData}
       />
-      <CustomTablePagination
-        total={total}
-        page={page}
-        onPageChange={(page) => setPage(page)}
-      />
+      {total > 1 && (
+        <CustomTablePagination
+          total={total}
+          page={page}
+          onPageChange={(page) => setPage(page)}
+        />
+      )}
     </Box>
   )
 }

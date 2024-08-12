@@ -10,7 +10,7 @@ const nonAuthRoutes = ['/login', '/seller/get-payment/finish'];
 
 export default function Guard({ children }: GuardProps) {
 
-  const { exp, logout, initialAuthDone } = useContext(AuthContext);
+  const { exp, logout, initialAuthDone, role } = useContext(AuthContext);
 
   const nav = useNavigate();
   const loc = useLocation();
@@ -28,7 +28,7 @@ export default function Guard({ children }: GuardProps) {
       if (redirectUrl) {
         redirectUrl += '?' + qs.get('redirectQs');
       } else {
-        redirectUrl = '/';
+        redirectUrl = role + '/';
       }
       nav(redirectUrl, { replace: true });
     }

@@ -13,7 +13,7 @@ export const useAlert = () => {
       message,
       {
         variant: variant,
-        autoHideDuration: autoHideDuration || 3000,
+        autoHideDuration: autoHideDuration || 1000,
         anchorOrigin: anchorOrigin
       },
     );
