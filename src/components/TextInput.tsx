@@ -4,21 +4,22 @@ import eye from '../assets/icons/eye.svg';
 import eyeOff from '../assets/icons/eye-slash.svg';
 
 type TextInputProps = {
-  label: string
-  required?: boolean
-  multiline?: boolean
-  rows?: number
-  placeholder?: string
-  type?: string
-  value?: any
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  sx?: SxProps
-  autocomplete?: string
-  backgroundColor?: string
-  borderEnabled?: boolean
-}
+  label: string;
+  required?: boolean;
+  multiline?: boolean;
+  rows?: number;
+  placeholder?: string;
+  type?: string;
+  value?: any;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  sx?: SxProps;
+  autocomplete?: string;
+  backgroundColor?: string;
+  borderEnabled?: boolean;
+  endAdornment?: React.ReactNode; // EndAdornment prop'u eklendi
+};
 
-export default function TextInput({ autocomplete, borderEnabled, backgroundColor, label, placeholder, type, value, onChange, required, multiline, rows, sx }: TextInputProps) {
+export default function TextInput({ endAdornment, autocomplete, borderEnabled, backgroundColor, label, placeholder, type, value, onChange, required, multiline, rows, sx }: TextInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const theme = useTheme();
@@ -79,29 +80,32 @@ export default function TextInput({ autocomplete, borderEnabled, backgroundColor
           rows={rows}
           InputProps={{
             autoComplete: autocomplete,
-            endAdornment: type === 'password' ? (
+            endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                  sx={{
-                    mr: '-5px'
-                  }}
-                >
-                  <img
-                    src={showPassword ? eye : eyeOff}
-                    alt={showPassword ? 'Hide password' : 'Show password'}
-                    style={{
-                      stroke: '#9AA6A7',
+                {type === 'password' && (
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                    sx={{
+                      mr: '-5px'
                     }}
-                  />
-                </IconButton>
+                  >
+                    <img
+                      src={showPassword ? eye : eyeOff}
+                      alt={showPassword ? 'Hide password' : 'Show password'}
+                      style={{
+                        stroke: '#9AA6A7',
+                      }}
+                    />
+                  </IconButton>
+                )}
+                {endAdornment} {/* Özel endAdornment burada gösterilecek */}
               </InputAdornment>
-            ) : null,
+            ),
           }}
         />
       </FormControl>
     </Box>
-  )
+  );
 }

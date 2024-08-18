@@ -15,21 +15,21 @@ type SellerFormProps = {
 
 export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFormProps) {
 
-  const [values, setValues] = React.useState<JewelerInput>({
-    firstName: '',
-    lastName: '',
-    companyName: '',
-    companyType: undefined,
-    taxOffice: '',
-    taxNumber: '',
-    email: '',
-    identity: '',
-    phone: '',
-    companyTableName: '',
-    accountHolder: '',
-    iban: '',
-    bankName: ''
-  })
+  // const [values, setValues] = React.useState<JewelerInput>({
+  //   firstName: '',
+  //   lastName: '',
+  //   companyName: '',
+  //   companyType: undefined,
+  //   taxOffice: '',
+  //   taxNumber: '',
+  //   email: '',
+  //   identity: '',
+  //   phone: '',
+  //   companyTableName: '',
+  //   accountHolder: '',
+  //   iban: '',
+  //   bankName: ''
+  // })
 
   useEffect(() => {
     if (initialValues) {
@@ -52,21 +52,21 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
   }, [initialValues])
 
 
-  // const [values, setValues] = React.useState<JewelerInput>({
-  //   firstName: 'Mustafa',
-  //   lastName: 'Cevher',
-  //   companyName: 'Cevher Kuyumculuk Lmt. Şti.',
-  //   companyType: CompanyType.LIMITED,
-  //   taxOffice: 'Alemdağ',
-  //   taxNumber: '12341234',
-  //   email: 'test1@kuyumcu.com',
-  //   identity: '1111111110',
-  //   phone: '05321234567',
-  //   companyTableName: 'Cevher Kuyumculuk',
-  //   accountHolder: 'Mustafa Cevher',
-  //   iban: 'TR180006200119000006672315',
-  //   bankName: 'Ziraaat Bankası'
-  // })
+  const [values, setValues] = React.useState<JewelerInput>({
+    firstName: 'Mustafa',
+    lastName: 'Cevher',
+    companyName: 'Cevher Kuyumculuk Lmt. Şti.',
+    companyType: CompanyType.LIMITED,
+    taxOffice: 'Alemdağ',
+    taxNumber: '12341234',
+    email: 'test1@kuyumcu.com',
+    identity: '1111111110',
+    phone: '05321234567',
+    companyTableName: 'Cevher Kuyumculuk',
+    accountHolder: 'Mustafa Cevher',
+    iban: 'TR180006200119000006672315',
+    bankName: 'Ziraaat Bankası'
+  })
 
   return (
     <Box>

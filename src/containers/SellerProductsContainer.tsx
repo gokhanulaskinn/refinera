@@ -5,6 +5,8 @@ import BasicTabs from '../components/CustomTabs'
 import ProductsList from '../components/ProductsList';
 import CustomTablePagination from '../components/CustomTablePagination';
 import PaymentSummary from '../components/PaymentSummary';
+import ItemList from '../components/ItemList';
+import { BucketType } from '../utils/types';
 
 
 export default function SellerProductsContainer() {
@@ -35,17 +37,19 @@ export default function SellerProductsContainer() {
     setSupplier(newValue);
   };
 
+  const [bucket, setBucket] = React.useState<BucketType[]>([]);
+
   return (
     <Box>
-      <TablePageHeader 
-      title="Ürünler"
-      handleSearch={(searchText) => console.log(searchText)}
+      <TablePageHeader
+        title="Ürünler"
+        handleSearch={(searchText) => console.log(searchText)}
       />
-      <BasicTabs
+      {/* <BasicTabs
         value={variant}
         handleChange={handleChangeVariant}
         tabs={variants}
-      />
+      /> */}
       <BasicTabs
         value={supplier}
         handleChange={handleChangeSupplier}
@@ -65,12 +69,16 @@ export default function SellerProductsContainer() {
                 gap: '1rem',
               }}
             >
-              <ProductsList />
-              <CustomTablePagination />
+              <ItemList
+                bucket={bucket}
+                setBucket={setBucket}
+              />
             </Box>
           </Grid>
-          <Grid  item xs={12} sm={12} md={4}>
-            <PaymentSummary />
+          <Grid item xs={12} sm={12} md={4}>
+            <PaymentSummary
+              bucket={bucket}
+            />
           </Grid>
         </Grid>
       </Box>

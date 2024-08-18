@@ -45,6 +45,7 @@ export default function BuySummary() {
         <CountDownProgress
           timeLeft={20}
           onFinished={() => console.log('finished')}
+          label='İşlemi tamamlamak için kalan süre'
         />
         <CommonButton
           onClick={() => console.log('clicked')}

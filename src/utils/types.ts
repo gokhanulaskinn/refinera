@@ -240,3 +240,8 @@ export type TableRowCellType = {
   variant?: { id: string; label: string, bgColor?: string, textColor?: string }[];
   actions?: { name: string, action: any }[];
 }
+
+export type BucketType = {
+  itemId: number,
+  quantity: number,
+}

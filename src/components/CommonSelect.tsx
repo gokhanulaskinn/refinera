@@ -2,17 +2,18 @@ import { Box, FormControl, SxProps, Typography, Select, MenuItem, useTheme } fro
 import { CompanyType } from '../utils/types';
 
 type CommonSelectProps = {
-  label: string;
-  value?: CompanyType;
+  label?: string;
+  value?: any;
   onChange: (e: React.ChangeEvent<{ value: CompanyType }>) => void;
   items: { value: any, label: string }[];
   sx?: SxProps;
   backgroundColor?: string;
   borderEnabled?: boolean;
   required?: boolean;
+  placeholder?: string;
 };
 
-export default function CommonSelect({ borderEnabled, backgroundColor, label, value, onChange, items, sx, required }: CommonSelectProps) {
+export default function CommonSelect({ placeholder, borderEnabled, backgroundColor, label, value, onChange, items, sx, required }: CommonSelectProps) {
   const theme = useTheme();
 
   const handleChange = (event: any) => {
@@ -89,6 +90,9 @@ export default function CommonSelect({ borderEnabled, backgroundColor, label, va
             }
           }}
         >
+          <MenuItem value="" disabled>
+            {placeholder || 'Seçim yapınız'} {/* Placeholder burada yer alır */}
+          </MenuItem>
           {items.map((item) => (
             <MenuItem key={item.value} value={item.value}>
               {item.label}

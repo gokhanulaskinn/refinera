@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import CircularProgress, {
-  circularProgressClasses
-} from '@mui/material/CircularProgress';
+import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 import { Typography } from '@mui/material';
 
 type CountDownProgressProps = {
   timeLeft: number;
   onFinished: () => void;
+  repeat?: boolean;
+  label?: string;
 };
 
-export default function CountDownProgress({ timeLeft, onFinished }: CountDownProgressProps) {
+export default function CountDownProgress({ timeLeft, onFinished, repeat = false, label }: CountDownProgressProps) {
   const [remainingTime, setRemainingTime] = useState(timeLeft);
 
   useEffect(() => {
     if (remainingTime <= 0) {
       onFinished();
+      if (repeat) {
+        setRemainingTime(timeLeft);
+      }
       return;
     }
 
@@ -24,7 +27,7 @@ export default function CountDownProgress({ timeLeft, onFinished }: CountDownPro
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [remainingTime, onFinished]);
+  }, [remainingTime, onFinished, repeat, timeLeft]);
 
   const progressValue = (remainingTime / timeLeft) * 100;
 
@@ -43,8 +46,7 @@ export default function CountDownProgress({ timeLeft, onFinished }: CountDownPro
         <CircularProgress
           variant="determinate"
           sx={{
-            color: (theme) =>
-              theme.palette.grey[200],
+            color: (theme) => theme.palette.grey[200],
           }}
           size={72}
           thickness={4}
@@ -85,7 +87,7 @@ export default function CountDownProgress({ timeLeft, onFinished }: CountDownPro
           fontWeight: 400,
           color: 'text.secondary',
         }}>
-        İşlemi tamamlamak için kalan süre
+        {label}
       </Typography>
     </Box>
   );
