@@ -10,7 +10,6 @@ import useSWR from 'swr'
 
 export default function LastUsersContainer() {
 
-
   const [recordPerPage, setRecordPerPage] = useState(10);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -38,7 +37,7 @@ export default function LastUsersContainer() {
         { value: transaction.cardholderName || '', type: 'text' },
         { value: transaction.phone || '', type: 'text' },
         { value: transaction.jeweler.companyName || '', type: 'text' },
-        { value: [formatMoney(((transaction.amount / 100).toFixed(2) || '')) + ' TL'], type: 'badge' }
+        { value: [formatMoney(((transaction.totalAmount / 100).toFixed(2) || '')) + ' TL'], type: 'badge' }
       ]
     })
     );

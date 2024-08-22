@@ -1,4 +1,4 @@
-import { Box, Paper, TextField, Typography } from '@mui/material'
+import { Box, Divider, Paper, TextField, Typography } from '@mui/material'
 import React, { useContext, useEffect } from 'react'
 import CommonButton from './CommonButton'
 import { Add, ArrowForward, ArrowForwardIos, ArrowRight, ArrowRightAltOutlined } from '@mui/icons-material'
@@ -24,6 +24,7 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
   const [commission, setCommission] = React.useState<number>();
   const [sellerTotal, setSellerTotal] = React.useState<number>();
   const [serviceFee, setServiceFee] = React.useState<number>();
+  const [productList, setProductList] = React.useState<string[]>([]);
   const { user } = useContext(AuthContext);
 
   const nav = useNavigate();
@@ -32,13 +33,17 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
 
   useEffect(() => {
     let total = 0;
+    let productListData: string[] = [];
     bucket.forEach((item) => {
       const product = items.find((product) => product.id === item.itemId);
       if (product) {
         total += product.sell * item.quantity;
+        //1 x 14 Ayar Altın 10 gr
+        productListData.push(`${item.quantity} x ${product.label} = ${formatMoney((product.sell * item.quantity).toFixed(2))} TL`);
       }
     })
     setPrice(total);
+    setProductList(productListData);
   }, [bucket])
 
   useEffect(() => {
@@ -72,6 +77,32 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
       }}
     >
       <Box>
+        {productList.length > 0 && (
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                my: 1
+              }}
+            >
+              {productList.map((product, index) => (
+                <Typography
+                  key={index}
+                  sx={{
+                    fontSize: '14px',
+                    fontWeight: '400',
+                    color: '#475467'
+                  }}
+                >
+                  {product}
+                </Typography>
+              ))}
+            </Box>
+            <Divider />
+          </Box>
+        )}
         <Typography
           sx={{
             fontSize: '18px',
