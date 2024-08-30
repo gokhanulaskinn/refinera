@@ -22,8 +22,6 @@ export default function SellerProductsContainer() {
 
   const suppliers = [
     'Harem Altın',
-    // 'İAR',
-    // 'Nadir'
   ]
 
   const [variant, setVariant] = React.useState(0);
@@ -45,11 +43,6 @@ export default function SellerProductsContainer() {
         title="Ürünler"
         handleSearch={(searchText) => console.log(searchText)}
       />
-      {/* <BasicTabs
-        value={variant}
-        handleChange={handleChangeVariant}
-        tabs={variants}
-      /> */}
       <BasicTabs
         value={supplier}
         handleChange={handleChangeSupplier}

@@ -9,9 +9,12 @@ interface MoneyInputProps {
   sx?: any;
   backgroundColor?: string;
   borderEnabled?: boolean;
+  height?: number;
+  align?: 'left' | 'center' | 'right';
+  endAdornment?: React.ReactNode;
 }
 
-const MoneyInput: React.FC<MoneyInputProps> = ({ label, value, onChange, sx, backgroundColor, borderEnabled }) => {
+const MoneyInput: React.FC<MoneyInputProps> = ({ endAdornment, align, height, label, value, onChange, sx, backgroundColor, borderEnabled }) => {
 
   const [displayValue, setDisplayValue] = React.useState<string>('');
   const theme = useTheme();
@@ -76,15 +79,15 @@ const MoneyInput: React.FC<MoneyInputProps> = ({ label, value, onChange, sx, bac
           {label}
         </Typography>
         <TextField
-          label={label}
           value={displayValue}
           onChange={handleChange}
           variant="outlined"
           fullWidth
           inputProps={{
             style: {
-              textAlign: 'center', // Yatay olarak ortalama
-              padding: '10px 0', // Dikey olarak ortalama için iç boşluk ekleme
+              height: height || 30,
+              textAlign: align || 'center', // Yatay ortalama
+              padding: '10px 16px', // Dikey olarak ortalama için iç boşluk ekleme
             }
           }}
           sx={{
@@ -98,6 +101,9 @@ const MoneyInput: React.FC<MoneyInputProps> = ({ label, value, onChange, sx, bac
               alignItems: 'center', // Dikey olarak ortalama
               justifyContent: 'center', // İçeriği ortalama
             }
+          }}
+          InputProps={{
+            endAdornment: endAdornment
           }}
         />
       </FormControl>

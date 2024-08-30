@@ -30,6 +30,7 @@ import SellerReport from './views/seller/SellerReport';
 import SellerSuppliers from './views/seller/SellerSuppliers';
 import AdminReport from './views/admin/AdminReport';
 import SellerBranches from './views/seller/SellerBranches';
+import ExternalPayment from './views/ExternalPayment';
 
 const App = () => {
 
@@ -42,6 +43,7 @@ const App = () => {
             <Router>
               <Routes>
                 <Route path="/login" element={<Login />} />
+                <Route path="/pay" element={<ExternalPayment />} />
                 <Route path="/seller/get-payment/finish" element={<CloseIframePage />} />
               </Routes>
               <Guard>

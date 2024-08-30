@@ -19,9 +19,9 @@ type PaymentSummaryProps = {
 
 export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
 
-  const [price, setPrice] = React.useState<number>();
+  const [price, setPrice] = React.useState<number>(0);
   const [commissionType, setCommissionType] = React.useState<string>('');
-  const [commission, setCommission] = React.useState<number>();
+  const [commission, setCommission] = React.useState<number>(0);
   const [sellerTotal, setSellerTotal] = React.useState<number>();
   const [serviceFee, setServiceFee] = React.useState<number>();
   const [productList, setProductList] = React.useState<string[]>([]);
@@ -38,7 +38,6 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
       const product = items.find((product) => product.id === item.itemId);
       if (product) {
         total += product.sell * item.quantity;
-        //1 x 14 Ayar Altın 10 gr
         productListData.push(`${item.quantity} x ${product.label} = ${formatMoney((product.sell * item.quantity).toFixed(2))} TL`);
       }
     })
@@ -55,7 +54,7 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
   }, [sellerTotal])
 
   useEffect(() => {
-    if (price && commission && commissionType) {
+    if (commissionType) {
       if (commissionType === 'percent') {
         setSellerTotal(price + (price * commission / 100));
       } else {
@@ -126,24 +125,37 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
         onChange={(e) => setCommissionType(e.target.value)}
         items={[
           { value: 'percent', label: 'Yüzde' },
-          { value: 'fixed', label: 'Sabit' }
+          { value: 'fixed', label: 'TL' }
         ]}
         backgroundColor='#F2F4F7'
       />
       {commissionType && (
-        <TextInput
-          label='Komisyon'
-          value={commission}
-          onChange={(e) => {
-            if (e.target.value) {
-              setCommission(parseFloat(e.target.value));
-            } else {
-              setCommission(undefined);
-            }
-          }}
-          backgroundColor='#F2F4F7'
-          endAdornment={commissionType === 'percent' ? '%' : 'TL'}
-        />
+        commissionType === 'percent' ? (
+          <TextInput
+            label='Komisyon'
+            value={commission || ''}
+            onChange={(e) => {
+              if (e.target.value) {
+                setCommission(parseFloat(e.target.value));
+              } else {
+                setCommission(0);
+              }
+            }}
+            type='money'
+            backgroundColor='#F2F4F7'
+            endAdornment={commissionType === 'percent' ? '%' : 'TL'}
+          />
+        ) : (
+          <MoneyInput
+            label='Komisyon'
+            value={commission.toString()}
+            onChange={(value) => { setCommission(parseFloat(value)) }}
+            backgroundColor='#F2F4F7'
+            height={36}
+            align='left'
+            endAdornment='TL'
+          />
+        )
       )}
       <Box
         sx={{

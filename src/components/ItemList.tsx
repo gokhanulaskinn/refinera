@@ -165,15 +165,19 @@ export default function ItemList({ bucket, setBucket }: ItemListProps) {
   const handleUpdateBucket = (itemId: number, quantity: number) => {
     const bucketItem = bucket.find(bucketItem => bucketItem.itemId === itemId)
     if (bucketItem) {
-      setBucket(bucket.map(bucketItem => {
-        if (bucketItem.itemId === itemId) {
-          return {
-            ...bucketItem,
-            quantity
+      if (quantity === 0) {
+        setBucket(bucket.filter(bucketItem => bucketItem.itemId !== itemId))
+      } else {
+        setBucket(bucket.map(bucketItem => {
+          if (bucketItem.itemId === itemId) {
+            return {
+              ...bucketItem,
+              quantity
+            }
           }
-        }
-        return bucketItem
-      }))
+          return bucketItem
+        }))
+      }
     } else {
       setBucket([
         ...bucket,
