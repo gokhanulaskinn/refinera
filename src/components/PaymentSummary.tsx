@@ -60,6 +60,12 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
       } else {
         setSellerTotal(price + commission);
       }
+    } else {
+      setSellerTotal(price);
+    }
+    if (price === 0) {
+      setCommission(0);
+      setCommissionType('');
     }
   }, [commission, commissionType, price])
 

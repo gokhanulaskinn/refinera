@@ -107,3 +107,16 @@ export const getBank = async (id: string) => {
 
   return handleResponse(response);
 }
+
+export const getLongUrl = async (code: string) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/url?code=${code}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  return handleResponse(response);
+}

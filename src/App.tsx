@@ -43,7 +43,7 @@ const App = () => {
             <Router>
               <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/pay" element={<ExternalPayment />} />
+                <Route path="/pay/:code" element={<ExternalPayment />} />
                 <Route path="/seller/get-payment/finish" element={<CloseIframePage />} />
               </Routes>
               <Guard>

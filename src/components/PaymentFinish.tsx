@@ -2,6 +2,14 @@ import { ArrowForwardIos } from '@mui/icons-material'
 import { Box, Typography } from '@mui/material'
 import CommonButton from './CommonButton'
 import { formatMoney } from '../utils/global';
+import { useContext, useState } from 'react';
+import { set } from 'lodash';
+import TextInput from './TextInput';
+import { useAlert } from '../hooks/useAlert';
+import { createPaymentLink } from '../services/seller/SellerServices';
+import { AuthContext } from '../contexts/AuthProvider';
+import ShareLinkDialog from './ShareLinkDialog';
+import CreditCardNumberInput from './CreditCardNumberInput';
 
 type PaymentFinishProps = {
   handleFinish(): void;
@@ -14,6 +22,50 @@ type PaymentFinishProps = {
 export default function PaymentFinish({ handleFinish, price, canFinish, comissionFee, totalPrice }: PaymentFinishProps) {
 
   const comissionRate = 0.025;
+
+  const { user } = useContext(AuthContext);
+
+  const [shareLink, setShareLink] = useState(false);
+  const [shareDialog, setShareDialog] = useState(false);
+  const [url, setUrl] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [loading, setLoading] = useState(false);
+  const showSnacbar = useAlert();
+
+  const handleShareLink = async () => {
+    try {
+      setLoading(true);
+      const res = await createPaymentLink({
+        amount: `${price * 100}`,
+        email: user?.email,
+        phone: `90${phoneNumber}`,
+      });
+      console.log(res.shortUrl);
+      const url = res.shortUrl;
+      // const url = "https://refinera.com.tr/pay/DtJFjad1Ru";
+      setUrl(url);
+      setShareDialog(true);
+    } catch (e) {
+      showSnacbar('Bişeyler hata oluştu', 'error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(url);
+    showSnacbar('Link kopyalandı', 'success');
+  }
+
+  const handleShareWithWhatsapp = () => {
+
+    //Aşağıdaki linki kullanarak ödemenizi tamamlayabilirsiniz. urlencoded olacak
+    const text = `Aşağıdaki linki kullanarak ödemenizi tamamlayabilirsiniz. ${url}`;
+
+    window.open(`https://wa.me/90${phoneNumber}?text=${encodeURI(text)}`, '_blank');
+  }
+
+  console.log(phoneNumber)
 
   return (
     <Box>
@@ -93,13 +145,41 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
         <CommonButton
           label="Ödeme Linki Paylaş"
           color='white'
-          onClick={() => { }}
+          onClick={() => { setShareLink(!shareLink) }}
           icon={<ArrowForwardIos />}
           sx={{
             background: '#9AA6A7'
           }}
         />
+        {shareLink && (
+          <Box>
+            <CreditCardNumberInput
+              label="Telefon Numarası"
+              inputType='phone'
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.replace(/[^0-9]/g, ''))}
+              backgroundColor='#F2F4F7'
+            />
+            <CommonButton
+              label="Paylaş"
+              color='white'
+              onClick={() => { handleShareLink() }}
+              icon={<ArrowForwardIos />}
+              sx={{
+                background: '#9AA6A7',
+                mt: 2
+              }}
+              loading={loading}
+            />
+          </Box>
+        )}
       </Box>
+      <ShareLinkDialog
+        open={shareDialog}
+        onClose={() => setShareDialog(false)}
+        handleCopy={handleCopy}
+        handleShareWithWhatsapp={handleShareWithWhatsapp}
+      />
     </Box>
   )
 }

@@ -1,4 +1,4 @@
-import { Button, SxProps } from '@mui/material'
+import { Button, CircularProgress, SxProps } from '@mui/material'
 import React from 'react'
 
 type CommonButtonProps = {
@@ -12,14 +12,15 @@ type CommonButtonProps = {
   sx?: SxProps
   icon?: React.ReactNode
   size?: 'small' | 'medium' | 'large'
+  loading?: boolean
 }
 
-export default function CommonButton({ size, type, label, onClick, color = 'primary', variant = 'contained', disabled = false, sx, icon }: CommonButtonProps) {
+export default function CommonButton({ loading, size, type, label, onClick, color = 'primary', variant = 'contained', disabled = false, sx, icon }: CommonButtonProps) {
   return (
     <Button
       onClick={onClick}
       variant={variant}
-      disabled={disabled}
+      disabled={disabled || loading}
       type={type}
       size={size}
       sx={{
@@ -34,8 +35,20 @@ export default function CommonButton({ size, type, label, onClick, color = 'prim
         ...sx,
       }}
     >
-      {label}
-      {icon}
+      {loading ? (
+        <CircularProgress
+          size={24}
+          color="inherit"
+          sx={{
+            mx:'auto'
+          }}
+        />
+      ) : (
+        <>
+          {label}
+          {icon}
+        </>
+      )}
     </Button>
   )
 }

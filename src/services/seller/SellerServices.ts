@@ -3,8 +3,8 @@ import { PaymentInput } from "../../utils/types";
 import { handleResponse } from "../ResponseHandler";
 
 
-export const paymentCreate = async (values: any) => {
-  const token = localStorage.getItem('token');
+export const paymentCreate = async (values: any, tokenData?: string) => {
+  const token = tokenData || localStorage.getItem('token');
   const response = await fetch(`${baseUrl}/payment/create`, {
     method: 'POST',
     headers: {
@@ -17,8 +17,8 @@ export const paymentCreate = async (values: any) => {
   return handleResponse(response);
 }
 
-export const checkPaymentStatus = async (values: any) => {
-  const token = localStorage.getItem('token');
+export const checkPaymentStatus = async (values: any, tokenData?: string) => {
+  const token = tokenData || localStorage.getItem('token');
   const response = await fetch(`${baseUrl}/payment/check`, {
     method: 'POST',
     headers: {
@@ -40,6 +40,20 @@ export const deleteSeller = async (id: string) => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     }
+  });
+
+  return handleResponse(response);
+}
+
+export const createPaymentLink = async (values: any) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/payment/link`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(values)
   });
 
   return handleResponse(response);

@@ -17,12 +17,13 @@ export default function Guard({ children }: GuardProps) {
 
   useEffect(() => {
     if (!initialAuthDone) return;
-    if (!exp && !nonAuthRoutes.includes(loc.pathname)) {
+    if (!exp && (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/pay'))) {
       // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+      console.log('a')
       nav('/login', { replace: true });
     }
 
-    if (exp && nonAuthRoutes.includes(loc.pathname)) {
+    if (exp && (nonAuthRoutes.includes(loc.pathname) && loc.pathname.includes('/pay'))) {
       const qs = new URLSearchParams(loc.search);
       let redirectUrl = qs.get('redirect');
       if (redirectUrl) {
@@ -35,15 +36,19 @@ export default function Guard({ children }: GuardProps) {
 
     if (exp) {
       if (exp < new Date()) {
-        if (!nonAuthRoutes.includes(loc.pathname)) {
+        if (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/pay')) {
           // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+      console.log('b')
+
           nav('/login', { replace: true });
           logout!();
         }
       }
     } else {
-      if (!nonAuthRoutes.includes(loc.pathname)) {
+      if (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/pay')) {
         // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
+      console.log('c')
+
         nav('/login', { replace: true });
         logout!();
       }

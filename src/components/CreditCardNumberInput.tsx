@@ -9,7 +9,7 @@ type CreditCardNumberInputProps = {
   sx?: SxProps;
   backgroundColor?: string;
   borderEnabled?: boolean;
-  inputType: 'number' | 'exp' | 'cvc' | 'iban';
+  inputType: 'number' | 'exp' | 'cvc' | 'iban' | 'phone';
   required?: boolean;
 };
 
@@ -43,6 +43,8 @@ export default function CreditCardNumberInput({ borderEnabled, backgroundColor, 
     switch (inputType) {
       case 'exp':
         return '00/0000';
+      case 'phone':
+        return '(000) 000 00 00';
       case 'cvc':
         return '0000';
       case 'iban':
@@ -53,7 +55,7 @@ export default function CreditCardNumberInput({ borderEnabled, backgroundColor, 
     }
   };
 
-  const placeholder = inputType === 'exp' ? 'MM/YYYY' : inputType === 'cvc' ? 'CVC' : inputType === 'iban' ? 'TR00 0000 0000 0000 0000 0000 00' : '1234 5678 9012 3456';
+  const placeholder = inputType === 'phone' ? '(555) 444 33 22' :  inputType === 'exp' ? 'MM/YYYY' : inputType === 'cvc' ? 'CVC' : inputType === 'iban' ? 'TR00 0000 0000 0000 0000 0000 00' : '1234 5678 9012 3456';
 
   return (
     <Box>
