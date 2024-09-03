@@ -3,6 +3,7 @@ import React from 'react'
 import ProductItem from './ProductItem'
 import Clock from './Clock'
 import { BucketType } from '../utils/types'
+import useSocket from '../hooks/useCurrency'
 
 export const items = [
   {
@@ -161,6 +162,9 @@ type ItemListProps = {
 }
 
 export default function ItemList({ bucket, setBucket }: ItemListProps) {
+
+  // const currencyData = useSocket();
+  // console.log(currencyData)
 
   const handleUpdateBucket = (itemId: number, quantity: number) => {
     const bucketItem = bucket.find(bucketItem => bucketItem.itemId === itemId)

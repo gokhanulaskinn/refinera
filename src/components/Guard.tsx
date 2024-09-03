@@ -23,7 +23,7 @@ export default function Guard({ children }: GuardProps) {
       nav('/login', { replace: true });
     }
 
-    if (exp && (nonAuthRoutes.includes(loc.pathname) && loc.pathname.includes('/pay'))) {
+    if (exp && (nonAuthRoutes.includes(loc.pathname) || loc.pathname.includes('/pay'))) {
       const qs = new URLSearchParams(loc.search);
       let redirectUrl = qs.get('redirect');
       if (redirectUrl) {
