@@ -163,8 +163,8 @@ type ItemListProps = {
 
 export default function ItemList({ bucket, setBucket }: ItemListProps) {
 
-  // const currencyData = useSocket();
-  // console.log(currencyData)
+  const currencyData = useSocket();
+  console.log(currencyData)
 
   const handleUpdateBucket = (itemId: number, quantity: number) => {
     const bucketItem = bucket.find(bucketItem => bucketItem.itemId === itemId)

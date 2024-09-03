@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL = 'ws://echo.websocket.org'; // WebSocket URL'inizi buraya girin
-
+const SOCKET_URL = 'http://refinera.com.tr'; // WebSocket URL'inizi buraya girin
+const SOCKET_PATH = '/ws'; 
 // export interface CurrencyData {
 //   symbol: string;
 //   price: number;
@@ -10,16 +10,22 @@ const SOCKET_URL = 'ws://echo.websocket.org'; // WebSocket URL'inizi buraya giri
 // }
 
 const useSocket = () => {
-  const [currencyData, setCurrencyData] = useState<any[]>([]);
+  const [incomingData, setCurrencyData] = useState<any[]>([]);
 
   useEffect(() => {
-    const socket: Socket = io(SOCKET_URL);
+    const socket: Socket = io(SOCKET_URL, {
+      path: SOCKET_PATH,  
+    });
 
     socket.on('connect', () => {
       console.log('Connected to WebSocket');
     });
 
-    socket.on('currency-update', (data: any[]) => {
+    // socket.on('currency-update', (data: any[]) => {
+    //   setCurrencyData(data);
+    // });
+    socket.on('mergedSymbols', (data) => {
+      console.log('Received merged symbols data:', data);
       setCurrencyData(data);
     });
 
@@ -32,7 +38,7 @@ const useSocket = () => {
     };
   }, []);
 
-  return currencyData;
+  return incomingData;
 };
 
 export default useSocket;
