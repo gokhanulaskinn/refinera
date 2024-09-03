@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 const SOCKET_URL = 'http://refinera.com.tr'; // WebSocket URL'inizi buraya girin
-const SOCKET_PATH = '/ws'; 
+const SOCKET_PATH = '/ws/socket.io'; 
 // export interface CurrencyData {
 //   symbol: string;
 //   price: number;
