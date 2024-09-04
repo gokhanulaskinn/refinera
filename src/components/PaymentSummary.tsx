@@ -5,13 +5,13 @@ import { Add, ArrowForward, ArrowForwardIos, ArrowRight, ArrowRightAltOutlined }
 import TextInput from './TextInput';
 import { useNavigate } from 'react-router-dom';
 import MoneyInput from './MoneyInput';
-import { BucketType } from '../utils/types';
-import { items } from './ItemList';
-import { formatMoney } from '../utils/global';
+import { BucketType, CurrencyItem } from '../utils/types';
+import { baseUrl, fetcher, formatMoney } from '../utils/global';
 import CommonSelect from './CommonSelect';
 import PriceControl from './PriceControl';
 import { AuthContext } from '../contexts/AuthProvider';
 import CountDownProgress from './CountDownProgress';
+import useSWR, { mutate } from 'swr';
 
 type PaymentSummaryProps = {
   bucket: BucketType[];
@@ -31,19 +31,25 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
 
   const [total, setTotal] = React.useState<number>(0);
 
+
+  const { data: items, isLoading, error } = useSWR<CurrencyItem[]>(
+    `${baseUrl}/data?w=123`,
+    (url: string) => fetcher(url)
+  );
+
   useEffect(() => {
     let total = 0;
     let productListData: string[] = [];
     bucket.forEach((item) => {
-      const product = items.find((product) => product.id === item.itemId);
+      const product = items?.find((product) => product.parity === item.itemId);
       if (product) {
-        total += product.sell * item.quantity;
-        productListData.push(`${item.quantity} x ${product.label} = ${formatMoney((product.sell * item.quantity).toFixed(2))} TL`);
+        total += product.sellerPrice * item.quantity;
+        productListData.push(`${item.quantity} x ${product.parity} = ${formatMoney((product.sellerPrice * item.quantity).toFixed(2))} TL`);
       }
     })
     setPrice(total);
     setProductList(productListData);
-  }, [bucket])
+  }, [bucket, items])
 
   useEffect(() => {
     if (user?.jeweler?.comissionRate) {
@@ -254,7 +260,10 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
       <Box>
         <CountDownProgress
           timeLeft={60}
-          onFinished={() => console.log('finished')}
+          onFinished={() => {
+            mutate(`${baseUrl}/data?w=123`);
+            mutate(`${baseUrl}/data`);
+          }}
           label='İşlemi tamamlamak için kalan süre'
           repeat
         />

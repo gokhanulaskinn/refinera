@@ -142,6 +142,13 @@ export interface PaymentInput {
   cardCvv: string,
   cardAccountHolderName: string,
 }
+export interface CurrencyItem {
+  parity: string;
+  currency: string;
+  buyPrice: number;
+  sellerPrice: number;
+  timestamp: string
+}
 
 
 // {
@@ -242,6 +249,6 @@ export type TableRowCellType = {
 }
 
 export type BucketType = {
-  itemId: number,
+  itemId: string,
   quantity: number,
 }

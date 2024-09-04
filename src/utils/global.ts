@@ -33,6 +33,7 @@ export const formatDate = (date: string): string => {
 
 export const formatMoney = (value: string) => {
   // Ondalık kısmı ayır
+  if(!value) return '';
   const parts = value.split('.');
   const integerPart = parts[0].replace(/\D/g, ''); // Tam sayı kısmından tüm rakam olmayan karakterleri kaldır
   const decimalPart = parts[1] ? parts[1].replace(/\D/g, '') : ''; // Ondalık kısmı temizle

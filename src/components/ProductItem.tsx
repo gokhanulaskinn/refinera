@@ -1,21 +1,36 @@
 import { Box, ListItemButton, Typography } from '@mui/material';
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import Counter from './Counter';
 import { formatMoney } from '../utils/global';
-import { ArrowUpward } from '@mui/icons-material';
+import { CurrencyItem } from '../utils/types';
 
 type ProductItemProps = {
-  item: {
-    label: string;
-    buy: number;
-    sell: number;
-    diff: number;
-  },
+  item: CurrencyItem;
   count: number;
   setCount: (count: number) => void;
-}
+};
 
 export default function ProductItem({ item, count, setCount }: ProductItemProps) {
+  const [bgColor, setBgColor] = useState<'transparent' | 'rgba(28, 186, 118, 0.2)' | 'rgba(212, 61, 40, 0.2)'>('transparent');
+  const [oldItem, setOldItem] = useState<CurrencyItem | null>(null);
+
+  useEffect(() => {
+    if (oldItem !== null && oldItem.sellerPrice !== item.sellerPrice) {
+      if (item.sellerPrice > oldItem.sellerPrice) {
+        setBgColor('rgba(28, 186, 118, 0.2)');
+      } else if (item.sellerPrice < oldItem.sellerPrice) {
+        setBgColor('rgba(212, 61, 40, 0.2)');
+      }
+      setOldItem(item);
+      const timer = setTimeout(() => {
+        setBgColor('transparent');
+      }, 500);
+
+      return () => clearTimeout(timer);
+    } else {
+      setOldItem(item);
+    }
+  }, [item.sellerPrice]);
 
   return (
     <Box
@@ -23,11 +38,12 @@ export default function ProductItem({ item, count, setCount }: ProductItemProps)
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        px: 2
+        px: 2,
+        backgroundColor: bgColor, // Arka plan rengini dinamik olarak ayarla
+        transition: 'background-color 0.2s ease-in-out', // Daha hızlı ve yumuşak geçiş
       }}
     >
       <ListItemButton
-        disableRipple
         onClick={() => setCount(count + 1)}
       >
         <Box
@@ -37,20 +53,17 @@ export default function ProductItem({ item, count, setCount }: ProductItemProps)
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            gap: '8px'
+            gap: '8px',
           }}
         >
-          <Counter
-            count={count}
-            setCount={setCount}
-          />
+          <Counter count={count} setCount={setCount} />
           <Typography
             sx={{
               fontSize: '16px',
               fontWeight: '700',
             }}
           >
-            {item.label}
+            {item.parity}
           </Typography>
         </Box>
         <Typography
@@ -62,21 +75,14 @@ export default function ProductItem({ item, count, setCount }: ProductItemProps)
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
           }}
         >
-          {formatMoney(item.buy.toFixed(2))}
-          {item.diff >= 0 && (
-            <ArrowUpward sx={{ color: '#1CBA76' }} />
-          )}
-          {item.diff < 0 && (
-            <ArrowUpward sx={{ color: '#D43D28' }} />
-          )}
+          {formatMoney(item.buyPrice?.toFixed(2))}
         </Typography>
         <Box
           sx={{
             width: '25%',
-
           }}
         >
           <Typography
@@ -87,30 +93,13 @@ export default function ProductItem({ item, count, setCount }: ProductItemProps)
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'flex-end'
+              justifyContent: 'flex-end',
             }}
           >
-            {formatMoney(item.sell.toFixed(2))}
-            {item.diff >= 0 && (
-              <ArrowUpward sx={{ color: '#1CBA76' }} />
-            )}
-            {item.diff < 0 && (
-              <ArrowUpward sx={{ color: '#D43D28' }} />
-            )}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '14px',
-              fontWeight: '500',
-              textAlign: 'end',
-              color: item.diff >= 0 ? '#1CBA76' : '#D43D28'
-            }}
-          >
-            %{item.diff.toFixed(2)}
+            {formatMoney(item.sellerPrice?.toFixed(2))}
           </Typography>
         </Box>
-
       </ListItemButton>
     </Box>
-  )
+  );
 }
