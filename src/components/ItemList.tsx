@@ -6,6 +6,7 @@ import { ApiList, BucketType, CurrencyItem } from '../utils/types'
 import useSocket from '../hooks/useCurrency'
 import useSWR from 'swr'
 import { baseUrl, fetcher } from '../utils/global'
+import { time, timeStamp } from 'console'
 
 // export const items = [
 //   {
@@ -161,25 +162,10 @@ import { baseUrl, fetcher } from '../utils/global'
 type ItemListProps = {
   bucket: BucketType[],
   setBucket: React.Dispatch<React.SetStateAction<BucketType[]>>
+  items: CurrencyItem[]
 }
 
-export default function ItemList({ bucket, setBucket }: ItemListProps) {
-
-  const { data: datas, isLoading, error } = useSWR<CurrencyItem[]>(
-    `${baseUrl}/data`,
-    (url: string) => fetcher(url),
-    { refreshInterval: 2000 } // 10 saniye
-  );
-
-  const [items, setItems] = React.useState<CurrencyItem[]>([])
-
-  useEffect(() => {
-    if (datas) {
-      setItems(datas)
-    }
-  },[datas])
-
-  console.log('items', items)
+export default function ItemList({ bucket, setBucket,items }: ItemListProps) {
 
   const handleUpdateBucket = (itemId: string, quantity: number) => {
     const bucketItem = bucket.find(bucketItem => bucketItem.itemId === itemId)

@@ -63,7 +63,7 @@ export default function ProductItem({ item, count, setCount }: ProductItemProps)
               fontWeight: '700',
             }}
           >
-            {item.parity}
+            {item.currency}
           </Typography>
         </Box>
         <Typography

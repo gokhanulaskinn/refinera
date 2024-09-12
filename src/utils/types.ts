@@ -147,7 +147,7 @@ export interface CurrencyItem {
   currency: string;
   buyPrice: number;
   sellerPrice: number;
-  timestamp: string
+  timestamp:  string;
 }
 
 

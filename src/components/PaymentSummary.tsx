@@ -15,9 +15,11 @@ import useSWR, { mutate } from 'swr';
 
 type PaymentSummaryProps = {
   bucket: BucketType[];
+  items: CurrencyItem[];
+  handleUpdateSummaryItems: () => void;
 }
 
-export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
+export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems }: PaymentSummaryProps) {
 
   const [price, setPrice] = React.useState<number>(0);
   const [commissionType, setCommissionType] = React.useState<string>('');
@@ -27,15 +29,11 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
   const [productList, setProductList] = React.useState<string[]>([]);
   const { user } = useContext(AuthContext);
 
+  console.log(items)
+
   const nav = useNavigate();
 
   const [total, setTotal] = React.useState<number>(0);
-
-
-  const { data: items, isLoading, error } = useSWR<CurrencyItem[]>(
-    `${baseUrl}/data?w=123`,
-    (url: string) => fetcher(url)
-  );
 
   useEffect(() => {
     let total = 0;
@@ -263,6 +261,7 @@ export default function PaymentSummary({ bucket }: PaymentSummaryProps) {
           onFinished={() => {
             mutate(`${baseUrl}/data?w=123`);
             mutate(`${baseUrl}/data`);
+            handleUpdateSummaryItems();
           }}
           label='İşlemi tamamlamak için kalan süre'
           repeat

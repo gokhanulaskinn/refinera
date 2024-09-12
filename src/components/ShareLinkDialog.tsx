@@ -27,7 +27,8 @@ export default function ShareLinkDialog({ open, onClose, handleCopy, handleShare
       </DialogTitle>
       <DialogContent>
         <Typography>
-          Ödeme linkinizi aşağıdaki butonlardan kopyalayabilir veya whatsapp üzerinden paylaşabilirsiniz.
+          Ödeme linki sms olarak gönderilmiştir. 
+          Ayrıca ödeme linkinizi aşağıdaki butonlardan kopyalayabilir veya whatsapp üzerinden paylaşabilirsiniz.
         </Typography>
         <Box
           sx={{

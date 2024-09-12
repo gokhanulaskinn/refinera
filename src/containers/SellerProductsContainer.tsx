@@ -1,12 +1,14 @@
 import { Box, Grid } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import TablePageHeader from '../components/TablePageHeader'
 import BasicTabs from '../components/CustomTabs'
 import ProductsList from '../components/ProductsList';
 import CustomTablePagination from '../components/CustomTablePagination';
 import PaymentSummary from '../components/PaymentSummary';
 import ItemList from '../components/ItemList';
-import { BucketType } from '../utils/types';
+import { BucketType, CurrencyItem } from '../utils/types';
+import useSWR from 'swr';
+import { allCurrency, baseUrl, fetcher } from '../utils/global';
 
 
 export default function SellerProductsContainer() {
@@ -26,6 +28,7 @@ export default function SellerProductsContainer() {
 
   const [variant, setVariant] = React.useState(0);
   const [supplier, setSupplier] = React.useState(0);
+  const [summaryItems, setSummaryItems] = React.useState<CurrencyItem[]>([]);
 
   const handleChangeVariant = (event: React.SyntheticEvent, newValue: number) => {
     setVariant(newValue);
@@ -34,6 +37,57 @@ export default function SellerProductsContainer() {
   const handleChangeSupplier = (event: React.SyntheticEvent, newValue: number) => {
     setSupplier(newValue);
   };
+
+  const { data: datas, isLoading, error } = useSWR<any>(
+    `${baseUrl}/data`,
+    (url: string) => fetcher(url),
+    { refreshInterval: 2000 } // 10 saniye
+  );
+
+  const [items, setItems] = React.useState<CurrencyItem[]>([])
+
+  useEffect(() => {
+    if (datas) {
+      let defaultItems = allCurrency;
+      const loc = localStorage.getItem('items');
+      if (loc && loc.length > 40) {
+        defaultItems = JSON.parse(localStorage.getItem('items') || '');
+      }
+      const values = Object.values(datas.data);
+      const valuesData = values.map((item: any) => {
+        return {
+          currency: item.code,
+          parity: item.code,
+          buyPrice: parseFloat(item.alis),
+          sellerPrice: parseFloat(item.satis),
+          diff: 0,
+          timestamp: datas.meta.time
+        }
+      })
+      const newValues = defaultItems.map((item: CurrencyItem) => {
+        const newValue = valuesData.find((value) => value.parity === item.parity);
+        if (newValue) {
+          return {
+            ...item,
+            buyPrice: newValue.buyPrice,
+            sellerPrice: newValue.sellerPrice,
+            diff: 0,
+            timestamp: newValue.timestamp
+          }
+        }
+        return item;
+      })
+      setItems(newValues);
+      if (summaryItems.length === 0) {
+        setSummaryItems(newValues);
+      }
+      localStorage.setItem('items', JSON.stringify(newValues));
+    }
+  }, [datas])
+
+  const handleUpdateSummaryItems = () => {
+    setSummaryItems(items);
+  }
 
   const [bucket, setBucket] = React.useState<BucketType[]>([]);
 
@@ -65,12 +119,15 @@ export default function SellerProductsContainer() {
               <ItemList
                 bucket={bucket}
                 setBucket={setBucket}
+                items={items}
               />
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
             <PaymentSummary
               bucket={bucket}
+              items={summaryItems}
+              handleUpdateSummaryItems={handleUpdateSummaryItems}
             />
           </Grid>
         </Grid>
