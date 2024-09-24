@@ -1,5 +1,5 @@
 import { Box, Button, Paper, SxProps, TextField, Typography, useTheme } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import CommonButton from './CommonButton';
 import { Add } from '@mui/icons-material';
 import { ReactComponent as EqualIcon } from '../assets/icons/equals-cirlce.svg';
@@ -15,6 +15,10 @@ export default function ComissionCalculation({ baseComission, canSetRate, onSubm
 
   const [rate, setRate] = React.useState(comissionRate || 0);
   const [base, setBase] = React.useState(baseComission);
+
+  useEffect(() => {
+    setBase(baseComission || 0)
+  }, [baseComission])
 
   return (
     <Paper

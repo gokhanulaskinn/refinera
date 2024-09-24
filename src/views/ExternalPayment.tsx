@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import GetPaymentContainer from '../containers/GetPaymentContainer'
 import CustomPaper from '../components/CustomPaper'
 import CardInfo from '../components/CardInfo'
-import { PaymentInput, PaymentRes } from '../utils/types'
+import { OzanPaymentRes, PaymentInput } from '../utils/types'
 import { Box, Typography } from '@mui/material'
 import CommonButton from '../components/CommonButton'
 import smalLogo from '../assets/images/small-logo.svg';
@@ -18,7 +18,7 @@ export default function ExternalPayment() {
   const { code } = useParams<{ code: string }>();
   const [price, setPrice] = useState(0);
   const showSnacbar = useAlert();
-  const [paymentRes, setPaymentRes] = useState<PaymentRes>();
+  const [ozanPaymentRes, setOzanPaymentRes] = useState<OzanPaymentRes>();
   const [iframe, setIframe] = useState<string>('');
   const [iframeOpen, setIframeOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -77,8 +77,8 @@ export default function ExternalPayment() {
     const interval = setInterval(async () => {
       try {
         const res = await checkPaymentStatus({
-          referenceNo: paymentRes?.referenceNo,
-          transactionId: paymentRes?.transactionId,
+          referenceNo: ozanPaymentRes?.referenceNo,
+          transactionId: ozanPaymentRes?.transactionId,
         }, token);
         if (res.status !== 'WAITING') {
           clearInterval(interval);
@@ -112,7 +112,7 @@ export default function ExternalPayment() {
       }, token);
       if (res.form3d) {
         setIframe(res.form3d);
-        setPaymentRes(res);
+        setOzanPaymentRes(res);
         setIframeOpen(true);
       }
     } catch (error) {

@@ -38,7 +38,7 @@ export default function LastUsersContainer() {
         { value: transaction.cardholderName || '', type: 'text' },
         { value: transaction.phone || '', type: 'text' },
         { value: transaction.jeweler.companyName || '', type: 'text' },
-        { value: 'Ozan', type: 'text' },
+        { value: transaction.pos || 'Ozan', type: 'text' },
         { value: [formatMoney(((transaction.totalAmount / 100).toFixed(2) || '')) + ' TL'], type: 'badge' }
       ]
     })

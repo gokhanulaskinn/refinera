@@ -3,16 +3,24 @@ import React from 'react'
 import CommonButton from './CommonButton'
 import ComissionCalculation from './ComissionCalculation'
 import { Close } from '@mui/icons-material'
+import BasicTabs from './CustomTabs'
+import { PosType, posProviders } from '../utils/types'
 
 type PosRateDialogProps = {
   open: boolean
   onClose: () => void
-  onSubmit: (rate: number, base: number) => void
-  baseCommissionRate: number
-  comissionRate: number
+  onSubmit: (pos: PosType, base: number) => void
+  constants: any
+  pos: PosType
 }
 
-export default function PosRateDialog({ open, onClose, onSubmit, baseCommissionRate, comissionRate }: PosRateDialogProps) {
+export default function PosRateDialog({ open, onClose, onSubmit, constants, pos }: PosRateDialogProps) {
+
+  const tabs = posProviders;
+  const [value, setValue] = React.useState(tabs.indexOf(pos.name));
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
   return (
     <Dialog
@@ -42,11 +50,19 @@ export default function PosRateDialog({ open, onClose, onSubmit, baseCommissionR
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ width: 'fit-content' }}> {/* İçeriğin genişliğine göre ayarlıyoruz */}
+      <BasicTabs
+          value={value}
+          handleChange={handleChange}
+          tabs={tabs}
+        />
         <ComissionCalculation
-          baseComission={baseCommissionRate}
-          comissionRate={comissionRate}
+          baseComission={parseFloat(constants?.[tabs[value]] || '0')}
+          comissionRate={pos.rate}
           canSetRate={true}
-          onSubmit={(rate, base) => onSubmit(rate, base)}
+          onSubmit={(rate, base) => onSubmit({
+            name: tabs[value],
+            rate
+          }, base)}
         />
       </DialogContent>
       {/* <DialogActions>

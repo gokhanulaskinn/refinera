@@ -3,9 +3,10 @@ import React, { useEffect } from 'react'
 import TextInput from './TextInput'
 import CommonButton from './CommonButton';
 import CommonSelect from './CommonSelect';
-import { CompanyType, Jeweler, JewelerInput } from '../utils/types';
+import { CompanyType, Jeweler, JewelerInput, posProviders } from '../utils/types';
 import { companyTypes } from '../utils/global';
 import CreditCardNumberInput from './CreditCardNumberInput';
+import NumberInput from './NumberInput';
 
 type SellerFormProps = {
   onSubmit: (values: JewelerInput) => void;
@@ -15,21 +16,25 @@ type SellerFormProps = {
 
 export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFormProps) {
 
-  // const [values, setValues] = React.useState<JewelerInput>({
-  //   firstName: '',
-  //   lastName: '',
-  //   companyName: '',
-  //   companyType: undefined,
-  //   taxOffice: '',
-  //   taxNumber: '',
-  //   email: '',
-  //   identity: '',
-  //   phone: '',
-  //   companyTableName: '',
-  //   accountHolder: '',
-  //   iban: '',
-  //   bankName: ''
-  // })
+  const [values, setValues] = React.useState<JewelerInput>({
+    firstName: '',
+    lastName: '',
+    companyName: '',
+    companyType: undefined,
+    taxOffice: '',
+    taxNumber: '',
+    email: '',
+    identity: '',
+    phone: '',
+    companyTableName: '',
+    accountHolder: '',
+    iban: '',
+    bankName: '',
+    pos: {
+      name: '',
+      rate: 0
+    }
+  })
 
   useEffect(() => {
     if (initialValues) {
@@ -47,34 +52,31 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
         accountHolder: '',
         iban: '',
         bankName: '',
-        pos: {
-          name: '',
-          rate: 0
-        }
+        pos: initialValues.pos
       })
     }
   }, [initialValues])
 
 
-  const [values, setValues] = React.useState<JewelerInput>({
-    firstName: 'Mustafa',
-    lastName: 'Cevher',
-    companyName: 'Cevher Kuyumculuk Lmt. Şti.',
-    companyType: CompanyType.LIMITED,
-    taxOffice: 'Alemdağ',
-    taxNumber: '12341234',
-    email: 'test1@kuyumcu.com',
-    identity: '1111111110',
-    phone: '05321234567',
-    companyTableName: 'Cevher Kuyumculuk',
-    accountHolder: 'Mustafa Cevher',
-    iban: 'TR180006200119000006672315',
-    bankName: 'Ziraaat Bankası',
-    pos: {
-      name: 'Ozan',
-      rate: 0
-    }
-  })
+  // const [values, setValues] = React.useState<JewelerInput>({
+  //   firstName: 'Mustafa',
+  //   lastName: 'Cevher',
+  //   companyName: 'Cevher Kuyumculuk Lmt. Şti.',
+  //   companyType: CompanyType.LIMITED,
+  //   taxOffice: 'Alemdağ',
+  //   taxNumber: '12341234',
+  //   email: 'test1@kuyumcu.com',
+  //   identity: '1111111110',
+  //   phone: '05321234567',
+  //   companyTableName: 'Cevher Kuyumculuk',
+  //   accountHolder: 'Mustafa Cevher',
+  //   iban: 'TR180006200119000006672315',
+  //   bankName: 'Ziraaat Bankası',
+  //   pos: {
+  //     name: 'Ozan',
+  //     rate: 0
+  //   }
+  // })
 
   return (
     <Box>
@@ -179,6 +181,25 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
               required
               value={values.taxNumber}
               onChange={(e) => setValues({ ...values, taxNumber: e.target.value })}
+              backgroundColor='#F2F4F7'
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <CommonSelect
+              label='Pos Türü'
+              required
+              backgroundColor='#F2F4F7'
+              items={posProviders.map((provider) => ({ label: provider, value: provider }))}
+              value={values.pos.name}
+              onChange={(e) => setValues({ ...values, pos: { ...values.pos, name: e.target.value } })}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <NumberInput
+              label="Pos Oranı"
+              required
+              value={values.pos.rate.toString()}
+              onChange={(value) => setValues({ ...values, pos: { ...values.pos, rate: value || 0 } })}
               backgroundColor='#F2F4F7'
             />
           </Grid>

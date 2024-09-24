@@ -5,7 +5,7 @@ import CustomPaper from '../components/CustomPaper';
 import CardInfo from '../components/CardInfo';
 import PaymentFinish from '../components/PaymentFinish';
 import SubmitFormDialog from '../components/SubmitFormDialog';
-import { ConstantsType, PaymentInput, PaymentRes } from '../utils/types';
+import { ConstantsType, OzanPaymentRes, PaymentInput } from '../utils/types';
 import { paymentCreate, checkPaymentStatus } from '../services/seller/SellerServices'; // checkPaymentStatus eklenmiş
 import { useAlert } from '../hooks/useAlert';
 import IframeModal from '../components/IframeModal';
@@ -22,33 +22,34 @@ export default function GetPaymentContainer() {
   const [comissionFee, setComissionFee] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [canFinish, setCanFinish] = useState(false);
-  const [paymentRes, setPaymentRes] = useState<PaymentRes>();
+  const [ozanPaymentRes, setOzanPaymentRes] = useState<OzanPaymentRes>();
   const [iframe, setIframe] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
   const { user } = useContext(AuthContext);
+  const posProvider = user?.jeweler?.pos?.name;
   const showSnacbar = useAlert();
 
-  const [cardInfo, setCardInfo] = useState<PaymentInput>({
-    customerName: '',
-    customerPhone: '',
-    customerIdentity: '',
-    cardNumber: '',
-    cardExpiry: '',
-    cardCvv: '',
-    cardAccountHolderName: ''
-  });
-
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
-  //   customerName: 'Mehmet Fatih BUÇAK',
-  //   customerPhone: '5345649909',
-  //   customerIdentity: '23635962680',
-  //   cardNumber: '5269110246368999',
-  //   cardExpiry: '08/2028',
-  //   cardCvv: '987',
-  //   cardAccountHolderName: 'Mehmet BUÇAK'
+  //   customerName: '',
+  //   customerPhone: '',
+  //   customerIdentity: '',
+  //   cardNumber: '',
+  //   cardExpiry: '',
+  //   cardCvv: '',
+  //   cardAccountHolderName: ''
   // });
+
+  const [cardInfo, setCardInfo] = useState<PaymentInput>({
+    customerName: 'Mehmet Fatih BUÇAK',
+    customerPhone: '5345649909',
+    customerIdentity: '23635962680',
+    cardNumber: '5269110246368999',
+    cardExpiry: '08/2028',
+    cardCvv: '987',
+    cardAccountHolderName: 'Mehmet BUÇAK'
+  });
 
   const nav = useNavigate();
 
@@ -57,11 +58,17 @@ export default function GetPaymentContainer() {
       const res = await paymentCreate({
         ...cardInfo,
         amount: price * 100,
-      });
-      if (res.form3d) {
-        setIframe(res.form3d);
-        setPaymentRes(res);
-        setIframeOpen(true);
+      },
+        posProvider === 'Ozan' ? 'ozan' : 'elekse'
+      );
+      if (user?.jeweler?.pos.name === 'Ozan') {
+        if (res.form3d) {
+          setIframe(res.form3d);
+          setOzanPaymentRes(res);
+          setIframeOpen(true);
+        }
+      } else if (user?.jeweler?.pos.name === 'Elekse') {
+        // todo: elekse için iframe oluştur
       }
     } catch (error) {
       showSnacbar('Ödeme Başarısız', 'error');
@@ -96,10 +103,18 @@ export default function GetPaymentContainer() {
   const startPolling = () => {
     const interval = setInterval(async () => {
       try {
-        const res = await checkPaymentStatus({
-          referenceNo: paymentRes?.referenceNo,
-          transactionId: paymentRes?.transactionId,
-        });
+        let body = {};
+        if (user?.jeweler?.pos.name === 'Ozan') {
+          body = {
+            referenceNo: ozanPaymentRes?.referenceNo,
+            transactionId: ozanPaymentRes?.transactionId,
+          }
+        } else {
+          // todo: elekse için body oluştur
+        }
+        const res = await checkPaymentStatus(
+          body,
+          posProvider === 'Ozan' ? 'ozan' : 'elekse');
         if (res.status !== 'WAITING') {
           clearInterval(interval);
           showSnacbar(`Ödeme ${res.message}`, res.status);

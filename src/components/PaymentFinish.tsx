@@ -39,8 +39,7 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
         amount: `${price * 100}`,
         email: user?.email,
         phone: `90${phoneNumber}`,
-      });
-      console.log(res.shortUrl);
+      }, user?.jeweler?.pos.name === 'Ozan' ? 'ozan' : 'elekse');
       const url = res.shortUrl;
       // const url = "https://refinera.com.tr/pay/DtJFjad1Ru";
       setUrl(url);

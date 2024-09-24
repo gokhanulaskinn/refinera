@@ -201,6 +201,7 @@ export interface Transaction {
   cardholderName: string;
   email: string;
   phone: string;
+  pos: string;
   transactionId: string;
   referenceId: string;
   status: Status;
@@ -210,10 +211,14 @@ export interface Transaction {
   jeweler: Jeweler;
 }
 
-export interface PaymentRes {
+export interface OzanPaymentRes {
   referenceNo: string;
   transactionId: string;
   form3d: string;
+}
+
+export interface EleksePaymentRes {
+  //fill it
 }
 
 export interface ConstantsType {

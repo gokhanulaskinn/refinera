@@ -3,9 +3,9 @@ import { PaymentInput } from "../../utils/types";
 import { handleResponse } from "../ResponseHandler";
 
 
-export const paymentCreate = async (values: any, tokenData?: string) => {
+export const paymentCreate = async (values: any, provider: string, tokenData?: string) => {
   const token = tokenData || localStorage.getItem('token');
-  const response = await fetch(`${baseUrl}/payment/create`, {
+  const response = await fetch(`${baseUrl}/${provider}/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,9 +17,9 @@ export const paymentCreate = async (values: any, tokenData?: string) => {
   return handleResponse(response);
 }
 
-export const checkPaymentStatus = async (values: any, tokenData?: string) => {
+export const checkPaymentStatus = async (values: any, provider: string, tokenData?: string) => {
   const token = tokenData || localStorage.getItem('token');
-  const response = await fetch(`${baseUrl}/payment/check`, {
+  const response = await fetch(`${baseUrl}/${provider}/check`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -45,9 +45,9 @@ export const deleteSeller = async (id: string) => {
   return handleResponse(response);
 }
 
-export const createPaymentLink = async (values: any) => {
+export const createPaymentLink = async (values: any, provider: string) => {
   const token = localStorage.getItem('token');
-  const response = await fetch(`${baseUrl}/payment/link`, {
+  const response = await fetch(`${baseUrl}/${provider}/link`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

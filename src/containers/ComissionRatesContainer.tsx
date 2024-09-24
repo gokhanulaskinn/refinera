@@ -35,7 +35,7 @@ export default function ComissionRatesContainer() {
   const [selectedJewelers, setSelectedJewelers] = React.useState<string[]>([]);
 
   const { data } = useSWR<ConstantsType>(
-    `${baseUrl}/configuration?key=${activeTab}`,
+    `${baseUrl}/configuration`,
     (url: string) => fetcher(url)
   );
 
@@ -46,13 +46,13 @@ export default function ComissionRatesContainer() {
 
   const handleSubmit = async (rate: number, base: number) => {
     try {
-      const res = await setComissionRate(selectedJewelers, {name: activeTab, rate: rate});
+      const res = await setComissionRate(selectedJewelers, { name: activeTab, rate: rate });
       if (constans?.[activeTab] !== base.toString()) {
         await updateBaseCommissionRate(activeTab, base);
       }
       showSnacbar('İşlem başarılı', 'success');
       mutate(`${baseUrl}/jewelers?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}`);
-      mutate(`${baseUrl}/configuration?key=${activeTab}`);
+      mutate(`${baseUrl}/configuration`);
     } catch (err) {
       showSnacbar('Bir hata oluştu', 'error');
     }
@@ -106,7 +106,7 @@ export default function ComissionRatesContainer() {
       rowData: [
         { value: jeweler.companyName || '', type: 'text' },
         { value: jeweler.pos.name || '', type: 'text' },
-        { value: constans?.[activeTab]?.toString() || '0', type: 'badge' },
+        { value: constans?.[jeweler.pos.name as 'Ozan' | 'Elekse']?.toString() || '0', type: 'badge' },
         { value: jeweler.pos?.rate?.toString() || '0', type: 'badge' },
         { value: ((parseFloat(constans?.[activeTab] || '0')) + jeweler.pos.rate || 0).toString() || '0', type: 'badge' }
       ]
