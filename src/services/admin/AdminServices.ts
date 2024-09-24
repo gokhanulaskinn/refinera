@@ -66,14 +66,13 @@ export const setComissionRate = async (jewelerIds: string[], pos: PosType) => {
 
 export const updateBaseCommissionRate = async (key: string, value: number) => {
   const token = localStorage.getItem('token');
-  const response = await fetch(`${baseUrl}/configuration/key/commissionRate`, {
+  const response = await fetch(`${baseUrl}/configuration/key/${key}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({
-      key,
       value: value.toString()
     })
   });
