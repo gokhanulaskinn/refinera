@@ -20,6 +20,7 @@ export default function LastUsersContainer() {
       { id: 'owner', label: 'Kart Sahibi' },
       { id: 'phone', label: 'Telefon Numarası' },
       { id: 'section', label: 'Satış Yapan Mağaza' },
+      { id: 'pos', label: 'Pos' },
       { id: 'detail', label: 'Detay' }
     ],
     body: []
@@ -37,6 +38,7 @@ export default function LastUsersContainer() {
         { value: transaction.cardholderName || '', type: 'text' },
         { value: transaction.phone || '', type: 'text' },
         { value: transaction.jeweler.companyName || '', type: 'text' },
+        { value: 'Ozan', type: 'text' },
         { value: [formatMoney(((transaction.totalAmount / 100).toFixed(2) || '')) + ' TL'], type: 'badge' }
       ]
     })

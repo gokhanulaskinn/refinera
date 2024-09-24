@@ -1,30 +1,26 @@
-import { Box, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import TablePageHeader from '../components/TablePageHeader'
-import BasicTabs from '../components/CustomTabs'
+import { Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import useSWR, { mutate } from 'swr';
 import ComissionCalculation from '../components/ComissionCalculation';
-import { ApiList, ConstantsType, Jeweler, TableBodyRowType, TableDataType } from '../utils/types';
 import CustomTable from '../components/CustomTable';
 import CustomTablePagination from '../components/CustomTablePagination';
-import useSWR, { mutate } from 'swr';
-import { baseUrl, fetcher } from '../utils/global';
-import { set } from 'lodash';
+import BasicTabs from '../components/CustomTabs';
+import TablePageHeader from '../components/TablePageHeader';
 import { useAlert } from '../hooks/useAlert';
 import { setComissionRate, updateBaseCommissionRate } from '../services/admin/AdminServices';
+import { baseUrl, fetcher } from '../utils/global';
+import { ApiList, ConstantsType, Jeweler, TableBodyRowType, TableDataType, posProviders } from '../utils/types';
 
 export default function ComissionRatesContainer() {
 
-  const tabs = [
-    'Ozan',
-    // 'Iyzico',
-    // 'Param',
-    // 'Sipay'
-  ];
+  const tabs = posProviders;
   const showSnacbar = useAlert();
   const [recordPerPage, setRecordPerPage] = useState(10);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [total, setTotal] = useState(0);
   const [constans, setConstans] = React.useState<ConstantsType>();
+  const [activeTab, setActiveTab] = useState<'Ozan' | 'Elekse'>('Ozan');
   const [tableData, setTableData] = useState<TableDataType>({
     head: [
       { id: 'select', label: 'Seçim' },
@@ -39,7 +35,7 @@ export default function ComissionRatesContainer() {
   const [selectedJewelers, setSelectedJewelers] = React.useState<string[]>([]);
 
   const { data } = useSWR<ConstantsType>(
-    `${baseUrl}/configuration?key=commissionRate`,
+    `${baseUrl}/configuration?key=${activeTab}`,
     (url: string) => fetcher(url)
   );
 
@@ -50,13 +46,13 @@ export default function ComissionRatesContainer() {
 
   const handleSubmit = async (rate: number, base: number) => {
     try {
-      const res = await setComissionRate(selectedJewelers, rate);
-      if (constans?.commissionRate !== base.toString()) {
-        await updateBaseCommissionRate(base);
+      const res = await setComissionRate(selectedJewelers, {name: activeTab, rate: rate});
+      if (constans?.[activeTab] !== base.toString()) {
+        await updateBaseCommissionRate(activeTab, base);
       }
       showSnacbar('İşlem başarılı', 'success');
       mutate(`${baseUrl}/jewelers?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}`);
-      mutate(`${baseUrl}/configuration?key=commissionRate`);
+      mutate(`${baseUrl}/configuration?key=${activeTab}`);
     } catch (err) {
       showSnacbar('Bir hata oluştu', 'error');
     }
@@ -68,9 +64,27 @@ export default function ComissionRatesContainer() {
     }
   }, [data])
 
+
+  // useEffect(() => {
+  //   if (users) {
+  //     convertData(users);
+  //     const totalCount = users.total;
+  //     const totalPage = Math.ceil(totalCount / recordPerPage);
+  //     setTotal(totalPage);
+  //   } else {
+  //     setTableData({
+  //       head: tableData.head,
+  //       body: []
+  //     });
+  //   }
+  // }, [users])
+
   useEffect(() => {
     if (users) {
       convertData(users);
+      const totalCount = users.total;
+      const totalPage = Math.ceil(totalCount / recordPerPage);
+      setTotal(totalPage);
     } else {
       setTableData({
         head: [
@@ -91,10 +105,10 @@ export default function ComissionRatesContainer() {
       id: jeweler.id,
       rowData: [
         { value: jeweler.companyName || '', type: 'text' },
-        { value: 'Ozan', type: 'text' },
-        { value: constans?.commissionRate.toString() || '0', type: 'badge' },
-        { value: jeweler.comissionRate.toString() || '0', type: 'badge' },
-        { value: ((parseFloat(constans?.commissionRate || '0')) + jeweler.comissionRate).toString() || '0', type: 'badge' }
+        { value: jeweler.pos.name || '', type: 'text' },
+        { value: constans?.[activeTab]?.toString() || '0', type: 'badge' },
+        { value: jeweler.pos?.rate?.toString() || '0', type: 'badge' },
+        { value: ((parseFloat(constans?.[activeTab] || '0')) + jeweler.pos.rate || 0).toString() || '0', type: 'badge' }
       ]
     }));
 
@@ -111,52 +125,11 @@ export default function ComissionRatesContainer() {
     });
   }
 
-  // const tableDatas: TableDataType = {
-  //   head: [
-  //     {
-  //       id: 'name',
-  //       label: 'Kuyumcu'
-  //     },
-  //     {
-  //       id: 'owner',
-  //       label: 'POS Sahibi'
-  //     },
-  //     {
-  //       id: 'section',
-  //       label: 'Baz Oran'
-  //     },
-  //     {
-  //       id: 'phone',
-  //       label: 'Kar Marjı'
-  //     },
-  //     {
-  //       id: 'detail',
-  //       label: 'POS Komisyon Oranı'
-  //     },
-  //   ],
-  //   body: [
-  //     {
-  //       rowData: [
-  //         { value: 'Can Hitay', type: 'text' },
-  //         { value: 'Ozan', type: 'text' },
-  //         { value: '2.5', type: 'badge' },
-  //         { value: '0.5', type: 'badge' },
-  //         { value: '3', type: 'badge' }
-  //       ]
-  //     },
-  //     {
-  //       rowData: [
-  //         { value: 'Semih Kuyumculuk', type: 'text' },
-  //         { value: 'Ozan', type: 'text' },
-  //         { value: '2.5', type: 'badge' },
-  //         { value: '0.4', type: 'badge' },
-  //         { value: '2.9', type: 'badge' }
-  //       ]
-  //     },
-  //   ]
-  // }
-
   const [value, setValue] = React.useState(0);
+
+  useEffect(() => {
+    setActiveTab(tabs[value] as 'Ozan' | 'Elekse');
+  }, [value])
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -184,7 +157,7 @@ export default function ComissionRatesContainer() {
           tabs={tabs}
         />
         <ComissionCalculation
-          baseComission={parseFloat(constans.commissionRate)}
+          baseComission={parseFloat(constans?.[activeTab] || '0')}
           canSetRate={selectedJewelers.length > 0}
           onSubmit={handleSubmit}
         />
@@ -201,7 +174,13 @@ export default function ComissionRatesContainer() {
           selectedIds={selectedJewelers}
           setSelectedIds={setSelectedJewelers}
         />
-        <CustomTablePagination />
+        {total > 1 && (
+          <CustomTablePagination
+            total={total}
+            page={page}
+            onPageChange={(page) => setPage(page)}
+          />
+        )}
       </Box>
     </Box>
   )

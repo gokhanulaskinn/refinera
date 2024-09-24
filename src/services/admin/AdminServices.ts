@@ -1,5 +1,5 @@
 import { baseUrl } from "../../utils/global";
-import { Jeweler, JewelerInput } from "../../utils/types";
+import { Jeweler, JewelerInput, PosType } from "../../utils/types";
 import { handleResponse } from "../ResponseHandler";
 
 export const createJeweler = async (jeweler: JewelerInput) => {
@@ -47,7 +47,7 @@ export const updateJeweler = async (id: string, jeweler: Partial<Jeweler>) => {
 }
 
 
-export const setComissionRate = async (jewelerIds: string[], comissionRate: number) => {
+export const setComissionRate = async (jewelerIds: string[], pos: PosType) => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${baseUrl}/jewelers/bulk`, {
     method: 'POST',
@@ -57,14 +57,14 @@ export const setComissionRate = async (jewelerIds: string[], comissionRate: numb
     },
     body: JSON.stringify({
       ids: jewelerIds,
-      comissionRate
+      pos
     })
   });
 
   return handleResponse(response);
 }
 
-export const updateBaseCommissionRate = async (rate: number) => {
+export const updateBaseCommissionRate = async (key: string, value: number) => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${baseUrl}/configuration/key/commissionRate`, {
     method: 'PUT',
@@ -73,8 +73,8 @@ export const updateBaseCommissionRate = async (rate: number) => {
       'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({
-      key: "commissionRate",
-      value: rate.toString()
+      key,
+      value: value.toString()
     })
   });
 

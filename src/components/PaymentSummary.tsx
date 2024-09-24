@@ -50,8 +50,8 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
   }, [bucket, items])
 
   useEffect(() => {
-    if (user?.jeweler?.comissionRate) {
-      const fee = (sellerTotal || 0) * user.jeweler.comissionRate / 100;
+    if (user?.jeweler?.pos.rate) {
+      const fee = (sellerTotal || 0) * user.jeweler.pos.rate / 100;
       setServiceFee(fee);
       setTotal((sellerTotal || 0) + fee);
     }

@@ -46,7 +46,11 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
         companyTableName: initialValues.companyTableName,
         accountHolder: '',
         iban: '',
-        bankName: ''
+        bankName: '',
+        pos: {
+          name: '',
+          rate: 0
+        }
       })
     }
   }, [initialValues])
@@ -65,7 +69,11 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
     companyTableName: 'Cevher Kuyumculuk',
     accountHolder: 'Mustafa Cevher',
     iban: 'TR180006200119000006672315',
-    bankName: 'Ziraaat Bankası'
+    bankName: 'Ziraaat Bankası',
+    pos: {
+      name: 'Ozan',
+      rate: 0
+    }
   })
 
   return (

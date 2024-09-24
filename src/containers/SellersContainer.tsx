@@ -59,7 +59,7 @@ export default function SellersContainer() {
         { value: (`${jeweler.firstName} ${jeweler.lastName}`), type: 'text' },
         { value: jeweler.email || '', type: 'text' },
         { value: jeweler.phone || '', type: 'text' },
-        { value: jeweler.comissionRate ? `${(jeweler.comissionRate + parseFloat(constants?.commissionRate!)).toFixed(2)}%` : '0%', type: 'text' },
+        { value: jeweler.pos?.rate ? `${(jeweler.pos?.rate + parseFloat(constants![(jeweler.pos?.name || 'Ozan') as 'Ozan' | 'Elekse']!))?.toFixed(2)}%` : '0%', type: 'text' },
         {
           value: jeweler.status === 'ACTIVE' ? 'Aktif' : 'Pasif',
           id: jeweler.status || '',
@@ -181,21 +181,21 @@ export default function SellersContainer() {
     }
   }
 
-  const handleSetComissionRate = async (rate: number, base: number) => {
-    try {
-      const res = await updateJeweler(selectedJeweler?.id || '', { comissionRate: rate });
-      if (constants?.commissionRate !== base.toString()) {
-        await updateBaseCommissionRate(base);
-      }
-      mutate(`${baseUrl}/jewelers?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}${statusFilter ? `&status=${statusFilter}` : ''}`);
-      mutate(`${baseUrl}/configuration?key=commissionRate`);
-      showSnackBar('Komisyon oranı başarıyla güncellendi', 'success');
-      setOpenPosRateDialog(false);
-    } catch (e) {
-      console.log(e);
-      showSnackBar('Komisyon oranı güncellenirken bir hata oluştu', 'error');
-    }
-  }
+  // const handleSetComissionRate = async (rate: number, base: number) => {
+  //   try {
+  //     const res = await updateJeweler(selectedJeweler?.id || '', { comissionRate: rate });
+  //     if (constants?.commissionRate !== base.toString()) {
+  //       await updateBaseCommissionRate(base);
+  //     }
+  //     mutate(`${baseUrl}/jewelers?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}${statusFilter ? `&status=${statusFilter}` : ''}`);
+  //     mutate(`${baseUrl}/configuration?key=commissionRate`);
+  //     showSnackBar('Komisyon oranı başarıyla güncellendi', 'success');
+  //     setOpenPosRateDialog(false);
+  //   } catch (e) {
+  //     console.log(e);
+  //     showSnackBar('Komisyon oranı güncellenirken bir hata oluştu', 'error');
+  //   }
+  // }
 
   return (
     <Box
@@ -234,13 +234,13 @@ export default function SellersContainer() {
         items={['Hepsi', 'Aktif Kuyumcular', 'Pasif Kuyumcular']}
         onSelected={handleFilterSelect}
       />
-      <PosRateDialog
+      {/* <PosRateDialog
         open={openPosRateDialog}
         onClose={() => setOpenPosRateDialog(false)}
         baseCommissionRate={parseFloat(constants?.commissionRate || '0')}
         comissionRate={selectedJeweler?.comissionRate || 0}
         onSubmit={handleSetComissionRate}
-      />
+      /> */}
     </Box>
   );
 }

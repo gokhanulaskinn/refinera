@@ -70,11 +70,11 @@ export interface Jeweler {
   status?: Status;
   taxNumber?: string;
   branches: Branch[];
-  comissionRate: number;
   users: User[];
   bankAccounts: BankAccount[];
   createdAt: Date;
   updatedAt: Date;
+  pos: PosType;
 }
 
 export interface JewelerInput {
@@ -91,6 +91,12 @@ export interface JewelerInput {
   iban?: string;
   accountHolder?: string;
   bankName?: string;
+  pos: PosType;
+}
+
+export type PosType = {
+  name: string;
+  rate: number;
 }
 
 export interface Supplier {
@@ -147,8 +153,12 @@ export interface CurrencyItem {
   currency: string;
   buyPrice: number;
   sellerPrice: number;
-  timestamp:  string;
+  timestamp: string;
 }
+
+
+
+export const posProviders = ['Ozan', 'Elekse']
 
 
 // {
@@ -207,7 +217,8 @@ export interface PaymentRes {
 }
 
 export interface ConstantsType {
-  commissionRate: string;
+  Ozan?: string;
+  Elekse?: string;
 }
 
 // export type User = {

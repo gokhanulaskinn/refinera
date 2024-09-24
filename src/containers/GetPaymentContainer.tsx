@@ -71,7 +71,7 @@ export default function GetPaymentContainer() {
   useEffect(() => {
     const price = parseFloat(searchParams.get('price') || '0');
     setPrice(price);
-    const comissionFee = parseFloat((price * (user?.jeweler?.comissionRate || 0) / 100).toFixed(2));
+    const comissionFee = parseFloat((price * (user?.jeweler?.pos?.rate || 0) / 100).toFixed(2));
     setComissionFee(comissionFee);
     const totalPrice = price + comissionFee;
     setTotalPrice(totalPrice);
