@@ -218,7 +218,8 @@ export interface OzanPaymentRes {
 }
 
 export interface EleksePaymentRes {
-  //fill it
+  URL_3DS: string;
+  ORDER_REF_NUMBER : string;
 }
 
 export interface ConstantsType {

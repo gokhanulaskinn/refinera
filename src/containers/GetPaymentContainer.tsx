@@ -5,7 +5,7 @@ import CustomPaper from '../components/CustomPaper';
 import CardInfo from '../components/CardInfo';
 import PaymentFinish from '../components/PaymentFinish';
 import SubmitFormDialog from '../components/SubmitFormDialog';
-import { ConstantsType, OzanPaymentRes, PaymentInput } from '../utils/types';
+import { ConstantsType, EleksePaymentRes, OzanPaymentRes, PaymentInput } from '../utils/types';
 import { paymentCreate, checkPaymentStatus } from '../services/seller/SellerServices'; // checkPaymentStatus eklenmiş
 import { useAlert } from '../hooks/useAlert';
 import IframeModal from '../components/IframeModal';
@@ -23,6 +23,7 @@ export default function GetPaymentContainer() {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [canFinish, setCanFinish] = useState(false);
   const [ozanPaymentRes, setOzanPaymentRes] = useState<OzanPaymentRes>();
+  const [eleksePaymentRes, setEleksePaymentRes] = useState<EleksePaymentRes>();
   const [iframe, setIframe] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -68,7 +69,11 @@ export default function GetPaymentContainer() {
           setIframeOpen(true);
         }
       } else if (user?.jeweler?.pos.name === 'Elekse') {
-        // todo: elekse için iframe oluştur
+        if (res.URL_3DS) {
+          setIframe(res.URL_3DS);
+          setEleksePaymentRes(res);
+          setIframeOpen(true);
+        }
       }
     } catch (error) {
       showSnacbar('Ödeme Başarısız', 'error');
@@ -110,25 +115,45 @@ export default function GetPaymentContainer() {
             transactionId: ozanPaymentRes?.transactionId,
           }
         } else {
-          // todo: elekse için body oluştur
+          body = {
+            order_ref_number: eleksePaymentRes?.ORDER_REF_NUMBER,
+          }
         }
         const res = await checkPaymentStatus(
           body,
           posProvider === 'Ozan' ? 'ozan' : 'elekse');
-        if (res.status !== 'WAITING') {
-          clearInterval(interval);
-          showSnacbar(`Ödeme ${res.message}`, res.status);
-          if (res.status === 'APPROVED') {
-            setIsSuccessful(true);
-            setTitle('Ödeme Başarılı');
-            setContent('Ödemeniz başarıyla gerçekleşmiştir.');
-          } else {
-            setIsSuccessful(false);
-            setTitle('Ödeme Başarısız');
-            setContent(res.message);
+        if (posProvider === 'Ozan') {
+          if (res.status !== 'WAITING') {
+            clearInterval(interval);
+            showSnacbar(`Ödeme ${res.message}`, res.status);
+            if (res.status === 'APPROVED') {
+              setIsSuccessful(true);
+              setTitle('Ödeme Başarılı');
+              setContent('Ödemeniz başarıyla gerçekleşmiştir.');
+            } else {
+              setIsSuccessful(false);
+              setTitle('Ödeme Başarısız');
+              setContent(res.message);
+            }
+            setOpen(true);
+            setIframeOpen(false);
           }
-          setOpen(true);
-          setIframeOpen(false);
+        } else if (posProvider === 'Elekse') {
+          if (res.STATUS !== 'PAYMENT_WAITING') {
+            clearInterval(interval);
+            showSnacbar(`Ödeme ${res.RETURN_MESSAGE}`, res.STATUS);
+            if (res.STATUS === 'SUCCESS') {
+              setIsSuccessful(true);
+              setTitle('Ödeme Başarılı');
+              setContent('Ödemeniz başarıyla gerçekleşmiştir.');
+            } else {
+              setIsSuccessful(false);
+              setTitle('Ödeme Başarısız');
+              setContent(res.message);
+            }
+            setOpen(true);
+            setIframeOpen(false);
+          }
         }
       } catch (error) {
         clearInterval(interval);

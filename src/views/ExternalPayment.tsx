@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import GetPaymentContainer from '../containers/GetPaymentContainer'
 import CustomPaper from '../components/CustomPaper'
 import CardInfo from '../components/CardInfo'
-import { OzanPaymentRes, PaymentInput } from '../utils/types'
+import { EleksePaymentRes, OzanPaymentRes, PaymentInput } from '../utils/types'
 import { Box, Typography } from '@mui/material'
 import CommonButton from '../components/CommonButton'
 import smalLogo from '../assets/images/small-logo.svg';
@@ -19,33 +19,35 @@ export default function ExternalPayment() {
   const [price, setPrice] = useState(0);
   const showSnacbar = useAlert();
   const [ozanPaymentRes, setOzanPaymentRes] = useState<OzanPaymentRes>();
+  const [eleksePaymentRes, setEleksePaymentRes] = useState<EleksePaymentRes>();
   const [iframe, setIframe] = useState<string>('');
   const [iframeOpen, setIframeOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [pos, setPos] = useState<string>('');
   const [token, setToken] = useState('');
   const [tokenData, setTokenData] = useState<any>();
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
 
-  const [cardInfo, setCardInfo] = useState<PaymentInput>({
-    customerName: '',
-    customerPhone: '',
-    customerIdentity: '',
-    cardNumber: '',
-    cardExpiry: '',
-    cardCvv: '',
-    cardAccountHolderName: ''
-  });
-
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
-  //   customerName: 'Mehmet Fatih BUÇAK',
-  //   customerPhone: '5345649909',
-  //   customerIdentity: '23635962680',
-  //   cardNumber: '5269110246368999',
-  //   cardExpiry: '08/2028',
-  //   cardCvv: '987',
-  //   cardAccountHolderName: 'Mehmet BUÇAK'
+  //   customerName: '',
+  //   customerPhone: '',
+  //   customerIdentity: '',
+  //   cardNumber: '',
+  //   cardExpiry: '',
+  //   cardCvv: '',
+  //   cardAccountHolderName: ''
   // });
+
+  const [cardInfo, setCardInfo] = useState<PaymentInput>({
+    customerName: 'Mehmet Fatih BUÇAK',
+    customerPhone: '5345649909',
+    customerIdentity: '23635962680',
+    cardNumber: '5269110246368999',
+    cardExpiry: '08/2028',
+    cardCvv: '987',
+    cardAccountHolderName: 'Mehmet BUÇAK'
+  });
 
 
   useEffect(() => {
@@ -60,6 +62,8 @@ export default function ExternalPayment() {
         const decodedToken: any = jwtDecode(token);
         const price = decodedToken.amount / 100;
         const totalCost = price + (price * decodedToken.comission / 100);
+        const pos = decodedToken.pos;
+        setPos(pos);
         setPrice(price);
         setTotalPrice(totalCost);
         setTokenData(decodedToken);
@@ -76,21 +80,46 @@ export default function ExternalPayment() {
   const startPolling = () => {
     const interval = setInterval(async () => {
       try {
-        const res = await checkPaymentStatus({
-          referenceNo: ozanPaymentRes?.referenceNo,
-          transactionId: ozanPaymentRes?.transactionId,
-        }, token);
-        if (res.status !== 'WAITING') {
-          clearInterval(interval);
-          showSnacbar(`Ödeme ${res.message}`, res.status);
-          if (res.status === 'APPROVED') {
-            setIsSuccessful(true);
-            showSnacbar('Ödeme başarı ile gerçeklwşti', 'success')
-          } else {
-            showSnacbar('Ödeme esnasında bir sorun oluştu', 'error')
+        let body = {};
+        if (pos === 'Ozan') {
+          body = {
+            referenceNo: ozanPaymentRes?.referenceNo,
+            transactionId: ozanPaymentRes?.transactionId,
           }
-          setIframeOpen(false);
+        } else if (pos === 'Elekse') {
+          body = {
+            order_ref_number: eleksePaymentRes?.ORDER_REF_NUMBER,
+          }
         }
+        const res = await checkPaymentStatus(body, pos === 'Ozan' ? 'ozan' : 'elekse', token);
+        if (pos === 'Ozan') {
+          if (res.status !== 'WAITING') {
+            clearInterval(interval);
+            console.log('ozannnn')
+            showSnacbar(`Ödeme ${res.message}`, res.status);
+            if (res.status === 'APPROVED') {
+              setIsSuccessful(true);
+              showSnacbar('Ödeme başarı ile gerçeklwşti', 'success')
+            } else {
+              showSnacbar('Ödeme esnasında bir sorun oluştu', 'error')
+            }
+            setIframeOpen(false);
+          }
+        } else if (pos === 'Elekse') {
+          if (res.STATUS !== 'PAYMENT_WAITING') {
+            clearInterval(interval);
+            console.log('elekseeee')
+            showSnacbar(`Ödeme ${res.RETURN_MESSAGE}`, res.STATUS);
+            if (res.STATUS === 'SUCCESS') {
+              setIsSuccessful(true);
+              showSnacbar('Ödeme başarı ile gerçekleşti', 'success')
+            } else {
+              showSnacbar('Ödeme esnasında bir sorun oluştu', 'error')
+            }
+            setIframeOpen(false);
+          }
+        }
+
       } catch (error) {
         clearInterval(interval);
         showSnacbar('Durum sorgulamada hata', 'error');
@@ -109,16 +138,28 @@ export default function ExternalPayment() {
       const res = await paymentCreate({
         ...cardInfo,
         amount: price * 100,
-      }, token);
-      if (res.form3d) {
-        setIframe(res.form3d);
-        setOzanPaymentRes(res);
-        setIframeOpen(true);
+      },
+        pos === 'Ozan' ? 'ozan' : 'elekse',
+        token
+      );
+      if (pos === 'Ozan') {
+        if (res.form3d) {
+          setIframe(res.form3d);
+          setOzanPaymentRes(res);
+          setIframeOpen(true);
+        }
+      } else if (pos === 'Elekse') {
+        if (res.URL_3DS) {
+          setIframe(res.URL_3DS);
+          setEleksePaymentRes(res);
+          setIframeOpen(true);
+        }
       }
     } catch (error) {
       showSnacbar('Ödeme Başarısız', 'error');
     }
   };
+
 
   if (loading) {
     return (

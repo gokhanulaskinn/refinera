@@ -1,9 +1,8 @@
 import { Checkbox, TableBody, TableCell, TableRow } from '@mui/material';
-import React, { useState } from 'react';
 import { TableBodyRowType } from '../utils/types';
 import TableActions from './TableActions';
-import TableOptions from './TableOptions';
 import TableBadge from './TableBadge';
+import TableOptions from './TableOptions';
 
 type CustomTableBodyProps = {
   body: TableBodyRowType[];
