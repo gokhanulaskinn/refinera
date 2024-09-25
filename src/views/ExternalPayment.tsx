@@ -29,26 +29,25 @@ export default function ExternalPayment() {
   const [tokenData, setTokenData] = useState<any>();
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
 
-  // const [cardInfo, setCardInfo] = useState<PaymentInput>({
-  //   customerName: '',
-  //   customerPhone: '',
-  //   customerIdentity: '',
-  //   cardNumber: '',
-  //   cardExpiry: '',
-  //   cardCvv: '',
-  //   cardAccountHolderName: ''
-  // });
-
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
-    customerName: 'Mehmet Fatih BUÇAK',
-    customerPhone: '5345649909',
-    customerIdentity: '23635962680',
-    cardNumber: '5269110246368999',
-    cardExpiry: '08/2028',
-    cardCvv: '987',
-    cardAccountHolderName: 'Mehmet BUÇAK'
+    customerName: '',
+    customerPhone: '',
+    customerIdentity: '',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvv: '',
+    cardAccountHolderName: ''
   });
 
+  // const [cardInfo, setCardInfo] = useState<PaymentInput>({
+  //   customerName: 'Mehmet Fatih BUÇAK',
+  //   customerPhone: '5345649909',
+  //   customerIdentity: '23635962680',
+  //   cardNumber: '5269110246368999',
+  //   cardExpiry: '08/2028',
+  //   cardCvv: '987',
+  //   cardAccountHolderName: 'Mehmet BUÇAK'
+  // });
 
   useEffect(() => {
     const fetchData = async () => {
