@@ -1,4 +1,4 @@
-import { Box, Divider, Paper, TextField, Typography } from '@mui/material'
+import { Box, Divider, FormControlLabel, Paper, Switch, TextField, Typography } from '@mui/material'
 import React, { useContext, useEffect } from 'react'
 import CommonButton from './CommonButton'
 import { Add, ArrowForward, ArrowForwardIos, ArrowRight, ArrowRightAltOutlined } from '@mui/icons-material'
@@ -12,6 +12,7 @@ import PriceControl from './PriceControl';
 import { AuthContext } from '../contexts/AuthProvider';
 import CountDownProgress from './CountDownProgress';
 import useSWR, { mutate } from 'swr';
+import NumberInput from './NumberInput';
 
 type PaymentSummaryProps = {
   bucket: BucketType[];
@@ -27,13 +28,30 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
   const [sellerTotal, setSellerTotal] = React.useState<number>();
   const [serviceFee, setServiceFee] = React.useState<number>();
   const [productList, setProductList] = React.useState<string[]>([]);
+  const [milyenOn, setMilyenOn] = React.useState<boolean>(false);
+  const [milyenValue, setMilyenValue] = React.useState<number>(0);
+  const [totalWeight, setTotalWeight] = React.useState<number>(0);
+  const [feeRate, setFeeRate] = React.useState<number>(0);
+  const [milyenTotal, setMilyenTotal] = React.useState<number>(0);
   const { user } = useContext(AuthContext);
+
+  const hasAltin = items?.find((item) => item.parity === 'ALTIN');
 
   console.log(items)
 
   const nav = useNavigate();
 
   const [total, setTotal] = React.useState<number>(0);
+
+  useEffect(() => {
+    if (milyenOn && feeRate && milyenValue && totalWeight) {
+      const total = milyenValue * totalWeight * (hasAltin?.sellerPrice || 1);
+      const fee = total * feeRate / 100;
+      setMilyenTotal(total + fee);
+    } else {
+      setMilyenTotal(0);
+    }
+  }, [feeRate, milyenValue, totalWeight])
 
   useEffect(() => {
     let total = 0;
@@ -60,18 +78,18 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
   useEffect(() => {
     if (commissionType) {
       if (commissionType === 'percent') {
-        setSellerTotal(price + (price * commission / 100));
+        setSellerTotal(price + (price * commission / 100) + milyenTotal);
       } else {
-        setSellerTotal(price + commission);
+        setSellerTotal(price + commission + milyenTotal);
       }
     } else {
-      setSellerTotal(price);
+      setSellerTotal(price + milyenTotal);
     }
     if (price === 0) {
       setCommission(0);
       setCommissionType('');
     }
-  }, [commission, commissionType, price])
+  }, [commission, commissionType, price, milyenTotal])
 
   return (
     <Paper
@@ -129,6 +147,39 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
           {formatMoney(price?.toFixed(2) || '0')} TL
         </Typography>
       </Box>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={milyenOn}
+            onChange={() => setMilyenOn(!milyenOn)}
+            name="checkedB"
+            color="primary"
+          />
+        }
+        label="Milyen"
+      />
+      {milyenOn && (
+        <>
+          <NumberInput
+            label='Toplam Gram'
+            value={totalWeight.toString()}
+            onChange={(value) => setTotalWeight(value || 0)}
+            backgroundColor='#F2F4F7'
+          />
+          <NumberInput
+            label='Milyen'
+            value={milyenValue.toString()}
+            onChange={(value) => setMilyenValue(value || 0)}
+            backgroundColor='#F2F4F7'
+          />
+          <NumberInput
+            label='Vergi'
+            value={feeRate.toString()}
+            onChange={(value) => setFeeRate(value || 0)}
+            backgroundColor='#F2F4F7'
+          />
+        </>
+      )}
       <CommonSelect
         placeholder='Komisyon Cinsi'
         value={commissionType}
@@ -236,6 +287,27 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
           </Typography>
         </Box>
       </Box>
+      {milyenOn && (
+        <Box>
+          <Typography
+            sx={{
+              fontSize: '14px',
+              fontWeight: '400',
+              color: '#475467'
+            }}
+          >
+            İşçilik
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '24px',
+              fontWeight: '500',
+            }}
+          >
+            {formatMoney(milyenTotal?.toFixed(2) || '0')} TL
+          </Typography>
+        </Box>
+      )}
       <Box>
         <Typography
           sx={{
