@@ -13,14 +13,17 @@ import { AuthContext } from '../contexts/AuthProvider';
 import CountDownProgress from './CountDownProgress';
 import useSWR, { mutate } from 'swr';
 import NumberInput from './NumberInput';
+import { set } from 'lodash';
 
 type PaymentSummaryProps = {
   bucket: BucketType[];
   items: CurrencyItem[];
   handleUpdateSummaryItems: () => void;
+  milyenOn: boolean;
+  milyenValues: any;
 }
 
-export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems }: PaymentSummaryProps) {
+export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, handleUpdateSummaryItems }: PaymentSummaryProps) {
 
   const [price, setPrice] = React.useState<number>(0);
   const [commissionType, setCommissionType] = React.useState<string>('');
@@ -28,11 +31,7 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
   const [sellerTotal, setSellerTotal] = React.useState<number>();
   const [serviceFee, setServiceFee] = React.useState<number>();
   const [productList, setProductList] = React.useState<string[]>([]);
-  const [milyenOn, setMilyenOn] = React.useState<boolean>(false);
-  const [milyenValue, setMilyenValue] = React.useState<number>(0);
-  const [totalWeight, setTotalWeight] = React.useState<number>(0);
-  const [feeRate, setFeeRate] = React.useState<number>(0);
-  const [milyenTotal, setMilyenTotal] = React.useState<number>(0);
+
   const { user } = useContext(AuthContext);
 
   const hasAltin = items?.find((item) => item.parity === 'ALTIN');
@@ -44,28 +43,40 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
   const [total, setTotal] = React.useState<number>(0);
 
   useEffect(() => {
-    if (milyenOn && feeRate && milyenValue && totalWeight) {
-      const total = milyenValue * totalWeight * (hasAltin?.sellerPrice || 1);
-      const fee = total * feeRate / 100;
-      setMilyenTotal(total + fee);
-    } else {
-      setMilyenTotal(0);
-    }
-  }, [feeRate, milyenValue, totalWeight])
+    setProductList([]);
+  },[milyenOn])
 
   useEffect(() => {
     let total = 0;
     let productListData: string[] = [];
-    bucket.forEach((item) => {
-      const product = items?.find((product) => product.parity === item.itemId);
-      if (product) {
-        total += product.sellerPrice * item.quantity;
-        productListData.push(`${item.quantity} x ${product.parity} = ${formatMoney((product.sellerPrice * item.quantity).toFixed(2))} TL`);
+    if (milyenOn) {
+      if (milyenValues) {
+        const { totalWeight, milyenValue, feeRate, totalFeeRate, ayarMilyen } = milyenValues;
+        if (totalWeight && milyenValue && ayarMilyen) {
+          let purePrice = totalWeight * (ayarMilyen / 1000) * (hasAltin?.sellerPrice || 0);
+          purePrice += purePrice * totalFeeRate / 100;
+          productListData.push(`Saf Altın: ${formatMoney((hasAltin?.sellerPrice || 0).toFixed(2))} TL`);
+          productListData.push(`Ürün Saflık TL Karşılığı: ${formatMoney(purePrice.toFixed(2))} TL`);
+          let workPrice = totalWeight * (milyenValue) * (hasAltin?.sellerPrice || 0);
+          productListData.push(`İşçilik TL Karşılığı: ${formatMoney(workPrice.toFixed(2))} TL`);
+          workPrice += workPrice * feeRate / 100;
+          total += purePrice + workPrice;
+          setPrice(total);
+          setProductList(productListData);
+        }
       }
-    })
-    setPrice(total);
-    setProductList(productListData);
-  }, [bucket, items])
+    } else {
+      bucket.forEach((item) => {
+        const product = items?.find((product) => product.parity === item.itemId);
+        if (product) {
+          total += product.sellerPrice * item.quantity;
+          productListData.push(`${item.quantity} x ${product.parity} = ${formatMoney((product.sellerPrice * item.quantity).toFixed(2))} TL`);
+        }
+      })
+      setPrice(total);
+      setProductList(productListData);
+    }
+  }, [bucket, items, milyenOn, milyenValues])
 
   useEffect(() => {
     if (user?.jeweler?.pos.rate) {
@@ -76,20 +87,21 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
   }, [sellerTotal])
 
   useEffect(() => {
+
     if (commissionType) {
       if (commissionType === 'percent') {
-        setSellerTotal(price + (price * commission / 100) + milyenTotal);
+        setSellerTotal(price + (price * commission / 100));
       } else {
-        setSellerTotal(price + commission + milyenTotal);
+        setSellerTotal(price + commission);
       }
     } else {
-      setSellerTotal(price + milyenTotal);
+      setSellerTotal(price);
     }
     if (price === 0) {
       setCommission(0);
       setCommissionType('');
     }
-  }, [commission, commissionType, price, milyenTotal])
+  }, [commission, commissionType, price])
 
   return (
     <Paper
@@ -147,41 +159,9 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
           {formatMoney(price?.toFixed(2) || '0')} TL
         </Typography>
       </Box>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={milyenOn}
-            onChange={() => setMilyenOn(!milyenOn)}
-            name="checkedB"
-            color="primary"
-          />
-        }
-        label="Milyen"
-      />
-      {milyenOn && (
-        <>
-          <NumberInput
-            label='Toplam Gram'
-            value={totalWeight.toString()}
-            onChange={(value) => setTotalWeight(value || 0)}
-            backgroundColor='#F2F4F7'
-          />
-          <NumberInput
-            label='Milyen'
-            value={milyenValue.toString()}
-            onChange={(value) => setMilyenValue(value || 0)}
-            backgroundColor='#F2F4F7'
-          />
-          <NumberInput
-            label='Vergi'
-            value={feeRate.toString()}
-            onChange={(value) => setFeeRate(value || 0)}
-            backgroundColor='#F2F4F7'
-          />
-        </>
-      )}
+
       <CommonSelect
-        placeholder='Komisyon Cinsi'
+        placeholder='Hizmet Bedeli Cinsi'
         value={commissionType}
         onChange={(e) => setCommissionType(e.target.value)}
         items={[
@@ -193,7 +173,7 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
       {commissionType && (
         commissionType === 'percent' ? (
           <TextInput
-            label='Komisyon'
+            label='İlave Hizmet Bedeli'
             value={commission || ''}
             onChange={(e) => {
               if (e.target.value) {
@@ -208,7 +188,7 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
           />
         ) : (
           <MoneyInput
-            label='Komisyon'
+            label='İlave Hizmet Bedeli'
             value={commission.toString()}
             onChange={(value) => { setCommission(parseFloat(value)) }}
             backgroundColor='#F2F4F7'
@@ -287,27 +267,6 @@ export default function PaymentSummary({ bucket, items, handleUpdateSummaryItems
           </Typography>
         </Box>
       </Box>
-      {milyenOn && (
-        <Box>
-          <Typography
-            sx={{
-              fontSize: '14px',
-              fontWeight: '400',
-              color: '#475467'
-            }}
-          >
-            İşçilik
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '24px',
-              fontWeight: '500',
-            }}
-          >
-            {formatMoney(milyenTotal?.toFixed(2) || '0')} TL
-          </Typography>
-        </Box>
-      )}
       <Box>
         <Typography
           sx={{

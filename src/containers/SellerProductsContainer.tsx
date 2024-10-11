@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material'
+import { Box, FormControlLabel, Grid, Switch } from '@mui/material'
 import React, { useEffect } from 'react'
 import TablePageHeader from '../components/TablePageHeader'
 import BasicTabs from '../components/CustomTabs'
@@ -9,6 +9,7 @@ import ItemList from '../components/ItemList';
 import { BucketType, CurrencyItem } from '../utils/types';
 import useSWR from 'swr';
 import { allCurrency, baseUrl, fetcher } from '../utils/global';
+import MilyenCalculator from '../components/MilyenCalculator';
 
 
 export default function SellerProductsContainer() {
@@ -29,6 +30,14 @@ export default function SellerProductsContainer() {
   const [variant, setVariant] = React.useState(0);
   const [supplier, setSupplier] = React.useState(0);
   const [summaryItems, setSummaryItems] = React.useState<CurrencyItem[]>([]);
+  const [milyenOn, setMilyenOn] = React.useState<boolean>(false);
+  const [milyenValues, setMilyenValues] = React.useState<any>({
+    totalWeight: 0,
+    milyenValue: 0,
+    feeRate: 0,
+    totalFeeRate: 0,
+    ayarMilyen: 0
+  });
 
   const handleChangeVariant = (event: React.SyntheticEvent, newValue: number) => {
     setVariant(newValue);
@@ -91,6 +100,20 @@ export default function SellerProductsContainer() {
 
   const [bucket, setBucket] = React.useState<BucketType[]>([]);
 
+  useEffect(() => {
+    if (milyenOn) {
+      setBucket([]);
+    } else {
+      setMilyenValues({
+        totalWeight: 0,
+        milyenValue: 0,
+        feeRate: 0,
+        totalFeeRate: 0,
+        ayarMilyen: 0
+      })
+    }
+  },[milyenOn])
+
   return (
     <Box>
       <TablePageHeader
@@ -116,11 +139,30 @@ export default function SellerProductsContainer() {
                 gap: '1rem',
               }}
             >
-              <ItemList
-                bucket={bucket}
-                setBucket={setBucket}
-                items={items}
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={milyenOn}
+                    onChange={() => setMilyenOn(!milyenOn)}
+                    name="checkedB"
+                    color="primary"
+                  />
+                }
+                label="Milyen"
               />
+              {!milyenOn ? (
+                <ItemList
+                  bucket={bucket}
+                  setBucket={setBucket}
+                  items={items}
+                />
+              ) : (
+                <MilyenCalculator
+                  milyenValues={milyenValues}
+                  setMilyenValues={setMilyenValues}
+                />
+              )
+              }
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
@@ -128,6 +170,8 @@ export default function SellerProductsContainer() {
               bucket={bucket}
               items={summaryItems}
               handleUpdateSummaryItems={handleUpdateSummaryItems}
+              milyenOn={milyenOn}
+              milyenValues={milyenValues}
             />
           </Grid>
         </Grid>

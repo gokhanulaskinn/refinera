@@ -160,6 +160,33 @@ export interface CurrencyItem {
 
 export const posProviders = ['Ozan', 'Elekse']
 
+export const ayars = [
+  { label: '1', value: 41.66 },
+  { label: '2', value: 83.32 },
+  { label: '3', value: 124.98 },
+  { label: '4', value: 166.64 },
+  { label: '5', value: 208.30 },
+  { label: '6', value: 249.96 },
+  { label: '7', value: 291.62 },
+  { label: '8', value: 333.28 },
+  { label: '9', value: 374.94 },
+  { label: '10', value: 416.60 },
+  { label: '11', value: 458.26 },
+  { label: '12', value: 499.92 },
+  { label: '13', value: 541.58 },
+  { label: '14', value: 585.00 },
+  { label: '15', value: 624.90 },
+  { label: '16', value: 666.56 },
+  { label: '17', value: 708.22 },
+  { label: '18', value: 750.00 },
+  { label: '19', value: 791.54 },
+  { label: '20', value: 833.20 },
+  { label: '21', value: 874.86 },
+  { label: '22', value: 916.00 },
+  { label: '23', value: 958.18 },
+  { label: '24', value: 995 },
+]
+
 
 // {
 //   "id": "clzgv0q5k0001ievais5kqit4",
@@ -219,7 +246,7 @@ export interface OzanPaymentRes {
 
 export interface EleksePaymentRes {
   URL_3DS: string;
-  ORDER_REF_NUMBER : string;
+  ORDER_REF_NUMBER: string;
 }
 
 export interface ConstantsType {
