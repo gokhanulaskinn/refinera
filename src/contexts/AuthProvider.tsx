@@ -15,7 +15,8 @@ type AuthStateType = {
   login: (token: string) => void,
   logout: () => void,
   user?: User,
-  initialAuthDone: boolean
+  setUser?: (user: User) => void,
+  initialAuthDone: boolean,
 }
 
 const initialAuthState: AuthStateType = {
@@ -23,6 +24,7 @@ const initialAuthState: AuthStateType = {
   exp: undefined,
   role: '',
   user: undefined,
+  setUser: (user: User) => { },
   setRole: (role: string) => { },
   login: (token: string) => { },
   logout: () => { },
@@ -100,6 +102,7 @@ export default function AuthProvider({ children }: AuthContextProps) {
         setRole,
         token,
         user,
+        setUser,
         login,
         logout,
         initialAuthDone,
