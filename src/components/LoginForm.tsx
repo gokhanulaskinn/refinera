@@ -4,6 +4,7 @@ import TextInput from './TextInput'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CommonButton from './CommonButton';
+import { useNavigate } from 'react-router-dom';
 
 type LoginFormProps = {
   handleLogin: (email: string, password: string) => void
@@ -14,6 +15,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
   const theme = useTheme();
+  const nav = useNavigate();
 
   return (
     <Box
@@ -105,7 +107,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
           />
           <CommonButton
             label="Şifremi Unuttum"
-            onClick={() => console.log('Şifremi Unuttum')}
+            onClick={() => nav('/forgot-password')}
             variant='text'
             sx={{
               width: 'wrap-content',

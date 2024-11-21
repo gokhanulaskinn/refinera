@@ -5,8 +5,9 @@ import CustomTable from '../components/CustomTable'
 import { ApiList, Jeweler, TableBodyRowType, TableDataType, Transaction } from '../utils/types'
 import CustomTablePagination from '../components/CustomTablePagination'
 import { useNavigate } from 'react-router-dom'
-import { baseUrl, fetcher, formatMoney } from '../utils/global'
+import { baseUrl, fetcher, formatMoney, getTransactionColor, getTransactionStatus } from '../utils/global'
 import useSWR from 'swr'
+import BasicMenu from '../components/BasicMenu'
 
 export default function LastUsersContainer() {
 
@@ -14,6 +15,9 @@ export default function LastUsersContainer() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [total, setTotal] = useState(0);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const [statusFilter, setStatusFilter] = useState('');
   const [tableData, setTableData] = useState<TableDataType>({
     head: [
       { id: 'name', label: 'İşlem Sahibi' },
@@ -21,15 +25,38 @@ export default function LastUsersContainer() {
       { id: 'phone', label: 'Telefon Numarası' },
       { id: 'section', label: 'Satış Yapan Mağaza' },
       { id: 'pos', label: 'Pos' },
+      { id: 'status', label: 'Durum' },
       { id: 'detail', label: 'Detay' }
     ],
     body: []
   });
 
   const { data, isLoading, error } = useSWR<ApiList<Transaction>>(
-    `${baseUrl}/transaction?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}`,
+    `${baseUrl}/transaction?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}&status=${statusFilter}`,
     (url: string) => fetcher(url)
   );
+
+  const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleFilterSelect = (item: string) => {
+    if (item === 'Başarılı') {
+      setStatusFilter('APPROVED');
+    } else if (item === 'Başarısız') {
+      setStatusFilter('ERROR');
+    } else if (item === 'Beklemede') {
+      setStatusFilter('WAITING');
+    } else {
+      setStatusFilter('');
+    }
+
+    setAnchorEl(null);
+  }
 
   const convertData = (data: ApiList<Transaction>) => {
     const bodyData: TableBodyRowType[] = data.results.map((transaction) => ({
@@ -39,7 +66,16 @@ export default function LastUsersContainer() {
         { value: transaction.phone || '', type: 'text' },
         { value: transaction.jeweler.companyName || '', type: 'text' },
         { value: transaction.pos || 'Ozan', type: 'text' },
-        { value: [formatMoney(((transaction.totalAmount / 100).toFixed(2) || '')) + ' TL'], type: 'badge' }
+        {
+          value: transaction.status ? getTransactionStatus(transaction.status) : '', type: 'badge',
+          sx: {
+            backgroundColor: getTransactionColor(transaction.status),
+          }
+        },
+        {
+          value: [formatMoney(((transaction.totalAmount / 100).toFixed(2) || '')) + ' TL'],
+          type: 'badge',
+        }
       ]
     })
     );
@@ -67,7 +103,7 @@ export default function LastUsersContainer() {
     >
       <TablePageHeader
         title='Son Kullanıcılar'
-        handleFilter={() => { }}
+        handleFilter={handleFilterClick}
         handleSearch={setSearch}
       />
       <CustomTable
@@ -80,6 +116,13 @@ export default function LastUsersContainer() {
           onPageChange={(page) => setPage(page)}
         />
       )}
+      <BasicMenu
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        items={['Hepsi', 'Başarılı', 'Başarısız', 'Beklemede']}
+        onSelected={handleFilterSelect}
+      />
     </Box>
   )
 }

@@ -6,7 +6,7 @@ type GuardProps = {
   children: React.ReactNode;
 }
 
-const nonAuthRoutes = ['/login', '/seller/get-payment/finish', '/pay'];
+const nonAuthRoutes = ['/login', '/seller/get-payment/finish', '/pay', '/forgot-password'];
 
 export default function Guard({ children }: GuardProps) {
 
@@ -38,7 +38,7 @@ export default function Guard({ children }: GuardProps) {
       if (exp < new Date()) {
         if (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/pay')) {
           // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
-      console.log('b')
+          console.log('b')
 
           nav('/login', { replace: true });
           logout!();
@@ -47,7 +47,7 @@ export default function Guard({ children }: GuardProps) {
     } else {
       if (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/pay')) {
         // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
-      console.log('c')
+        console.log('c')
 
         nav('/login', { replace: true });
         logout!();

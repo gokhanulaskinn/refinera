@@ -53,6 +53,7 @@ export const companyTypes = [
   { value: 'LIMITED', label: 'Limited' },
   { value: 'ANONYMOUS', label: 'Anonim' },
   { value: 'JOINT_STOCK', label: 'Sermaye Ortaklığı' },
+  { value: 'INDIVIDUAL', label: 'Şahıs' },
 ]
 
 export const getRoleName = (role: UserRole) => {
@@ -69,6 +70,32 @@ export const getRoleName = (role: UserRole) => {
       return 'Admin';
     case 'SUPPLIER_EMPLOYEE':
       return 'Çalışan';
+    default:
+      return '';
+  }
+}
+
+export const getTransactionStatus = (status: string) => {
+  switch (status) {
+    case 'APPROVED':
+      return 'Başarılı';
+    case 'ERROR':
+      return 'Başarısız';
+    case 'WAITING':
+      return 'Beklemede';
+    default:
+      return '';
+  }
+}
+
+export const getTransactionColor = (status: string) => {
+  switch (status) {
+    case 'APPROVED':
+      return '#1CBA761A';
+    case 'ERROR':
+      return '#C438251A';
+    case 'WAITING':
+      return '#FFC1071A';
     default:
       return '';
   }

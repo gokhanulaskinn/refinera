@@ -21,6 +21,7 @@ export default function TableBadge({ cell }: TableBadgeProps) {
             cursor: 'pointer',
             display: 'inline-block',
             margin: '4px',
+            ...cell.sx
           }}
         >
           {badge}
@@ -34,6 +35,7 @@ export default function TableBadge({ cell }: TableBadgeProps) {
             borderRadius: '8px',
             width: 'fit-content',
             cursor: 'pointer',
+            ...cell.sx
           }}
         >
           {cell.value}

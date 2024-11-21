@@ -1,3 +1,5 @@
+import { SxProps } from "@mui/material";
+
 export type ApiList<T> = {
   results: T[],
   total: number,
@@ -51,10 +53,16 @@ export interface Branch {
   status: Status;
   createdAt: Date;
   updatedAt: Date;
-  isMainBranch: boolean;
+  isMain: boolean;
   users: User[];
   jeweler: Jeweler;
   jewelerId: string;
+}
+
+export interface BranchInput {
+  name: string;
+  address?: string;
+  phone?: string;
 }
 
 export interface Jeweler {
@@ -290,6 +298,7 @@ export type TableRowCellType = {
   onSelected?: (id: any) => void;
   variant?: { id: string; label: string, bgColor?: string, textColor?: string }[];
   actions?: { name: string, action: any }[];
+  sx?: SxProps
 }
 
 export type BucketType = {

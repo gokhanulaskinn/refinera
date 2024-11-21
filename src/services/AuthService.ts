@@ -43,3 +43,22 @@ export const changePassword = async (userId: string, oldPassword: string, newPas
 
   return res;
 }
+
+export const userPasswordReset = async (email: string) => {
+  const url = `${baseUrl}/auth/reset-password`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(
+      {
+        email: email,
+      }
+    )
+  });
+
+  const res = await handleResponse(response);
+
+  return res;
+}

@@ -116,13 +116,13 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
         open={open}
         title={title}
         content={content}
-        onClose={() => console.log('kapat')}
+        onClose={() => setOpen(false)}
         type='add'
         isSuccessful={isSuccess}
-        actionText1='Ana Sayfaya Dön'
+        actionText1= {isSuccess ? 'Anasayfaya Dön' : 'Tekrar Dene'}
         actionText2='Listeyi Görüntüle'
-        onAction1={() => nav('/')}
-        onAction2={() => nav('/admin/users')}
+        onAction1={() => isSuccess ? nav(`/${role}`) : setOpen(false)}
+        onAction2={() => nav(`/${role}/users`)}
       />
     </Box>
   )

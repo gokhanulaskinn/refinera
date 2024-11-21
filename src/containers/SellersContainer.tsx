@@ -1,19 +1,18 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import TablePageHeader from '../components/TablePageHeader';
-import CustomTable from '../components/CustomTable';
-import { ApiList, ConstantsType, Jeweler, PosType, Status, TableBodyRowType, TableDataType } from '../utils/types';
-import CustomTablePagination from '../components/CustomTablePagination';
 import { useNavigate } from 'react-router-dom';
 import useSWR, { mutate } from 'swr';
-import { baseUrl, fetcher } from '../utils/global';
-import DeleteDialog from '../components/DeleteDialog';
-import { deleteSeller } from '../services/seller/SellerServices';
-import { useAlert } from '../hooks/useAlert';
 import BasicMenu from '../components/BasicMenu';
-import { updateBaseCommissionRate, updateJeweler } from '../services/admin/AdminServices';
+import CustomTable from '../components/CustomTable';
+import CustomTablePagination from '../components/CustomTablePagination';
+import DeleteDialog from '../components/DeleteDialog';
 import PosRateDialog from '../components/PosRateDialog';
-import { parse } from 'path';
+import TablePageHeader from '../components/TablePageHeader';
+import { useAlert } from '../hooks/useAlert';
+import { updateBaseCommissionRate, updateJeweler } from '../services/admin/AdminServices';
+import { deleteSeller } from '../services/seller/SellerServices';
+import { baseUrl, fetcher } from '../utils/global';
+import { ApiList, ConstantsType, Jeweler, PosType, Status, TableBodyRowType, TableDataType } from '../utils/types';
 
 export default function SellersContainer() {
 

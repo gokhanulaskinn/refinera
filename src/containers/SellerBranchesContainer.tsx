@@ -1,16 +1,14 @@
 import { Box } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
-import TablePageHeader from '../components/TablePageHeader'
-import CustomTable from '../components/CustomTable'
-import { ApiList, BankAccount, Branch, TableBodyRowType, TableDataType } from '../utils/types'
-import CustomTablePagination from '../components/CustomTablePagination'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useSWR from 'swr'
+import CustomTable from '../components/CustomTable'
+import CustomTablePagination from '../components/CustomTablePagination'
+import TablePageHeader from '../components/TablePageHeader'
 import { AuthContext } from '../contexts/AuthProvider'
-import useSWR, { mutate } from 'swr'
-import { baseUrl, fetcher } from '../utils/global'
-import { deleteBank, updateBank } from '../services/commonServices'
 import { useAlert } from '../hooks/useAlert'
-import DeleteDialog from '../components/DeleteDialog'
+import { baseUrl, fetcher } from '../utils/global'
+import { ApiList, Branch, TableBodyRowType, TableDataType } from '../utils/types'
 
 export default function SellerBranchesContainer() {
 
@@ -48,7 +46,9 @@ export default function SellerBranchesContainer() {
           actions: [
             {
               name: 'Düzenle',
-              action: () => console.log('edit')
+              action: () => {
+                nav(`/seller/branches/${branch.id}/edit`);
+              }
             },
             {
               name: 'Sil',

@@ -31,6 +31,8 @@ import SellerSuppliers from './views/seller/SellerSuppliers';
 import AdminReport from './views/admin/AdminReport';
 import SellerBranches from './views/seller/SellerBranches';
 import ExternalPayment from './views/ExternalPayment';
+import BranchAddEdit from './views/seller/BranchAddEdit';
+import ForgotPassword from './views/ForgotPassword';
 
 const App = () => {
 
@@ -43,6 +45,7 @@ const App = () => {
             <Router>
               <Routes>
                 <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/pay/:code" element={<ExternalPayment />} />
                 <Route path="/seller/get-payment/finish" element={<CloseIframePage />} />
               </Routes>
@@ -76,6 +79,8 @@ const App = () => {
                     <Route path="/seller/users/:id/edit" element={<UserAddEdit />} />
                     <Route path="/seller/suppliers" element={<SellerSuppliers />} />
                     <Route path="/seller/branches" element={<SellerBranches />} />
+                    <Route path="/seller/branches/new" element={<BranchAddEdit />} />
+                    <Route path="/seller/branches/:id/edit" element={<BranchAddEdit />} />
                     {/* <Route path="/seller/products" element={<SellerProducts />} /> */}
                     <Route path="/seller/get-payment" element={<GetPayment />} />
                     <Route path="/seller/profile" element={<UserProfile />} />

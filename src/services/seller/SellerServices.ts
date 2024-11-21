@@ -58,3 +58,58 @@ export const createPaymentLink = async (values: any, provider: string) => {
 
   return handleResponse(response);
 }
+
+
+export const createBranch = async (values: any) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/branches`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(values)
+  });
+
+  return handleResponse(response);
+}
+
+export const updateBranch = async (id: string, values: any) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/branches/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(values)
+  });
+
+  return handleResponse(response);
+}
+
+export const getBranch = async (id: string) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/branches/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  return handleResponse(response);
+}
+
+export const deleteBranch = async (id: string) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/branches/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  return handleResponse(response);
+}

@@ -93,10 +93,10 @@ export default function Sidebar() {
             label='Altın Sat'
             onClick={() => nav('/seller')}
           />
-          <SidebarAddButton
+          {/* <SidebarAddButton
             label='Has Altın Al'
             onClick={() => nav('/')}
-          />
+          /> */}
         </Box>
       )}
 
@@ -201,12 +201,12 @@ export default function Sidebar() {
               to='/seller/products'
               selected={loc.pathname === '/seller/products'}
             /> */}
-            <SidebarListItem
+            {/* <SidebarListItem
               label='Toptancılar'
               Icon={Suppliers}
               to='/seller/suppliers'
               selected={loc.pathname === '/seller/suppliers'}
-            />
+            /> */}
             <SidebarListItem
               label='Banka Hesapları'
               Icon={Banks}
