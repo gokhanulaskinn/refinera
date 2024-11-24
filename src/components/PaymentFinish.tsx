@@ -1,15 +1,13 @@
-import { ArrowForwardIos } from '@mui/icons-material'
-import { Box, Typography } from '@mui/material'
-import CommonButton from './CommonButton'
-import { formatMoney } from '../utils/global';
+import { ArrowForwardIos } from '@mui/icons-material';
+import { Box, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
-import { set } from 'lodash';
-import TextInput from './TextInput';
+import { AuthContext } from '../contexts/AuthProvider';
 import { useAlert } from '../hooks/useAlert';
 import { createPaymentLink } from '../services/seller/SellerServices';
-import { AuthContext } from '../contexts/AuthProvider';
-import ShareLinkDialog from './ShareLinkDialog';
+import { formatMoney } from '../utils/global';
+import CommonButton from './CommonButton';
 import CreditCardNumberInput from './CreditCardNumberInput';
+import ShareLinkDialog from './ShareLinkDialog';
 
 type PaymentFinishProps = {
   handleFinish(): void;
@@ -20,8 +18,6 @@ type PaymentFinishProps = {
 }
 
 export default function PaymentFinish({ handleFinish, price, canFinish, comissionFee, totalPrice }: PaymentFinishProps) {
-
-  const comissionRate = 0.025;
 
   const { user } = useContext(AuthContext);
 
@@ -41,7 +37,6 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
         phone: `90${phoneNumber}`,
       }, user?.jeweler?.pos.name === 'Ozan' ? 'ozan' : 'elekse');
       const url = res.shortUrl;
-      // const url = "https://refinera.com.tr/pay/DtJFjad1Ru";
       setUrl(url);
       setShareDialog(true);
     } catch (e) {
@@ -63,8 +58,6 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
 
     window.open(`https://wa.me/90${phoneNumber}?text=${encodeURI(text)}`, '_blank');
   }
-
-  console.log(phoneNumber)
 
   return (
     <Box>

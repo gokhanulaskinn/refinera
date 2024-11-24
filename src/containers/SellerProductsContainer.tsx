@@ -13,15 +13,6 @@ import MilyenCalculator from '../components/MilyenCalculator';
 
 
 export default function SellerProductsContainer() {
-  const variants = [
-    'Gram Altın',
-    'Çeyrek Altın',
-    'Yarım Altın',
-    'Tam Altın',
-    'Ata',
-    'Külçe Altın',
-    'Ziynet'
-  ];
 
   const suppliers = [
     'Harem Altın',

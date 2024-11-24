@@ -20,14 +20,37 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [title, setTitle] = React.useState('');
   const [content, setContent] = React.useState('');
-  const [values, setValues] = React.useState<User>();
+  const [userData, setUserData] = React.useState<User>();
   const showSnackBar = useAlert();
   const nav = useNavigate();
 
   const handleSubmit = async (values: any) => {
     try {
       if (id) {
-        const res = await updateUser(id, values);
+        const newValues = { ...values };
+        if (role === 'seller') {
+          if (userData?.branches?.length) {
+            if (userData.branches[0].id !== values.branch) {
+              newValues.branches = {
+                connect: {
+                  id: values.branch
+                },
+                disconnect: {
+                  id: userData.branches[0].id
+                }
+              }
+            }
+          } else {
+            newValues.branches = {
+              connect: {
+                id: values.branch
+              }
+            }
+          }
+        }
+
+        delete newValues.branch;
+        const res = await updateUser(id, newValues);
         showSnackBar('Kullanıcı başarıyla güncellendi!', 'success');
         nav(`/${role}/users`)
       } else {
@@ -38,6 +61,8 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
             password: '123456'
           });
         } else if (role === 'seller') {
+          const branchId = values.branch;
+          delete values.branch;
           const res = await createUser({
             ...values,
             role: UserRole.JEWELER_EMPLOYEE,
@@ -45,6 +70,11 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
             jeweler: {
               connect: {
                 id: user!.jewelerId // Burada jewelerId ile var olan bir Jeweler kaydına bağlanıyoruz.
+              }
+            },
+            branches: {
+              connect: {
+                id: branchId
               }
             }
           });
@@ -78,7 +108,7 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
   const fetchUser = async (id: string) => {
     try {
       const res = await getUser(token, id);
-      setValues(res);
+      setUserData(res);
     } catch (e) {
       console.log(e)
     }
@@ -89,8 +119,6 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
       fetchUser(id)
     }
   }, [id])
-
-
 
   return (
     <Box>
@@ -109,7 +137,7 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
       >
         <UserForm
           onSubmit={handleSubmit}
-          initialValues={values}
+          initialValues={userData}
         />
       </CustomPaper>
       <SubmitFormDialog
@@ -119,7 +147,7 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
         onClose={() => setOpen(false)}
         type='add'
         isSuccessful={isSuccess}
-        actionText1= {isSuccess ? 'Anasayfaya Dön' : 'Tekrar Dene'}
+        actionText1={isSuccess ? 'Anasayfaya Dön' : 'Tekrar Dene'}
         actionText2='Listeyi Görüntüle'
         onAction1={() => isSuccess ? nav(`/${role}`) : setOpen(false)}
         onAction2={() => nav(`/${role}/users`)}

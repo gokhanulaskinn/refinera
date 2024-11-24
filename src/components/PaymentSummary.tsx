@@ -36,8 +36,6 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
 
   const hasAltin = items?.find((item) => item.parity === 'ALTIN');
 
-  console.log(items)
-
   const nav = useNavigate();
 
   const [total, setTotal] = React.useState<number>(0);
@@ -102,6 +100,14 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
       setCommissionType('');
     }
   }, [commission, commissionType, price])
+
+  const handlePay = () => {
+    const type = milyenOn ? 'milyen' : 'normal';
+    //url encoded bucket
+    const bucketText = encodeURIComponent(JSON.stringify(bucket));
+
+    nav(`/seller/get-payment?price=${sellerTotal}&type=${type}&bucket=${bucketText}`);
+  }
 
   return (
     <Paper
@@ -299,7 +305,7 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
         />
       </Box>
       <CommonButton
-        onClick={() => { nav(`/seller/get-payment?price=${sellerTotal}`) }}
+        onClick={() => { handlePay() }}
         color='white'
         label='Alışverişi Tamamla'
         icon={<ArrowForwardIos />}

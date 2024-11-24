@@ -1,22 +1,22 @@
 import { Box, Grid, Typography } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import CustomPaper from '../components/CustomPaper';
 import CardInfo from '../components/CardInfo';
+import CustomPaper from '../components/CustomPaper';
+import IframeModal from '../components/IframeModal';
 import PaymentFinish from '../components/PaymentFinish';
 import SubmitFormDialog from '../components/SubmitFormDialog';
-import { ConstantsType, EleksePaymentRes, OzanPaymentRes, PaymentInput } from '../utils/types';
-import { paymentCreate, checkPaymentStatus } from '../services/seller/SellerServices'; // checkPaymentStatus eklenmiş
-import { useAlert } from '../hooks/useAlert';
-import IframeModal from '../components/IframeModal';
-import useSWR from 'swr';
-import { baseUrl, fetcher } from '../utils/global';
 import { AuthContext } from '../contexts/AuthProvider';
+import { useAlert } from '../hooks/useAlert';
+import { checkPaymentStatus, paymentCreate } from '../services/seller/SellerServices'; // checkPaymentStatus eklenmiş
+import { BucketType, EleksePaymentRes, OzanPaymentRes, PaymentInput } from '../utils/types';
 
 export default function GetPaymentContainer() {
   const loc = useLocation();
   const searchParams = new URLSearchParams(loc.search);
   const [price, setPrice] = useState<number>(0);
+  const [type, setType] = useState<string>('');
+  const [bucketData, setBucketData] = useState<BucketType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [iframeOpen, setIframeOpen] = useState<boolean>(false);
   const [comissionFee, setComissionFee] = useState<number>(0);
@@ -56,8 +56,24 @@ export default function GetPaymentContainer() {
 
   const handleFinish = async () => {
     try {
+      let product = {};
+      const type = searchParams.get('type');
+      const bucketData = JSON.parse(searchParams.get('bucket') || '[]') as BucketType[];
+      console.log(type)
+      if(type === 'normal') {
+        product = bucketData.map((item: any) => ({
+          name: item.itemId,
+          quantity: item.quantity
+        }));
+      } else {
+        product = {
+          name: type,
+          quantity: 1
+        }
+      }
       const res = await paymentCreate({
         ...cardInfo,
+        product,
         amount: price * 100,
       },
         posProvider === 'Ozan' ? 'ozan' : 'elekse'

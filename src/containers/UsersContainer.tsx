@@ -18,7 +18,7 @@ export default function UsersContainer() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [total, setTotal] = useState(0);
-  const [recordPerPage, setRecordPerPage] = useState(10);
+  const [recordPerPage, setRecordPerPage] = useState(1000);
   const [statusFilter, setStatusFilter] = useState('');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');

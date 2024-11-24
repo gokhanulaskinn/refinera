@@ -1,12 +1,11 @@
-import { Box, Grid, useTheme } from '@mui/material'
-import React, { useContext, useEffect } from 'react'
-import TextInput from './TextInput'
-import CommonButton from './CommonButton';
-import CommonSelect from './CommonSelect';
-import { identity } from 'lodash';
-import { User } from '../utils/types';
+import { Box, Grid } from '@mui/material';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthProvider';
+import { User } from '../utils/types';
+import CommonButton from './CommonButton';
+import SelectBranch from './SelectBranch';
+import TextInput from './TextInput';
 
 type UserFormProps = {
   onSubmit: (values: any) => void;
@@ -15,7 +14,8 @@ type UserFormProps = {
 
 export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
 
-  const {role} = useContext(AuthContext);
+  const { role } = useContext(AuthContext);
+  const [branch, setBranch] = React.useState<string>('');
   const nav = useNavigate();
 
   const [userInput, setUserInput] = React.useState({
@@ -34,7 +34,8 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
         email: initialValues.email || '',
         phone: initialValues.phone || '',
         identity: initialValues.identity || ''
-      })
+      });
+      setBranch(initialValues.branches?.[0]?.id || '');
     }
   }, [initialValues])
 
@@ -43,7 +44,10 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(userInput);
+          onSubmit({
+            ...userInput,
+            branch
+          });
         }}
       >
         <Grid container spacing={2}>
@@ -87,6 +91,14 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
               backgroundColor='#F2F4F7'
             />
           </Grid>
+          {role === 'seller' && (
+            <Grid item xs={12} md={6}>
+              <SelectBranch
+                branchId={branch}
+                setBranchId={setBranch}
+              />
+            </Grid>
+          )}
         </Grid>
         <Box
           sx={{
