@@ -160,6 +160,7 @@ export default function BanksContainer() {
       />
       <CustomTable
         data={tableData}
+        isLoading={isLoading}
       />
       {total > 1 && (
         <CustomTablePagination

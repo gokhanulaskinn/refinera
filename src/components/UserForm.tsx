@@ -6,6 +6,7 @@ import { User } from '../utils/types';
 import CommonButton from './CommonButton';
 import SelectBranch from './SelectBranch';
 import TextInput from './TextInput';
+import UserInfoInput from './UserInfoInput';
 
 type UserFormProps = {
   onSubmit: (values: any) => void;
@@ -44,10 +45,10 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit({
-            ...userInput,
-            branch
-          });
+          // onSubmit({
+          //   ...userInput,
+          //   branch
+          // });
         }}
       >
         <Grid container spacing={2}>
@@ -57,11 +58,13 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
               value={userInput.firstName}
               onChange={(e) => setUserInput({ ...userInput, firstName: e.target.value })}
               backgroundColor='#F2F4F7'
+              required
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextInput
               label="Soyad"
+              required
               value={userInput.lastName}
               onChange={(e) => setUserInput({ ...userInput, lastName: e.target.value })}
               backgroundColor='#F2F4F7'
@@ -70,30 +73,37 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
           <Grid item xs={12} md={6}>
             <TextInput
               label="E-posta"
+              required
+              type='email'
               value={userInput.email}
               onChange={(e) => setUserInput({ ...userInput, email: e.target.value })}
               backgroundColor='#F2F4F7'
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
-              label="Telefon"
+            <UserInfoInput
+              label='Telefon'
+              inputType='phone'
+              required
               value={userInput.phone}
-              onChange={(e) => setUserInput({ ...userInput, phone: e.target.value })}
+              onChange={(value) => setUserInput({ ...userInput, phone: value.replace(/[^0-9]/g, '') })}
               backgroundColor='#F2F4F7'
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
-              label="TC Kimlik No"
+            <UserInfoInput
+              label='TC Kimlik Numarası'
+              inputType='tc'
+              required
               value={userInput.identity}
-              onChange={(e) => setUserInput({ ...userInput, identity: e.target.value })}
+              onChange={(value) => setUserInput({ ...userInput, identity: value.replace(/[^0-9]/g, '') })}
               backgroundColor='#F2F4F7'
             />
           </Grid>
           {role === 'seller' && (
             <Grid item xs={12} md={6}>
               <SelectBranch
+                required
                 branchId={branch}
                 setBranchId={setBranch}
               />

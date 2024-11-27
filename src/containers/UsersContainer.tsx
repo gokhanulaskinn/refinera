@@ -167,6 +167,7 @@ export default function UsersContainer() {
       />
       <CustomTable
         data={tableData}
+        isLoading={isLoading}
       />
       {total > 1 && (
         <CustomTablePagination

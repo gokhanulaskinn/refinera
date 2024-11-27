@@ -211,7 +211,10 @@ export default function SellersContainer() {
         handleAdd={handleAddSeller}
         handleSearch={setSearch}
       />
-      <CustomTable data={tableData} />
+      <CustomTable
+        data={tableData}
+        isLoading={isLoading}
+      />
       {total > 1 && (
         <CustomTablePagination
           total={total}

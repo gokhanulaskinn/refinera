@@ -22,6 +22,7 @@ export default function LastUsersContainer() {
     head: [
       { id: 'name', label: 'İşlem Sahibi' },
       { id: 'owner', label: 'Kart Sahibi' },
+      { id: 'idendity', label: 'TCKN / Pasaport NO' },
       { id: 'phone', label: 'Telefon Numarası' },
       { id: 'section', label: 'Satış Yapan Mağaza' },
       { id: 'pos', label: 'Pos' },
@@ -63,6 +64,7 @@ export default function LastUsersContainer() {
       rowData: [
         { value: transaction.transactionOwner || '', type: 'text' },
         { value: transaction.cardholderName || '', type: 'text' },
+        { value: transaction.cardAccountIdentity, type: 'text' },
         { value: transaction.phone || '', type: 'text' },
         { value: transaction.jeweler.companyName || '', type: 'text' },
         { value: transaction.pos || 'Ozan', type: 'text' },
@@ -108,6 +110,7 @@ export default function LastUsersContainer() {
       />
       <CustomTable
         data={tableData}
+        isLoading={isLoading}
       />
       {total > 1 && (
         <CustomTablePagination

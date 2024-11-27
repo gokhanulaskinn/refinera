@@ -8,6 +8,8 @@ import { formatMoney } from '../utils/global';
 import CommonButton from './CommonButton';
 import CreditCardNumberInput from './CreditCardNumberInput';
 import ShareLinkDialog from './ShareLinkDialog';
+import { useLocation } from 'react-router-dom';
+import { BucketType } from '../utils/types';
 
 type PaymentFinishProps = {
   handleFinish(): void;
@@ -27,14 +29,32 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const showSnacbar = useAlert();
+  const loc = useLocation();
+  const searchParams = new URLSearchParams(loc.search);
 
   const handleShareLink = async () => {
     try {
       setLoading(true);
+
+      let product = {};
+      const type = searchParams.get('type');
+      const bucketData = JSON.parse(searchParams.get('bucket') || '[]') as BucketType[];
+      if(type === 'normal') {
+        product = bucketData.map((item: any) => ({
+          name: item.itemId,
+          quantity: item.quantity
+        }));
+      } else {
+        product = {
+          name: type,
+          quantity: 1
+        }
+      }
       const res = await createPaymentLink({
         amount: `${price * 100}`,
         email: user?.email,
         phone: `90${phoneNumber}`,
+        product,
       }, user?.jeweler?.pos.name === 'Ozan' ? 'ozan' : 'elekse');
       const url = res.shortUrl;
       setUrl(url);

@@ -28,11 +28,12 @@ export default function ExternalPayment() {
   const [token, setToken] = useState('');
   const [tokenData, setTokenData] = useState<any>();
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
+  const [product, setProduct] = useState<any>();
 
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
     customerName: '',
     customerPhone: '',
-    customerIdentity: '',
+    cardAccountIdentity: '',
     cardNumber: '',
     cardExpiry: '',
     cardCvv: '',
@@ -42,7 +43,7 @@ export default function ExternalPayment() {
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
   //   customerName: 'Mehmet Fatih BUÇAK',
   //   customerPhone: '5345649909',
-  //   customerIdentity: '23635962680',
+  //   cardAccountIdentity: '23635962680',
   //   cardNumber: '5269110246368999',
   //   cardExpiry: '08/2028',
   //   cardCvv: '987',
@@ -61,6 +62,8 @@ export default function ExternalPayment() {
         const decodedToken: any = jwtDecode(token);
         const price = decodedToken.amount / 100;
         const totalCost = price + (price * decodedToken.comission / 100);
+        const productData = decodedToken.product;
+        setProduct(productData);
         const pos = decodedToken.pos;
         setPos(pos);
         setPrice(price);
@@ -136,6 +139,7 @@ export default function ExternalPayment() {
     try {
       const res = await paymentCreate({
         ...cardInfo,
+        product,
         amount: price * 100,
       },
         pos === 'Ozan' ? 'ozan' : 'elekse',

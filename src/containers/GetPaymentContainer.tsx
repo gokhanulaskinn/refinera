@@ -35,7 +35,7 @@ export default function GetPaymentContainer() {
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
     customerName: '',
     customerPhone: '',
-    customerIdentity: '',
+    cardAccountIdentity: '',
     cardNumber: '',
     cardExpiry: '',
     cardCvv: '',
@@ -45,7 +45,7 @@ export default function GetPaymentContainer() {
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
   //   customerName: 'Mehmet Fatih BUÇAK',
   //   customerPhone: '5345649909',
-  //   customerIdentity: '23635962680',
+  //   cardAccountIdentity: '23635962680',
   //   cardNumber: '5269110246368999',
   //   cardExpiry: '08/2028',
   //   cardCvv: '987',
@@ -109,7 +109,7 @@ export default function GetPaymentContainer() {
     if (
       cardInfo?.customerName &&
       cardInfo?.customerPhone &&
-      cardInfo?.customerIdentity &&
+      cardInfo?.cardAccountIdentity &&
       cardInfo?.cardNumber &&
       cardInfo?.cardExpiry &&
       cardInfo?.cardCvv &&

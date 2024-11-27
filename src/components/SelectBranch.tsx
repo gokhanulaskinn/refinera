@@ -8,9 +8,10 @@ import CommonSelect from './CommonSelect';
 type SelectBranchProps = {
   branchId: string;
   setBranchId: (branchId: string) => void;
+  required?: boolean;
 }
 
-export default function SelectBranch({ branchId, setBranchId }: SelectBranchProps) {
+export default function SelectBranch({ branchId, setBranchId, required }: SelectBranchProps) {
 
   const { data, isLoading, error } = useSWR<ApiList<Branch>>(
     `${baseUrl}/branches?skip=0&take=${1000}`,
@@ -19,6 +20,7 @@ export default function SelectBranch({ branchId, setBranchId }: SelectBranchProp
   return (
     <Box>
       <CommonSelect
+        required={required}
         label="Mağaza Seçiniz"
         value={branchId}
         backgroundColor='#F2F4F7'

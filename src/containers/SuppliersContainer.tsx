@@ -404,6 +404,7 @@ export default function SuppliersContainer() {
       />
       <CustomTable
         data={tableData}
+        isLoading={isLoading}
       />
       <CustomTablePagination />
     </Box>

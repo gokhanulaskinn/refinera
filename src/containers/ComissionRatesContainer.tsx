@@ -173,6 +173,7 @@ export default function ComissionRatesContainer() {
           selectable
           selectedIds={selectedJewelers}
           setSelectedIds={setSelectedJewelers}
+          isLoading={jewelerLoading}
         />
         {total > 1 && (
           <CustomTablePagination
