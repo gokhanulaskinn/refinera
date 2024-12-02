@@ -3,11 +3,13 @@ import React, { useEffect } from 'react'
 import ReportCardBig from '../components/ReportCardBig'
 import { baseUrl, fetcher, formatMoney } from '../utils/global';
 import useSWR from 'swr';
+import ProductReport from '../components/ProductReport';
 
 export default function AdminReportContainer() {
   const theme = useTheme();
   const [totalRevenue, setTotalRevenue] = React.useState(0);
   const [totalProfit, setTotalProfit] = React.useState(0);
+  const [productList, setProductList] = React.useState<any[]>([]);
 
   const { data, isLoading, error } = useSWR<any>(
     `${baseUrl}/reports`,
@@ -20,6 +22,7 @@ export default function AdminReportContainer() {
     setTotalRevenue(parseFloat(price));
     const profit = (data?.totalProfit / 100).toString();
     setTotalProfit(parseFloat(profit));
+    setProductList(data?.productSummary);
   }, [data])
 
 
@@ -50,6 +53,18 @@ export default function AdminReportContainer() {
           badgeColor={theme.palette.primary.main}
           price={totalRevenue.toFixed(2)}
         />
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          mt: 2
+        }}
+      >
+        {productList && (<ProductReport
+          products={productList}
+        />)}
       </Box>
     </Box>
   )
