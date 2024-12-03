@@ -7,11 +7,25 @@ import CommonButton from './CommonButton';
 import SelectBranch from './SelectBranch';
 import TextInput from './TextInput';
 import UserInfoInput from './UserInfoInput';
+import * as yup from 'yup';
 
 type UserFormProps = {
   onSubmit: (values: any) => void;
   initialValues?: User;
 }
+
+// Add validation schema
+const validationSchema = yup.object().shape({
+  firstName: yup.string().required('Ad alanı zorunludur'),
+  lastName: yup.string().required('Soyad alanı zorunludur'),
+  email: yup.string().email('Geçerli bir e-posta adresi giriniz').required('E-posta alanı zorunludur'),
+  phone: yup.string()
+    .matches(/^\d{10}$/, 'Telefon numarası 10 haneli olmalıdır')
+    .required('Telefon alanı zorunludur'),
+  identity: yup.string()
+    .matches(/^\d{11}$/, 'TC Kimlik numarası 11 haneli olmalıdır')
+    .required('TC Kimlik numarası zorunludur'),
+});
 
 export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
 
@@ -27,6 +41,9 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
     identity: ''
   })
 
+  // Add error state
+  const [errors, setErrors] = React.useState<Partial<typeof userInput>>({});
+
   useEffect(() => {
     if (initialValues) {
       setUserInput({
@@ -40,44 +57,66 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
     }
   }, [initialValues])
 
+  // Update form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await validationSchema.validate(userInput, { abortEarly: false });
+      onSubmit({
+        ...userInput,
+        branch
+      });
+    } catch (err) {
+      if (err instanceof yup.ValidationError) {
+        const validationErrors: { [key: string]: string } = {};
+        err.inner.forEach((error) => {
+          if (error.path) {
+            validationErrors[error.path] = error.message;
+          }
+        });
+        setErrors(validationErrors);
+      }
+    }
+  };
+
   return (
     <Box>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          // onSubmit({
-          //   ...userInput,
-          //   branch
-          // });
-        }}
-      >
+      <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="Ad"
               value={userInput.firstName}
-              onChange={(e) => setUserInput({ ...userInput, firstName: e.target.value })}
+              onChange={(e) => setUserInput({ ...userInput, firstName: e})}
               backgroundColor='#F2F4F7'
+              inputType='text'
               required
+              error={!!errors.firstName}
+              helperText={errors.firstName}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="Soyad"
               required
               value={userInput.lastName}
-              onChange={(e) => setUserInput({ ...userInput, lastName: e.target.value })}
+              onChange={(e) => setUserInput({ ...userInput, lastName: e})}
               backgroundColor='#F2F4F7'
+              inputType='text'
+              error={!!errors.lastName}
+              helperText={errors.lastName}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="E-posta"
               required
-              type='email'
+              inputType='eposta'
               value={userInput.email}
-              onChange={(e) => setUserInput({ ...userInput, email: e.target.value })}
+              onChange={(e) => setUserInput({ ...userInput, email: e })}
               backgroundColor='#F2F4F7'
+              error={!!errors.email}
+              helperText={errors.email}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -88,6 +127,8 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
               value={userInput.phone}
               onChange={(value) => setUserInput({ ...userInput, phone: value.replace(/[^0-9]/g, '') })}
               backgroundColor='#F2F4F7'
+              error={!!errors.phone}
+              helperText={errors.phone}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -98,6 +139,8 @@ export default function UserForm({ onSubmit, initialValues }: UserFormProps) {
               value={userInput.identity}
               onChange={(value) => setUserInput({ ...userInput, identity: value.replace(/[^0-9]/g, '') })}
               backgroundColor='#F2F4F7'
+              error={!!errors.identity}
+              helperText={errors.identity}
             />
           </Grid>
           {role === 'seller' && (

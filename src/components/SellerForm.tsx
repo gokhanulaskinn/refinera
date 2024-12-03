@@ -1,18 +1,57 @@
 import { Box, Grid, Typography, useTheme } from '@mui/material'
 import React, { useEffect } from 'react'
-import TextInput from './TextInput'
+import UserInfoInput from './UserInfoInput'
 import CommonButton from './CommonButton';
 import CommonSelect from './CommonSelect';
 import { CompanyType, Jeweler, JewelerInput, posProviders } from '../utils/types';
 import { companyTypes } from '../utils/global';
 import CreditCardNumberInput from './CreditCardNumberInput';
 import NumberInput from './NumberInput';
+import * as yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 type SellerFormProps = {
   onSubmit: (values: JewelerInput) => void;
   initialValues?: Jeweler;
   isEdit?: boolean;
 }
+
+const validationSchema = yup.object().shape({
+  companyTableName: yup.string().required('Şirket tabela adı zorunludur'),
+  identity: yup.string()
+    .matches(/^\d{11}$/, 'TC Kimlik numarası 11 haneli olmalıdır')
+    .required('TC Kimlik numarası zorunludur'),
+  firstName: yup.string().required('Ad alanı zorunludur'),
+  lastName: yup.string().required('Soyad alanı zorunludur'),
+  email: yup.string().email('Geçerli bir e-posta adresi giriniz').required('E-posta alanı zorunludur'),
+  phone: yup.string()
+    .matches(/^\d{10}$/, 'Telefon numarası 10 haneli olmalıdır')
+    .required('Telefon alanı zorunludur'),
+  companyType: yup.string().required('Şirket türü seçiniz'),
+  companyName: yup.string().required('Şirket adı zorunludur'),
+  taxOffice: yup.string().required('Vergi dairesi zorunludur'),
+  taxNumber: yup.string()
+    .matches(/^\d{10}$/, 'Vergi numarası 10 haneli olmalıdır')
+    .required('Vergi numarası zorunludur'),
+  pos: yup.object().shape({
+    name: yup.string().required('POS türü seçiniz'),
+    rate: yup.number().min(0, 'POS oranı 0\'dan küçük olamaz').required('POS oranı zorunludur')
+  }),
+  bankName: yup.string().when('$isEdit', {
+    is: false,
+    then: (schema) => schema.required('Banka adı zorunludur')
+  }),
+  accountHolder: yup.string().when('$isEdit', {
+    is: false,
+    then: (schema) => schema.required('Hesap sahibi zorunludur')
+  }),
+  iban: yup.string().when('$isEdit', {
+    is: false,
+    then: (schema) => schema
+      .matches(/^TR\d{24}$/, 'Geçerli bir IBAN giriniz')
+      .required('IBAN zorunludur')
+  })
+});
 
 export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFormProps) {
 
@@ -35,6 +74,9 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
       rate: 0
     }
   })
+
+  const [errors, setErrors] = React.useState<any>({});
+  const nav = useNavigate();
 
   useEffect(() => {
     if (initialValues) {
@@ -81,70 +123,104 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
   return (
     <Box>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          onSubmit(values);
+          try {
+            await validationSchema.validate(values, { 
+              abortEarly: false,
+              context: { isEdit } 
+            });
+            onSubmit(values);
+          } catch (err) {
+            if (err instanceof yup.ValidationError) {
+              const validationErrors: { [key: string]: string } = {};
+              err.inner.forEach((error) => {
+                if (error.path) {
+                  validationErrors[error.path] = error.message;
+                }
+              });
+              setErrors(validationErrors);
+            }
+          }
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="Şirket Tabela Adı"
               required
-              value={values.companyTableName}
-              onChange={(e) => setValues({ ...values, companyTableName: e.target.value })}
+              value={values.companyTableName || ''}
+              onChange={(value) => setValues({ ...values, companyTableName: value })}
               backgroundColor='#F2F4F7'
+              inputType="text"
+              error={!!errors.companyTableName}
+              helperText={errors.companyTableName}
             />
           </Grid>
           {!isEdit && (
             <Grid item xs={12} md={6}>
-              <TextInput
+              <UserInfoInput
                 label="Mağaza Sahibi TC Kimlik Numarası"
                 required
-                value={values.identity}
-                onChange={(e) => setValues({ ...values, identity: e.target.value })}
+                value={values.identity || ''}
+                onChange={(value) => setValues({ ...values, identity: value })}
                 backgroundColor='#F2F4F7'
+                inputType="tc"
+                error={!!errors.identity}
+                helperText={errors.identity}
               />
             </Grid>
           )}
           {!isEdit && (
             <Grid item xs={12} md={6}>
-              <TextInput
+              <UserInfoInput
                 label="Mağaza Sahibi Adı"
                 required
-                value={values.firstName}
-                onChange={(e) => setValues({ ...values, firstName: e.target.value })}
+                value={values.firstName || ''}
+                onChange={(value) => setValues({ ...values, firstName: value })}
                 backgroundColor='#F2F4F7'
+                inputType="text"
+                error={!!errors.firstName}
+                helperText={errors.firstName}
               />
             </Grid>
           )}
           {!isEdit && (
             <Grid item xs={12} md={6}>
-              <TextInput
+              <UserInfoInput
                 label="Mağaza Sahibi Soyadı"
                 required
-                value={values.lastName}
-                onChange={(e) => setValues({ ...values, lastName: e.target.value })}
+                value={values.lastName || ''}
+                onChange={(value) => setValues({ ...values, lastName: value })}
                 backgroundColor='#F2F4F7'
+                inputType="text"
+                error={!!errors.lastName}
+                helperText={errors.lastName}
               />
             </Grid>
           )}
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="E-Posta Adresi"
               required
-              value={values.email}
-              onChange={(e) => setValues({ ...values, email: e.target.value })}
+              value={values.email || '' }
+              onChange={(value) => setValues({ ...values, email: value })}
               backgroundColor='#F2F4F7'
+              inputType="eposta"
+              error={!!errors.email}
+              helperText={errors.email}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="Cep Telefonu"
               required
-              value={values.phone}
-              onChange={(e) => setValues({ ...values, phone: e.target.value })}
+              value={values.phone || '' }
+              onChange={(value) => setValues({ ...values, phone: value })}
               backgroundColor='#F2F4F7'
+              inputType="phone"
+              error={!!errors.phone}
+              helperText={errors.phone}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -153,35 +229,46 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
               required
               backgroundColor='#F2F4F7'
               items={companyTypes}
-              value={values.companyType}
+              value={values.companyType || ''}
               onChange={(e) => setValues({ ...values, companyType: e.target.value })}
+              error={!!errors.companyType}
+              helperText={errors.companyType}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="Şirket Adı"
               required
-              value={values.companyName}
-              onChange={(e) => setValues({ ...values, companyName: e.target.value })}
+              value={values.companyName || ''}
+              onChange={(value) => setValues({ ...values, companyName: value })}
               backgroundColor='#F2F4F7'
+              inputType="text"
+              error={!!errors.companyName}
+              helperText={errors.companyName}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="Vergi Dairesi"
               required
-              value={values.taxOffice}
-              onChange={(e) => setValues({ ...values, taxOffice: e.target.value })}
+              value={values.taxOffice || ''}
+              onChange={(value) => setValues({ ...values, taxOffice: value })}
               backgroundColor='#F2F4F7'
+              inputType="text"
+              error={!!errors.taxOffice}
+              helperText={errors.taxOffice}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               label="Vergi No"
               required
-              value={values.taxNumber}
-              onChange={(e) => setValues({ ...values, taxNumber: e.target.value })}
+              value={values.taxNumber || ''}
+              onChange={(value) => setValues({ ...values, taxNumber: value })}
               backgroundColor='#F2F4F7'
+              inputType="text"
+              error={!!errors.taxNumber}
+              helperText={errors.taxNumber}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -190,38 +277,48 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
               required
               backgroundColor='#F2F4F7'
               items={posProviders.map((provider) => ({ label: provider, value: provider }))}
-              value={values.pos.name}
+              value={values.pos.name || ''}
               onChange={(e) => setValues({ ...values, pos: { ...values.pos, name: e.target.value } })}
+              error={!!errors.pos}
+              helperText={errors.pos}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <NumberInput
               label="Pos Oranı"
               required
-              value={values.pos.rate.toString()}
+              value={values.pos.rate.toString() || '0'}
               onChange={(value) => setValues({ ...values, pos: { ...values.pos, rate: value || 0 } })}
               backgroundColor='#F2F4F7'
+              error={!!errors.pos}
+              helperText={errors.pos}
             />
           </Grid>
           {!isEdit && (
             <>
               <Typography variant='h6' sx={{ mt: 2, width: '100%' }}>Banka Bilgileri</Typography>
               <Grid item xs={12} md={12}>
-                <TextInput
+                <UserInfoInput
                   label="Banka Tercihi"
                   required
-                  value={values.bankName}
-                  onChange={(e) => setValues({ ...values, bankName: e.target.value })}
+                  value={values.bankName || ''}
+                  onChange={(value) => setValues({ ...values, bankName: value })}
                   backgroundColor='#F2F4F7'
+                  inputType="text"
+                  error={!!errors.bankName}
+                  helperText={errors.bankName}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextInput
+                <UserInfoInput
                   required
                   label="Hesap Sahibi"
-                  value={values.accountHolder}
-                  onChange={(e) => setValues({ ...values, accountHolder: e.target.value })}
+                  value={values.accountHolder || ''}
+                  onChange={(value) => setValues({ ...values, accountHolder: value })}
                   backgroundColor='#F2F4F7'
+                  inputType="text"
+                  error={!!errors.accountHolder}
+                  helperText={errors.accountHolder}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -232,6 +329,8 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
                   value={values.iban || ''}
                   onChange={(value) => setValues({ ...values, iban: value.replaceAll(' ', '') })}
                   backgroundColor='#F2F4F7'
+                  error={!!errors.iban}
+                  helperText={errors.iban}
                 />
               </Grid>
             </>
@@ -248,7 +347,7 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
           <CommonButton
             label='Vazgeç'
             variant='outlined'
-            onClick={() => console.log('vazgeç')}
+            onClick={() => nav('/admin/jewelers')}
             sx={{
               width: '100px'
             }}

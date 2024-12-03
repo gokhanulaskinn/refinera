@@ -27,23 +27,16 @@ export default function BankAddEditContainer({ id }: BankAddEditContainerProps) 
   const handleSubmit = async (values: any) => {
     try {
       if (id) {
-        const res = await updateBank(id, values);
+        await updateBank(id, values);
         showSnacbar('Banka başarıyla güncellendi!', 'success');
-        nav(`/${role}/banks`)
+        nav(`/${role}/banks`);
       } else {
-        if (role === 'seller') {
-          const res = await createBank({
-            ...values,
-            jewelerId: user!.jewelerId,
-            isMain: false,
-          });
-        } else if (role === 'supplier') {
-          const res = await createBank({
-            ...values,
-            supplierId: user!.supplierId,
-            isMain: false,
-          });
-        }
+        const bankData = {
+          ...values,
+          isMain: false,
+          ...(role === 'seller' ? { jewelerId: user!.jewelerId } : { supplierId: user!.supplierId })
+        };
+        await createBank(bankData);
         setTitle('Banka Başarıyla Eklendi!');
         setContent('Banka ekleme işleminiz başarılı olmuştur. Bankayı liste sayfasından kontrol edebilirsiniz.');
         setIsSuccess(true);
@@ -58,10 +51,8 @@ export default function BankAddEditContainer({ id }: BankAddEditContainerProps) 
         setIsSuccess(false);
         setOpen(true);
       }
-      console.log(e);
+      console.error(e);
     }
-    console.log(values);
-    // setOpen(true);
   }
 
   const fetchBank = async (id: string) => {
@@ -87,7 +78,7 @@ export default function BankAddEditContainer({ id }: BankAddEditContainerProps) 
           fontWeight: 400,
         }}
       >
-        Banka Ekle
+        {id ? 'Banka Düzenle' : 'Banka Ekle'}
       </Typography>
       <CustomPaper
         sx={{
@@ -101,15 +92,15 @@ export default function BankAddEditContainer({ id }: BankAddEditContainerProps) 
       </CustomPaper>
       <SubmitFormDialog
         open={open}
-        title='Banka Başarıyla Eklendi!'
-        content='Banka ekleme işleminiz başarılı olmuştur. Bankayı liste sayfasından kontrol edebilirsiniz.'
-        onClose={() => console.log('kapat')}
-        type='add'
-        isSuccessful={true}
+        title={title}
+        content={content}
+        onClose={() => setOpen(false)}
+        type={id ? 'edit' : 'add'}
+        isSuccessful={isSuccess}
         actionText1='Ana Sayfaya Dön'
         actionText2='Listeyi Görüntüle'
         onAction1={() => nav('/')}
-        onAction2={() => nav('/admin/banks')}
+        onAction2={() => nav(`/${role}/banks`)}
       />
     </Box>
   )

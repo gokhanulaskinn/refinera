@@ -11,9 +11,11 @@ type CommonSelectProps = {
   borderEnabled?: boolean;
   required?: boolean;
   placeholder?: string;
+  error?: boolean;
+  helperText?: string;
 };
 
-export default function CommonSelect({ placeholder, borderEnabled, backgroundColor, label, value, onChange, items, sx, required }: CommonSelectProps) {
+export default function CommonSelect({ placeholder, borderEnabled, backgroundColor, label, value, onChange, items, sx, required, error, helperText }: CommonSelectProps) {
   const theme = useTheme();
 
   const handleChange = (event: any) => {
@@ -30,16 +32,16 @@ export default function CommonSelect({ placeholder, borderEnabled, backgroundCol
             backgroundColor: backgroundColor,
 
             '& fieldset': {
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
               borderWidth: borderEnabled ? 1 : 0,
             },
             '&:hover fieldset': {
               borderWidth: borderEnabled ? 1 : 0,
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
             },
             '&.Mui-focused fieldset': {
               borderWidth: borderEnabled ? 1 : 0,
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
             },
             '&.Mui-focused': {
               borderRadius: '60px',
@@ -48,12 +50,13 @@ export default function CommonSelect({ placeholder, borderEnabled, backgroundCol
           ...sx
         }}
         required={required}
+        error={error}
       >
         <Typography
           sx={{
             fontSize: 16,
             fontWeight: 500,
-            color: '#9AA6A7',
+            color: error ? 'error.main' : '#9AA6A7',
           }}
         >
           {label}
@@ -63,35 +66,36 @@ export default function CommonSelect({ placeholder, borderEnabled, backgroundCol
           onChange={handleChange}
           displayEmpty
           required={required}
+          error={error}
           inputProps={{
             sx: {
               borderRadius: '60px',
               backgroundColor: backgroundColor,
               '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#9AA6A7',
+                borderColor: error ? 'error.main' : '#9AA6A7',
                 borderWidth: borderEnabled ? 1 : 0,
                 borderRadius: '60px',
               },
               '&:hover .MuiOutlinedInput-notchedOutline': {
                 borderWidth: borderEnabled ? 1 : 0,
-                borderColor: '#9AA6A7',
+                borderColor: error ? 'error.main' : '#9AA6A7',
                 borderRadius: '60px',
               },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                 borderWidth: borderEnabled ? 1 : 0,
-                borderColor: '#9AA6A7',
+                borderColor: error ? 'error.main' : '#9AA6A7',
                 borderRadius: '60px',
               },
               '&.MuiOutlinedInput-input:focus': {
                 borderWidth: borderEnabled ? 1 : 0,
-                borderColor: '#9AA6A7',
+                borderColor: error ? 'error.main' : '#9AA6A7',
                 borderRadius: '60px',
               }
             }
           }}
         >
           <MenuItem value="" disabled>
-            {placeholder || 'Seçim yapınız'} {/* Placeholder burada yer alır */}
+            {placeholder || 'Seçim yapınız'}
           </MenuItem>
           {items.map((item) => (
             <MenuItem key={item.value} value={item.value}>
@@ -99,6 +103,18 @@ export default function CommonSelect({ placeholder, borderEnabled, backgroundCol
             </MenuItem>
           ))}
         </Select>
+        {helperText && (
+          <Typography
+            variant="caption"
+            sx={{
+              color: error ? 'error.main' : 'inherit',
+              ml: 2,
+              mt: 0.5
+            }}
+          >
+            {helperText}
+          </Typography>
+        )}
       </FormControl>
     </Box>
   );

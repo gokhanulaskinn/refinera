@@ -11,6 +11,8 @@ type CreditCardNumberInputProps = {
   borderEnabled?: boolean;
   inputType: 'number' | 'exp' | 'cvc' | 'iban' | 'phone';
   required?: boolean;
+  error?: boolean;
+  helperText?: string;
 };
 
 type CustomProps = {
@@ -36,7 +38,7 @@ const MaskedInput = React.forwardRef<HTMLInputElement, CustomProps & { mask: str
   );
 });
 
-export default function CreditCardNumberInput({ borderEnabled, backgroundColor, label, value, onChange, sx, inputType, required }: CreditCardNumberInputProps) {
+export default function CreditCardNumberInput({ borderEnabled, backgroundColor, label, value, onChange, sx, inputType, required, error, helperText }: CreditCardNumberInputProps) {
   const theme = useTheme();
 
   const getMask = () => {
@@ -67,16 +69,16 @@ export default function CreditCardNumberInput({ borderEnabled, backgroundColor, 
             backgroundColor: backgroundColor,
 
             '& fieldset': {
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
               borderWidth: borderEnabled ? 1 : 0,
             },
             '&:hover fieldset': {
               borderWidth: borderEnabled ? 1 : 0,
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
             },
             '&.Mui-focused fieldset': {
               borderWidth: borderEnabled ? 1 : 0,
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
             },
             '&.Mui-focused': {
               borderRadius: '60px',
@@ -94,7 +96,7 @@ export default function CreditCardNumberInput({ borderEnabled, backgroundColor, 
           sx={{
             fontSize: 16,
             fontWeight: 500,
-            color: '#9AA6A7',
+            color: error ? 'error.main' : '#9AA6A7',
           }}
         >
           {label}
@@ -108,6 +110,8 @@ export default function CreditCardNumberInput({ borderEnabled, backgroundColor, 
           }}
           placeholder={placeholder}
           required={required}
+          error={error}
+          helperText={helperText}
         />
       </FormControl>
     </Box>

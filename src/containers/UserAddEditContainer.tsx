@@ -55,6 +55,7 @@ export default function UserAddEditContainer({ id }: UserAddEditContainerProps) 
         nav(`/${role}/users`)
       } else {
         if (role === 'admin') {
+          delete values.branch
           const res = await createUser({
             ...values,
             role: UserRole.SUPERADMIN_EMPLOYEE,

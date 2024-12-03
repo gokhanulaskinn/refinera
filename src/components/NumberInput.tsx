@@ -19,6 +19,8 @@ type NumberInputProps = {
   backgroundColor?: string;
   borderEnabled?: boolean;
   endAdornment?: React.ReactNode;
+  error?: boolean;
+  helperText?: string;
 };
 
 export default function NumberInput({
@@ -31,6 +33,8 @@ export default function NumberInput({
   onChange,
   required,
   sx,
+  error,
+  helperText
 }: NumberInputProps) {
   const theme = useTheme();
   const [inputValue, setInputValue] = useState(value);
@@ -74,16 +78,16 @@ export default function NumberInput({
             backgroundColor: backgroundColor,
 
             '& fieldset': {
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
               borderWidth: borderEnabled ? 1 : 0,
             },
             '&:hover fieldset': {
               borderWidth: borderEnabled ? 1 : 0,
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
             },
             '&.Mui-focused fieldset': {
               borderWidth: borderEnabled ? 1 : 0,
-              borderColor: '#9AA6A7',
+              borderColor: error ? 'error.main' : '#9AA6A7',
             },
             '& input:-webkit-autofill': {
               WebkitBoxShadow: `0 0 0 1000px ${theme.palette.background.default} inset`,
@@ -97,7 +101,7 @@ export default function NumberInput({
           sx={{
             fontSize: 16,
             fontWeight: 500,
-            color: '#9AA6A7',
+            color: error ? 'error.main' : '#9AA6A7',
           }}
         >
           {label}
@@ -107,15 +111,17 @@ export default function NumberInput({
           value={inputValue}
           onChange={handleInputChange}
           required={required}
+          error={error}
+          helperText={helperText}
           InputProps={{
-            inputMode: 'decimal', // Mobil cihazlarda ondalık sayı girişi için
+            inputMode: 'decimal',
             endAdornment: (
               <InputAdornment position="end">
-                {endAdornment} {/* Özel endAdornment burada gösterilecek */}
+                {endAdornment}
               </InputAdornment>
             ),
           }}
-          type="text" // 'number' yerine 'text' kullanarak daha fazla esneklik sağlıyoruz
+          type="text"
         />
       </FormControl>
     </Box>

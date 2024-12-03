@@ -4,11 +4,22 @@ import TextInput from './TextInput'
 import CommonButton from './CommonButton';
 import { BankAccount } from '../utils/types';
 import CreditCardNumberInput from './CreditCardNumberInput';
+import UserInfoInput from './UserInfoInput'
+import * as yup from 'yup';
 
 type BankFormProps = {
   onSubmit: (values: any) => void
   initialValues?: BankAccount
 }
+
+// Add validation schema
+const validationSchema = yup.object().shape({
+  bankName: yup.string().required('Banka adı zorunludur'),
+  accountHolder: yup.string().required('Hesap sahibi zorunludur'),
+  iban: yup.string()
+    .matches(/^TR\d{24}$/, 'Geçerli bir IBAN giriniz')
+    .required('IBAN zorunludur')
+});
 
 export default function BankForm({ onSubmit, initialValues }: BankFormProps) {
   const theme = useTheme();
@@ -18,6 +29,8 @@ export default function BankForm({ onSubmit, initialValues }: BankFormProps) {
     accountHolder: '',
     iban: ''
   })
+
+  const [errors, setErrors] = React.useState<any>({});
 
   useEffect(() => {
     if (initialValues) {
@@ -33,27 +46,47 @@ export default function BankForm({ onSubmit, initialValues }: BankFormProps) {
   return (
     <Box>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          onSubmit(accountValues);
+          try {
+            await validationSchema.validate(accountValues, { abortEarly: false });
+            onSubmit(accountValues);
+          } catch (err) {
+            if (err instanceof yup.ValidationError) {
+              const validationErrors: { [key: string]: string } = {};
+              err.inner.forEach((error) => {
+                if (error.path) {
+                  validationErrors[error.path] = error.message;
+                }
+              });
+              setErrors(validationErrors);
+            }
+          }
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} md={12}>
-            <TextInput
+            <UserInfoInput
               label="Banka Tercihi"
-              value={accountValues.bankName}
-              onChange={(e) => setAccountValues({ ...accountValues, bankName: e.target.value })}
+              required
+              value={accountValues.bankName || ''}
+              onChange={(value) => setAccountValues({ ...accountValues, bankName: value })}
               backgroundColor='#F2F4F7'
+              inputType="text"
+              error={!!errors.bankName}
+              helperText={errors.bankName}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextInput
+            <UserInfoInput
               required
               label="Hesap Sahibi"
-              value={accountValues.accountHolder}
-              onChange={(e) => setAccountValues({ ...accountValues, accountHolder: e.target.value })}
+              value={accountValues.accountHolder || ''}
+              onChange={(value) => setAccountValues({ ...accountValues, accountHolder: value })}
               backgroundColor='#F2F4F7'
+              inputType="text"
+              error={!!errors.accountHolder}
+              helperText={errors.accountHolder}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -64,6 +97,8 @@ export default function BankForm({ onSubmit, initialValues }: BankFormProps) {
               value={accountValues.iban || ''}
               onChange={(value) => setAccountValues({ ...accountValues, iban: value.replaceAll(' ', '') })}
               backgroundColor='#F2F4F7'
+              error={!!errors.iban}
+              helperText={errors.iban}
             />
           </Grid>
         </Grid>
