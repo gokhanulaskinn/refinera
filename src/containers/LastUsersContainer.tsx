@@ -64,7 +64,7 @@ export default function LastUsersContainer() {
       rowData: [
         { value: transaction.transactionOwner || '', type: 'text' },
         { value: transaction.cardholderName || '', type: 'text' },
-        { value: transaction.customerIdentity, type: 'text' },
+        { value: transaction.customerIdentity || '---', type: 'text' },
         { value: transaction.phone || '', type: 'text' },
         { value: transaction.jeweler.companyName || '', type: 'text' },
         { value: transaction.pos || 'Ozan', type: 'text' },
