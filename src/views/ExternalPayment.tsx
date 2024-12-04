@@ -33,7 +33,7 @@ export default function ExternalPayment() {
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
     customerName: '',
     customerPhone: '',
-    cardAccountIdentity: '',
+    customerIdentity: '',
     cardNumber: '',
     cardExpiry: '',
     cardCvv: '',
@@ -43,7 +43,7 @@ export default function ExternalPayment() {
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
   //   customerName: 'Mehmet Fatih BUÇAK',
   //   customerPhone: '5345649909',
-  //   cardAccountIdentity: '23635962680',
+  //   customerIdentity: '23635962680',
   //   cardNumber: '5269110246368999',
   //   cardExpiry: '08/2028',
   //   cardCvv: '987',

@@ -150,7 +150,7 @@ export interface BankAccount {
 export interface PaymentInput {
   customerName: string;
   customerPhone: string,
-  cardAccountIdentity: string,
+  customerIdentity: string,
   cardNumber: string,
   cardExpiry: string,
   cardCvv: string,
@@ -233,7 +233,7 @@ export interface Transaction {
   amount: number;
   totalAmount: number;
   transactionOwner: string;
-  cardAccountIdentity: string;
+  customerIdentity: string;
   cardholderName: string;
   email: string;
   phone: string;
