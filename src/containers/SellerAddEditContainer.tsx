@@ -36,6 +36,7 @@ export default function SellerAddEditContainer({ id }: SellerAddEditContainerPro
         nav('/admin/jewelers');
       } else {
         const res = await createJeweler(values);
+        setIsSuccessful(true);
         setTitle('Kuyumcu Başarıyla Eklendi!');
         setContent('Kuyumcu ekleme işleminiz başarılı olmuştur. Kullanıcıyı liste sayfasından kontrol edebilirsiniz.');
         setOpen(true);
@@ -44,6 +45,7 @@ export default function SellerAddEditContainer({ id }: SellerAddEditContainerPro
       if (id) {
         showSnackbar('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
       } else {
+        setIsSuccessful(false);
         setTitle('Kuyumcu Eklenirken Bir Hata Oluştu!');
         setContent('Kuyumcu eklenirken bir hata oluştu. Lütfen tekrar deneyin.');
         setOpen(true);
@@ -91,14 +93,14 @@ export default function SellerAddEditContainer({ id }: SellerAddEditContainerPro
       </CustomPaper>
       <SubmitFormDialog
         open={open}
-        title='Kuyumcu Başarıyla Eklendi!'
-        content='Kuyumcu ekleme işleminiz başarılı olmuştur. Kullanıcıyı liste sayfasından kontrol edebilirsiniz.'
-        onClose={() => console.log('kapat')}
-        type='add'
-        isSuccessful={true}
-        actionText1='Ana Sayfaya Dön'
+        title={title}
+        content={content}
+        onClose={() => setOpen(false)}
+        type={id ? 'edit' : 'add'}
+        isSuccessful={isSuccessful}
+        actionText1={isSuccessful ? 'Ana Sayfaya Dön' : 'Tekrar Dene'}
         actionText2='Listeyi Görüntüle'
-        onAction1={() => nav('/')}
+        onAction1={() => isSuccessful ? nav('/') : setOpen(false)}
         onAction2={() => nav('/admin/jewelers')}
       />
     </Box>

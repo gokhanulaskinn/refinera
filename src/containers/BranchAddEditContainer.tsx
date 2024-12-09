@@ -93,12 +93,12 @@ export default function BranchAddEditContainer({ id }: BranchAddEditContainerPro
         open={open}
         title={title}
         content={content}
-        onClose={() => { setOpen(false) }}
-        type='add'
+        onClose={() => setOpen(false)}
+        type={id ? 'edit' : 'add'}
         isSuccessful={isSuccessful}
-        actionText1='Ana Sayfaya Dön'
+        actionText1={isSuccessful ? 'Ana Sayfaya Dön' : 'Tekrar Dene'}
         actionText2='Listeyi Görüntüle'
-        onAction1={() => nav('/seller')}
+        onAction1={() => isSuccessful ? nav('/seller') : setOpen(false)}
         onAction2={() => nav('/seller/branches')}
       />
     </Box>

@@ -97,9 +97,9 @@ export default function BankAddEditContainer({ id }: BankAddEditContainerProps) 
         onClose={() => setOpen(false)}
         type={id ? 'edit' : 'add'}
         isSuccessful={isSuccess}
-        actionText1='Ana Sayfaya Dön'
+        actionText1={isSuccess ? 'Ana Sayfaya Dön' : 'Tekrar Dene'}
         actionText2='Listeyi Görüntüle'
-        onAction1={() => nav('/')}
+        onAction1={() => isSuccess ? nav('/') : setOpen(false)}
         onAction2={() => nav(`/${role}/banks`)}
       />
     </Box>

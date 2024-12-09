@@ -9,6 +9,9 @@ export default function SupplierAddEditContainer() {
 
   const [open, setOpen] = React.useState(false);
   const nav = useNavigate();
+  const [isSuccessful, setIsSuccessful] = React.useState(false);
+  const [title, setTitle] = React.useState('');
+  const [content, setContent] = React.useState('');
 
   const handleSubmit = () => {
     setOpen(true);
@@ -35,14 +38,14 @@ export default function SupplierAddEditContainer() {
       </CustomPaper>
       <SubmitFormDialog
         open={open}
-        title='Toptancı Başarıyla Eklendi!'
-        content='Toptancı ekleme işleminiz başarılı olmuştur. Toptancıyı liste sayfasından kontrol edebilirsiniz.'
-        onClose={() => console.log('kapat')}
+        title={title}
+        content={content}
+        onClose={() => setOpen(false)}
         type='add'
-        isSuccessful={true}
-        actionText1='Ana Sayfaya Dön'
+        isSuccessful={isSuccessful}
+        actionText1={isSuccessful ? 'Ana Sayfaya Dön' : 'Tekrar Dene'}
         actionText2='Listeyi Görüntüle'
-        onAction1={() => nav('/')}
+        onAction1={() => isSuccessful ? nav('/') : setOpen(false)}
         onAction2={() => nav('/admin/suppliers')}
       />
     </Box>
