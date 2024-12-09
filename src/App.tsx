@@ -67,7 +67,7 @@ const App = () => {
                     <Route path="/admin/banks" element={<Banks />} />
                     <Route path="/admin/banks/new" element={<BankAddEdit />} />
                     <Route path="/admin/banks/:id/edit" element={<BankAddEdit />} />
-                    <Route path="/admin/last-users" element={<LastUsers />} />
+                    <Route path="/admin/transaction-history" element={<LastUsers />} />
                     <Route path="/admin/pos-rates" element={<ComissionRates />} />
 
                     <Route path="/seller" element={<SellerProducts />} />
@@ -85,6 +85,7 @@ const App = () => {
                     <Route path="/seller/get-payment" element={<GetPayment />} />
                     <Route path="/seller/profile" element={<UserProfile />} />
                     <Route path="/seller/reports" element={<SellerReport />} />
+                    <Route path="/seller/transaction-history" element={<LastUsers />} />
 
                     <Route path="/supplier/banks" element={<Banks />} />
                     <Route path="/supplier/banks/new" element={<BankAddEdit />} />

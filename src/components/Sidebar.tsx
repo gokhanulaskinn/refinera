@@ -173,10 +173,10 @@ export default function Sidebar() {
               selected={loc.pathname === '/admin/reports'}
             />
             <SidebarListItem
-              label='Son Kullanıcılar'
+              label='İşlem Geçmişi'
               Icon={LastUsers}
-              to='/admin/last-users'
-              selected={loc.pathname === '/admin/last-users'}
+              to='/admin/transaction-history'
+              selected={loc.pathname === '/admin/transaction-history'}
             />
           </List>
         </Box>
@@ -230,6 +230,12 @@ export default function Sidebar() {
               Icon={Users}
               to='/seller/users'
               selected={loc.pathname === '/seller/users'}
+            />
+                <SidebarListItem
+              label='İşlem Geçmişi'
+              Icon={LastUsers}
+              to='/seller/transaction-history'
+              selected={loc.pathname === '/seller/transaction-history'}
             />
 
             {/* <SidebarListItem
