@@ -104,38 +104,6 @@ export const getTransactionColor = (status: string) => {
 
 export const allCurrency = [
   {
-    "currency": "Has Altın",
-    "parity": "ALTIN",
-    "buyPrice": 2812.16,
-    "sellerPrice": 2832.94,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
-    "currency": "Ons Altın",
-    "parity": "ONS",
-    "buyPrice": 2559.7,
-    "sellerPrice": 2560,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
-    "currency": "Altın USD/KG",
-    "parity": "USDKG",
-    "buyPrice": 82830,
-    "sellerPrice": 83130,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
-    "currency": "Altın EUR/KG",
-    "parity": "EURKG",
-    "buyPrice": 74840,
-    "sellerPrice": 75270,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
     "currency": "22 Ayar Altın",
     "parity": "AYAR22",
     "buyPrice": 2557.07,
@@ -148,14 +116,6 @@ export const allCurrency = [
     "parity": "KULCEALTIN",
     "buyPrice": 2798.1,
     "sellerPrice": 2841.44,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
-    "currency": "Altın Gümüş Oranı",
-    "parity": "XAUXAG",
-    "buyPrice": 85.55,
-    "sellerPrice": 85.62,
     "diff": 0,
     "timestamp": "1726173612443"
   },
@@ -263,45 +223,23 @@ export const allCurrency = [
     "diff": 0,
     "timestamp": "1726173612443"
   },
-  {
-    "currency": "Gümüş TL",
-    "parity": "GUMUSTRY",
-    "buyPrice": 32.336,
-    "sellerPrice": 33.252,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
-    "currency": "Gümüş Ons",
-    "parity": "XAGUSD",
-    "buyPrice": 29.9,
-    "sellerPrice": 29.92,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
-    "currency": "Gümüş USD",
-    "parity": "GUMUSUSD",
-    "buyPrice": 957,
-    "sellerPrice": 981,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
-    "currency": "Platin Ons",
-    "parity": "XPDUSD",
-    "buyPrice": 1050,
-    "sellerPrice": 1052,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  },
-  {
-    "currency": "Paladyum Ons",
-    "parity": "PALADYUM",
-    "buyPrice": 23750,
-    "sellerPrice": 33820,
-    "diff": 0,
-    "timestamp": "1726173612443"
-  }
+];
+
+export const availableCurrencies = [
+  "AYAR22",
+  "KULCEALTIN",
+  "CEYREK_YENI",
+  "CEYREK_ESKI",
+  "YARIM_YENI",
+  "YARIM_ESKI",
+  "TEK_YENI",
+  "TEK_ESKI",
+  "ATA_YENI",
+  "ATA_ESKI",
+  "ATA5_YENI",
+  "ATA5_ESKI",
+  "GREMESE_YENI",
+  "GREMESE_ESKI",
+  "AYAR14"
 ];
 

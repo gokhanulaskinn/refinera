@@ -49,9 +49,9 @@ export default function SellerProductsContainer() {
   useEffect(() => {
     if (datas) {
       let defaultItems = allCurrency;
-      const loc = localStorage.getItem('items');
+      const loc = localStorage.getItem('items1');
       if (loc && loc.length > 40) {
-        defaultItems = JSON.parse(localStorage.getItem('items') || '');
+        defaultItems = JSON.parse(localStorage.getItem('items1') || '');
       }
       const values = Object.values(datas.data);
       const valuesData = values.map((item: any) => {
