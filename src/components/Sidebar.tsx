@@ -73,10 +73,10 @@ export default function Sidebar() {
             label='Kuyumcu Ekle'
             onClick={() => nav('/admin/jewelers/new')}
           />
-          <SidebarAddButton
+          {/* <SidebarAddButton
             label='Toptancı Ekle'
             onClick={() => nav('/admin/suppliers/new')}
-          />
+          /> */}
         </Box>
       )}
       {role === 'seller' && (
@@ -142,12 +142,12 @@ export default function Sidebar() {
               to='/admin/jewelers'
               selected={loc.pathname === '/admin/jewelers'}
             />
-            <SidebarListItem
+            {/* <SidebarListItem
               label='Toptancılar'
               Icon={Suppliers}
               to='/admin/suppliers'
               selected={loc.pathname === '/admin/suppliers'}
-            />
+            /> */}
             {/* <SidebarListItem
             label='Sözleşmeler'
             Icon={Contracts}

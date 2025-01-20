@@ -54,7 +54,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://refinera.com.tr",
+  "proxy": "https://medikalpos.2sworks.com",
   "devDependencies": {
     "@types/lodash": "^4.17.7"
   }

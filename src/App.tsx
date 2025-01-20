@@ -57,9 +57,9 @@ const App = () => {
                     <Route path="/admin/profile" element={<UserProfile />} />
                     <Route path="/admin/jewelers/new" element={<SellerAddEdit />} />
                     <Route path="/admin/jewelers/:id/edit" element={<SellerAddEdit />} />
-                    <Route path="/admin/suppliers" element={<Suppliers />} />
+                    {/* <Route path="/admin/suppliers" element={<Suppliers />} />
                     <Route path="/admin/suppliers/new" element={<SupplierAddEdit />} />
-                    <Route path="/admin/suppliers/:id/edit" element={<SupplierAddEdit />} />
+                    <Route path="/admin/suppliers/:id/edit" element={<SupplierAddEdit />} /> */}
                     <Route path="/admin/users" element={<Users />} />
                     <Route path="/admin/reports" element={<AdminReport />} />
                     <Route path="/admin/users/new" element={<UserAddEdit />} />
@@ -77,7 +77,7 @@ const App = () => {
                     <Route path="/seller/users" element={<Users />} />
                     <Route path="/seller/users/new" element={<UserAddEdit />} />
                     <Route path="/seller/users/:id/edit" element={<UserAddEdit />} />
-                    <Route path="/seller/suppliers" element={<SellerSuppliers />} />
+                    {/* <Route path="/seller/suppliers" element={<SellerSuppliers />} /> */}
                     <Route path="/seller/branches" element={<SellerBranches />} />
                     <Route path="/seller/branches/new" element={<BranchAddEdit />} />
                     <Route path="/seller/branches/:id/edit" element={<BranchAddEdit />} />
@@ -87,13 +87,13 @@ const App = () => {
                     <Route path="/seller/reports" element={<SellerReport />} />
                     <Route path="/seller/transaction-history" element={<LastUsers />} />
 
-                    <Route path="/supplier/banks" element={<Banks />} />
+                    {/* <Route path="/supplier/banks" element={<Banks />} />
                     <Route path="/supplier/banks/new" element={<BankAddEdit />} />
                     <Route path="/supplier/banks/:id/edit" element={<BankAddEdit />} />
                     <Route path="/supplier/users" element={<Users />} />
                     <Route path="/supplier/users/new" element={<UserAddEdit />} />
                     <Route path="/supplier/users/:id/edit" element={<UserAddEdit />} />
-                    <Route path="/supplier/suppliers" element={<SellerSuppliers />} />
+                    <Route path="/supplier/suppliers" element={<SellerSuppliers />} /> */}
 
                   </Routes>
                 </Layout>

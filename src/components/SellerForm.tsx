@@ -216,7 +216,7 @@ export default function SellerForm({ onSubmit, isEdit, initialValues }: SellerFo
               label="Cep Telefonu"
               required
               value={values.phone || '' }
-              onChange={(value) => setValues({ ...values, phone: value })}
+              onChange={(value) => setValues({ ...values, phone: value.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', '') })}
               backgroundColor='#F2F4F7'
               inputType="phone"
               error={!!errors.phone}

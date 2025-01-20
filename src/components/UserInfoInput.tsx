@@ -18,6 +18,7 @@ type UserInfoInputProps = {
   type?: string;
   autocomplete?: string;
   placeholder?: string;
+  disabled?: boolean;
 };
 
 type CustomProps = {
@@ -59,7 +60,8 @@ export default function UserInfoInput({
   helperText,
   type,
   autocomplete,
-  placeholder
+  placeholder,
+  disabled,
 }: UserInfoInputProps) {
   const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
@@ -143,6 +145,7 @@ export default function UserInfoInput({
         <TextField
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
           InputProps={{
             ...((inputType === 'text' || inputType === 'eposta' || inputType === 'password') ? {} : {
               inputComponent: MaskedInput as any,

@@ -90,7 +90,7 @@ export default function BranchForm({ onSubmit, initialValues }: BranchFormProps)
               label="Cep Telefonu"
               required
               value={values.phone || ''}
-              onChange={(e) => setValues({ ...values, phone: e})}
+              onChange={(e) => setValues({ ...values, phone: e.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', '')})}
               backgroundColor='#F2F4F7'
               inputType='phone'
               error={!!errors.phone}

@@ -83,6 +83,8 @@ export const getTransactionStatus = (status: string) => {
       return 'Başarısız';
     case 'WAITING':
       return 'Beklemede';
+    case 'DECLINED':
+      return 'Reddedildi';
     default:
       return '';
   }
@@ -96,6 +98,8 @@ export const getTransactionColor = (status: string) => {
       return '#C438251A';
     case 'WAITING':
       return '#FFC1071A';
+    case 'DECLINED':
+      return '#FF00001A';
     default:
       return '';
   }

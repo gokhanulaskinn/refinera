@@ -52,6 +52,8 @@ export default function LastUsersContainer() {
       setStatusFilter('ERROR');
     } else if (item === 'Beklemede') {
       setStatusFilter('WAITING');
+    }else if (item === 'Reddedildi') {
+      setStatusFilter('DECLINED');
     } else {
       setStatusFilter('');
     }

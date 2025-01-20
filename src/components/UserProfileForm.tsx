@@ -109,6 +109,7 @@ export default function UserProfileForm({ onSubmit, user }: UserProfileFormProps
               value={values.email || ''}
               onChange={(value) => setValues({ ...values, email: value })}
               backgroundColor='#F2F4F7'
+              disabled
               inputType="eposta"
               error={!!errors.email}
               helperText={errors.email}

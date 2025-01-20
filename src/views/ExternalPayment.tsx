@@ -105,7 +105,7 @@ export default function ExternalPayment() {
             } else {
               showSnacbar('Ödeme esnasında bir sorun oluştu', 'error')
             }
-            setIframeOpen(false);
+            setIframeOpen(false); 
           }
         } else if (pos === 'Elekse') {
           if (res.STATUS !== 'PAYMENT_WAITING') {
