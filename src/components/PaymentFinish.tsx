@@ -55,7 +55,7 @@ export default function PaymentFinish({ handleFinish, price, canFinish, comissio
         email: user?.email,
         phone: `90${phoneNumber}`,
         product,
-      }, user?.jeweler?.pos.name === 'Ozan' ? 'ozan' : 'elekse');
+      }, (user?.jeweler?.pos.name || '').toLowerCase());
       const url = res.shortUrl;
       setUrl(url);
       setShareDialog(true);

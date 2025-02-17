@@ -166,7 +166,7 @@ export interface CurrencyItem {
 
 
 
-export const posProviders = ['Ozan', 'Elekse']
+export const posProviders = ['Ozan', 'Elekse', 'Paywall']
 
 export const ayars = [
   { label: '1', value: 41.66 },
@@ -261,6 +261,7 @@ export interface EleksePaymentRes {
 export interface ConstantsType {
   Ozan?: string;
   Elekse?: string;
+  Paywall?: string;
 }
 
 // export type User = {

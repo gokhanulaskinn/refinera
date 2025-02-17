@@ -20,7 +20,7 @@ export default function ComissionRatesContainer() {
   const [search, setSearch] = useState('');
   const [total, setTotal] = useState(0);
   const [constans, setConstans] = React.useState<ConstantsType>();
-  const [activeTab, setActiveTab] = useState<'Ozan' | 'Elekse'>('Ozan');
+  const [activeTab, setActiveTab] = useState<'Ozan' | 'Elekse' | 'Paywall'>('Ozan');
   const [tableData, setTableData] = useState<TableDataType>({
     head: [
       { id: 'select', label: 'Seçim' },
@@ -106,7 +106,7 @@ export default function ComissionRatesContainer() {
       rowData: [
         { value: jeweler.companyName || '', type: 'text' },
         { value: jeweler.pos.name || '', type: 'text' },
-        { value: constans?.[jeweler.pos.name as 'Ozan' | 'Elekse']?.toString() || '0', type: 'badge' },
+        { value: constans?.[jeweler.pos.name as 'Ozan' | 'Elekse' | 'Paywall']?.toString() || '0', type: 'badge' },
         { value: jeweler.pos?.rate?.toString() || '0', type: 'badge' },
         { value: ((parseFloat(constans?.[activeTab] || '0')) + jeweler.pos.rate || 0).toString() || '0', type: 'badge' }
       ]
@@ -128,7 +128,7 @@ export default function ComissionRatesContainer() {
   const [value, setValue] = React.useState(0);
 
   useEffect(() => {
-    setActiveTab(tabs[value] as 'Ozan' | 'Elekse');
+    setActiveTab(tabs[value] as 'Ozan' | 'Elekse' | 'Paywall');
   }, [value])
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
