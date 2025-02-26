@@ -9,7 +9,7 @@ import SubmitFormDialog from '../components/SubmitFormDialog';
 import { AuthContext } from '../contexts/AuthProvider';
 import { useAlert } from '../hooks/useAlert';
 import { checkPaymentStatus, paymentCreate } from '../services/seller/SellerServices'; // checkPaymentStatus eklenmiş
-import { BucketType, EleksePaymentRes, OzanPaymentRes, PaymentInput } from '../utils/types';
+import { BucketType, EleksePaymentRes, OzanPaymentRes, PaymentInput, PaywallPaymentRes } from '../utils/types';
 
 export default function GetPaymentContainer() {
   const loc = useLocation();
@@ -24,6 +24,7 @@ export default function GetPaymentContainer() {
   const [canFinish, setCanFinish] = useState(false);
   const [ozanPaymentRes, setOzanPaymentRes] = useState<OzanPaymentRes>();
   const [eleksePaymentRes, setEleksePaymentRes] = useState<EleksePaymentRes>();
+  const [paywallPaymentRes, setPaywallPaymentRes] = useState<PaywallPaymentRes>();
   const [iframe, setIframe] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -32,25 +33,25 @@ export default function GetPaymentContainer() {
   const posProvider = user?.jeweler?.pos?.name;
   const showSnacbar = useAlert();
 
-  const [cardInfo, setCardInfo] = useState<PaymentInput>({
-    customerName: '',
-    customerPhone: '',
-    customerIdentity: '',
-    cardNumber: '',
-    cardExpiry: '',
-    cardCvv: '',
-    cardAccountHolderName: ''
-  });
-
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
-  //   customerName: 'Mehmet Fatih BUÇAK',
-  //   customerPhone: '5345649909',
-  //   customerIdentity: '23635962680',
-  //   cardNumber: '5269110246368999',
-  //   cardExpiry: '08/2028',
-  //   cardCvv: '987',
-  //   cardAccountHolderName: 'Mehmet BUÇAK'
+  //   customerName: '',
+  //   customerPhone: '',
+  //   customerIdentity: '',
+  //   cardNumber: '',
+  //   cardExpiry: '',
+  //   cardCvv: '',
+  //   cardAccountHolderName: ''
   // });
+
+  const [cardInfo, setCardInfo] = useState<PaymentInput>({
+    customerName: 'Mehmet Fatih BUÇAK',
+    customerPhone: '5345649909',
+    customerIdentity: '23635962680',
+    cardNumber: '5269110246368999',
+    cardExpiry: '08/2028',
+    cardCvv: '987',
+    cardAccountHolderName: 'Mehmet BUÇAK'
+  });
 
   const nav = useNavigate();
 
@@ -60,7 +61,7 @@ export default function GetPaymentContainer() {
       const type = searchParams.get('type');
       const bucketData = JSON.parse(searchParams.get('bucket') || '[]') as BucketType[];
       console.log(type)
-      if(type === 'normal') {
+      if (type === 'normal') {
         product = bucketData.map((item: any) => ({
           name: item.itemId,
           quantity: item.quantity
@@ -76,7 +77,7 @@ export default function GetPaymentContainer() {
         product,
         amount: price * 100,
       },
-        posProvider === 'Ozan' ? 'ozan' : 'elekse'
+        (posProvider || '').toLowerCase()
       );
       if (user?.jeweler?.pos.name === 'Ozan') {
         if (res.form3d) {
@@ -88,6 +89,15 @@ export default function GetPaymentContainer() {
         if (res.URL_3DS) {
           setIframe(res.URL_3DS);
           setEleksePaymentRes(res);
+          setIframeOpen(true);
+        }
+      } else if (user?.jeweler?.pos.name === 'Paywall') {
+        if (res?.Body?.RedirectUrl) {
+          setIframe(res?.Body?.RedirectUrl);
+          setPaywallPaymentRes({
+            redirectUrl: res?.Body?.RedirectUrl,
+            merchantuniquecode: res?.Body?.Payment?.MerchantUniqueKey,
+          });
           setIframeOpen(true);
         }
       }
@@ -130,14 +140,18 @@ export default function GetPaymentContainer() {
             referenceNo: ozanPaymentRes?.referenceNo,
             transactionId: ozanPaymentRes?.transactionId,
           }
-        } else {
+        } else if (user?.jeweler?.pos.name === 'Elekse') {
           body = {
             order_ref_number: eleksePaymentRes?.ORDER_REF_NUMBER,
+          }
+        } else if (user?.jeweler?.pos.name === 'Paywall') {
+          body = {
+            merchantuniquecode: paywallPaymentRes?.merchantuniquecode,
           }
         }
         const res = await checkPaymentStatus(
           body,
-          posProvider === 'Ozan' ? 'ozan' : 'elekse');
+          (posProvider || '').toLowerCase());
         if (posProvider === 'Ozan') {
           if (res.status !== 'WAITING') {
             clearInterval(interval);
@@ -155,6 +169,22 @@ export default function GetPaymentContainer() {
             setIframeOpen(false);
           }
         } else if (posProvider === 'Elekse') {
+          if (res.STATUS !== 'PAYMENT_WAITING') {
+            clearInterval(interval);
+            showSnacbar(`Ödeme ${res.RETURN_MESSAGE}`, res.STATUS);
+            if (res.STATUS === 'SUCCESS') {
+              setIsSuccessful(true);
+              setTitle('Ödeme Başarılı');
+              setContent('Ödemeniz başarıyla gerçekleşmiştir.');
+            } else {
+              setIsSuccessful(false);
+              setTitle('Ödeme Başarısız');
+              setContent(res.message);
+            }
+            setOpen(true);
+            setIframeOpen(false);
+          }
+        } else if (posProvider === 'Paywall') {
           if (res.STATUS !== 'PAYMENT_WAITING') {
             clearInterval(interval);
             showSnacbar(`Ödeme ${res.RETURN_MESSAGE}`, res.STATUS);
@@ -223,7 +253,7 @@ export default function GetPaymentContainer() {
         actionText1={isSuccessful ? 'Anasayfaya Dön' : 'Tekrar Dene'}
         actionText2="Ürünler"
         onAction1={() => isSuccessful ? nav('/seller') : setOpen(false)}
-        onAction2={() => nav('/seller/products')}
+        onAction2={() => nav('/seller')}
       />
       <IframeModal open={iframeOpen} iframeUrl={iframe} onClose={() => setIframeOpen(false)} />
     </Box>

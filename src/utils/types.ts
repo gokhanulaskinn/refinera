@@ -253,6 +253,11 @@ export interface OzanPaymentRes {
   form3d: string;
 }
 
+export interface PaywallPaymentRes {
+  redirectUrl: string;
+  merchantuniquecode: string;
+}
+
 export interface EleksePaymentRes {
   URL_3DS: string;
   ORDER_REF_NUMBER: string;

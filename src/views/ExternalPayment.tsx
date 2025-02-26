@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import GetPaymentContainer from '../containers/GetPaymentContainer'
 import CustomPaper from '../components/CustomPaper'
 import CardInfo from '../components/CardInfo'
-import { EleksePaymentRes, OzanPaymentRes, PaymentInput } from '../utils/types'
+import { EleksePaymentRes, OzanPaymentRes, PaymentInput, PaywallPaymentRes } from '../utils/types'
 import { Box, Typography } from '@mui/material'
 import CommonButton from '../components/CommonButton'
 import smalLogo from '../assets/images/small-logo.svg';
@@ -14,12 +14,12 @@ import { getLongUrl } from '../services/commonServices'
 import { jwtDecode } from 'jwt-decode'
 
 export default function ExternalPayment() {
-  console.log('ExternalPayment')
   const { code } = useParams<{ code: string }>();
   const [price, setPrice] = useState(0);
   const showSnacbar = useAlert();
   const [ozanPaymentRes, setOzanPaymentRes] = useState<OzanPaymentRes>();
   const [eleksePaymentRes, setEleksePaymentRes] = useState<EleksePaymentRes>();
+  const [paywallPaymentRes, setPaywallPaymentRes] = useState<PaywallPaymentRes>();
   const [iframe, setIframe] = useState<string>('');
   const [iframeOpen, setIframeOpen] = useState(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -69,7 +69,6 @@ export default function ExternalPayment() {
         setPrice(price);
         setTotalPrice(totalCost);
         setTokenData(decodedToken);
-        console.log(decodedToken)
       } catch (error) {
         showSnacbar('Ödeme oluşturulamadı', 'error');
       } finally {
@@ -92,12 +91,15 @@ export default function ExternalPayment() {
           body = {
             order_ref_number: eleksePaymentRes?.ORDER_REF_NUMBER,
           }
+        } else if (pos === 'Paywall') {
+          body = {
+            merchantuniquecode: paywallPaymentRes?.merchantuniquecode,
+          }
         }
-        const res = await checkPaymentStatus(body, pos === 'Ozan' ? 'ozan' : 'elekse', token);
+        const res = await checkPaymentStatus(body, pos.toLowerCase(), token);
         if (pos === 'Ozan') {
           if (res.status !== 'WAITING') {
             clearInterval(interval);
-            console.log('ozannnn')
             showSnacbar(`Ödeme ${res.message}`, res.status);
             if (res.status === 'APPROVED') {
               setIsSuccessful(true);
@@ -105,12 +107,23 @@ export default function ExternalPayment() {
             } else {
               showSnacbar('Ödeme esnasında bir sorun oluştu', 'error')
             }
-            setIframeOpen(false); 
+            setIframeOpen(false);
           }
         } else if (pos === 'Elekse') {
           if (res.STATUS !== 'PAYMENT_WAITING') {
             clearInterval(interval);
-            console.log('elekseeee')
+            showSnacbar(`Ödeme ${res.RETURN_MESSAGE}`, res.STATUS);
+            if (res.STATUS === 'SUCCESS') {
+              setIsSuccessful(true);
+              showSnacbar('Ödeme başarı ile gerçekleşti', 'success')
+            } else {
+              showSnacbar('Ödeme esnasında bir sorun oluştu', 'error')
+            }
+            setIframeOpen(false);
+          }
+        } else if (pos === 'Paywall') {
+          if (res.STATUS !== 'PAYMENT_WAITING') {
+            clearInterval(interval);
             showSnacbar(`Ödeme ${res.RETURN_MESSAGE}`, res.STATUS);
             if (res.STATUS === 'SUCCESS') {
               setIsSuccessful(true);
@@ -142,7 +155,7 @@ export default function ExternalPayment() {
         product,
         amount: price * 100,
       },
-        pos === 'Ozan' ? 'ozan' : 'elekse',
+        pos.toLowerCase(),
         token
       );
       if (pos === 'Ozan') {
@@ -155,6 +168,15 @@ export default function ExternalPayment() {
         if (res.URL_3DS) {
           setIframe(res.URL_3DS);
           setEleksePaymentRes(res);
+          setIframeOpen(true);
+        }
+      } else if (pos === 'Paywall') {
+        if (res?.Body?.RedirectUrl) {
+          setIframe(res?.Body?.RedirectUrl);
+          setPaywallPaymentRes({
+            redirectUrl: res?.Body?.RedirectUrl,
+            merchantuniquecode: res?.Body?.Payment?.MerchantUniqueKey,
+          });
           setIframeOpen(true);
         }
       }
