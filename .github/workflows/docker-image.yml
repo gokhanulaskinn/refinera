@@ -48,4 +48,4 @@ jobs:
           echo "Container does not exist. Skipping..."
         fi
 
-        docker run -d --name Refinera_Frontend --hostname frontend --env X_API_KEY= "123" --network Refinera_net --restart unless-stopped -p 8092:80 registry.2sworks.com/2sprivate/refinera-frontend:latest
+        docker run -d --name Refinera_Frontend --hostname frontend --env X_API_KEY="123" --network Refinera_net --restart unless-stopped -p 8092:80 registry.2sworks.com/2sprivate/refinera-frontend:latest
