@@ -95,14 +95,6 @@ export default function GetPaymentContainer() {
         if (res?.Body?.RedirectUrl) {
           let redirectUrl = res?.Body?.RedirectUrl;
           
-          const apiCallbackUrl = 'https://api.yourdomain.com/payment/callback';
-          
-          if (redirectUrl.includes('?')) {
-            redirectUrl += `&callbackUrl=${encodeURIComponent(apiCallbackUrl)}`;
-          } else {
-            redirectUrl += `?callbackUrl=${encodeURIComponent(apiCallbackUrl)}`;
-          }
-          
           window.location.href = redirectUrl;
           
           setPaywallPaymentRes({
