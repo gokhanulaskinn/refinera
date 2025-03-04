@@ -47,7 +47,7 @@ export default function SellerProductsContainer() {
   const [items, setItems] = React.useState<CurrencyItem[]>([])
 
   useEffect(() => {
-    if (datas) {
+    if (datas && datas.data) {
       let defaultItems = allCurrency;
       const loc = localStorage.getItem('items1');
       if (loc && loc.length > 40) {
@@ -61,7 +61,7 @@ export default function SellerProductsContainer() {
           buyPrice: parseFloat(item.alis),
           sellerPrice: parseFloat(item.satis),
           diff: 0,
-          timestamp: datas.meta.time
+          timestamp: datas.meta?.time || new Date().toISOString()
         }
       })
       const newValues = defaultItems.map((item: CurrencyItem) => {

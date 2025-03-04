@@ -33,6 +33,9 @@ import SellerBranches from './views/seller/SellerBranches';
 import ExternalPayment from './views/ExternalPayment';
 import BranchAddEdit from './views/seller/BranchAddEdit';
 import ForgotPassword from './views/ForgotPassword';
+import PaymentCallbackPage from './views/common/PaymentCallbackPage';
+import PaymentSuccessPage from './views/common/PaymentSuccessPage';
+import PaymentFailedPage from './views/common/PaymentFailedPage';
 
 const App = () => {
 
@@ -47,7 +50,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/pay/:code" element={<ExternalPayment />} />
-                <Route path="/seller/get-payment/finish" element={<CloseIframePage />} />
+                     
               </Routes>
               <Guard>
                 <Layout>
@@ -86,6 +89,9 @@ const App = () => {
                     <Route path="/seller/profile" element={<UserProfile />} />
                     <Route path="/seller/reports" element={<SellerReport />} />
                     <Route path="/seller/transaction-history" element={<LastUsers />} />
+                    <Route path="/seller/get-payment/payment-result" element={<PaymentCallbackPage />} />
+                    <Route path="/seller/get-payment/payment-success" element={<PaymentSuccessPage />} />
+                    <Route path="/seller/get-payment/payment-failed" element={<PaymentFailedPage />} />
 
                     {/* <Route path="/supplier/banks" element={<Banks />} />
                     <Route path="/supplier/banks/new" element={<BankAddEdit />} />
