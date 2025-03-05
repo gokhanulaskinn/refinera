@@ -6,7 +6,7 @@ type GuardProps = {
   children: React.ReactNode;
 }
 
-const nonAuthRoutes = ['/login', '/seller/get-payment/finish', '/pay', '/forgot-password'];
+const nonAuthRoutes = ['/login', '/seller/get-payment/finish', '/link-pay', '/forgot-password'];
 
 export default function Guard({ children }: GuardProps) {
 
@@ -17,13 +17,13 @@ export default function Guard({ children }: GuardProps) {
 
   useEffect(() => {
     if (!initialAuthDone) return;
-    if (!exp && (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/pay'))) {
+    if (!exp && (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/link-pay'))) {
       // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
       console.log('a')
       nav('/login', { replace: true });
     }
 
-    if (exp && (nonAuthRoutes.includes(loc.pathname) || loc.pathname.includes('/pay'))) {
+    if (exp && (nonAuthRoutes.includes(loc.pathname) || loc.pathname.includes('/link-pay'))) {
       const qs = new URLSearchParams(loc.search);
       let redirectUrl = qs.get('redirect');
       if (redirectUrl) {
@@ -36,7 +36,7 @@ export default function Guard({ children }: GuardProps) {
 
     if (exp) {
       if (exp < new Date()) {
-        if (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/pay')) {
+        if (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/link-pay')) {
           // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
           console.log('b')
 
@@ -45,7 +45,7 @@ export default function Guard({ children }: GuardProps) {
         }
       }
     } else {
-      if (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/pay')) {
+      if (!nonAuthRoutes.includes(loc.pathname) && !loc.pathname.includes('/link-pay')) {
         // nav(`/login?redirect=${loc.pathname}&redirectQs=${loc.search.slice(1)}`, { replace: true });
         console.log('c')
 
