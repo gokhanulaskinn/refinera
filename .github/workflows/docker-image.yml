@@ -1,0 +1,51 @@
+name: Docker Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: 2SMasterDocker
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Docker login
+    - name: Log in to Docker registry
+      uses: docker/login-action@v2
+      with:
+        registry: registry.2sworks.com  # Özel registry adresi
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    # Docker image'lerini temizle
+    - name: Clean up unused Docker images
+      run: |
+        docker rmi registry.2sworks.com/2sprivate/refinera-frontend:latest || true
+
+    # Docker image build
+    - name: Build Docker image
+      run: docker build -t registry.2sworks.com/2sprivate/refinera-frontend:latest .
+
+    # Docker image push
+    - name: Push Docker image to Private Registry
+      run: docker push registry.2sworks.com/2sprivate/refinera-frontend:latest
+
+    # Docker Deploy başla
+    - name: Deploy Docker Container
+      run: |
+        # Network oluşturma (hata önleme)
+        docker network inspect Refinera_net >/dev/null 2>&1 || docker network create Refinera_net
+        
+        if [ "$(docker ps -aq -f name=Refinera_Frontend)" ]; then
+          echo "Container exists. Stopping and removing..."
+          docker stop Refinera_Frontend
+          docker rm -f Refinera_Frontend
+        else
+          echo "Container does not exist. Skipping..."
+        fi
+
+        docker run -d --name Refinera_Frontend --hostname frontend --env X_API_KEY="123" --network Refinera_net --restart unless-stopped -p 8092:80 registry.2sworks.com/2sprivate/refinera-frontend:latest

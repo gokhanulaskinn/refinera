@@ -47,9 +47,9 @@ export default function GetPaymentContainer() {
   //   customerName: 'Mehmet Fatih BUÇAK',
   //   customerPhone: '5345649909',
   //   customerIdentity: '23635962680',
-  //   cardNumber: '5269110246368999',
-  //   cardExpiry: '08/2028',
-  //   cardCvv: '987',
+  //   cardNumber: '5528790000000008',
+  //   cardExpiry: '12/2030',
+  //   cardCvv: '123',
   //   cardAccountHolderName: 'Mehmet BUÇAK'
   // });
 
@@ -93,12 +93,14 @@ export default function GetPaymentContainer() {
         }
       } else if (user?.jeweler?.pos.name === 'Paywall') {
         if (res?.Body?.RedirectUrl) {
-          setIframe(res?.Body?.RedirectUrl);
+          let redirectUrl = res?.Body?.RedirectUrl;
+          
+          window.location.href = redirectUrl;
+          
           setPaywallPaymentRes({
             redirectUrl: res?.Body?.RedirectUrl,
             merchantuniquecode: res?.Body?.Payment?.MerchantUniqueKey,
           });
-          setIframeOpen(true);
         }
       }
     } catch (error) {
