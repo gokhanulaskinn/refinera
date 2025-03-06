@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const PaymentSuccessPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(5);
 
   // Geri sayım başlat ve bitince ana sayfaya yönlendir
   React.useEffect(() => {
@@ -93,7 +93,7 @@ const PaymentSuccessPage: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           <CircularProgress
             variant="determinate"
-            value={(countdown / 10) * 100}
+            value={(countdown / 5) * 100}
             size={24}
             sx={{ mr: 1, color: green[500] }}
           />
