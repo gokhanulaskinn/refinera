@@ -33,25 +33,25 @@ export default function GetPaymentContainer() {
   const posProvider = user?.jeweler?.pos?.name;
   const showSnacbar = useAlert();
 
-  // const [cardInfo, setCardInfo] = useState<PaymentInput>({
-  //   customerName: '',
-  //   customerPhone: '',
-  //   customerIdentity: '',
-  //   cardNumber: '',
-  //   cardExpiry: '',
-  //   cardCvv: '',
-  //   cardAccountHolderName: ''
-  // });
-
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
-    customerName: 'Mehmet Fatih BUÇAK',
-    customerPhone: '5345649909',
-    customerIdentity: '23635962680',
-    cardNumber: '5528790000000008',
-    cardExpiry: '12/2030',
-    cardCvv: '123',
-    cardAccountHolderName: 'Mehmet BUÇAK'
+    customerName: '',
+    customerPhone: '',
+    customerIdentity: '',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvv: '',
+    cardAccountHolderName: ''
   });
+
+  // const [cardInfo, setCardInfo] = useState<PaymentInput>({
+  //   customerName: 'Mehmet Fatih BUÇAK',
+  //   customerPhone: '5345649909',
+  //   customerIdentity: '23635962680',
+  //   cardNumber: '5528790000000008',
+  //   cardExpiry: '12/2030',
+  //   cardCvv: '123',
+  //   cardAccountHolderName: 'Mehmet BUÇAK'
+  // });
 
   const nav = useNavigate();
 
