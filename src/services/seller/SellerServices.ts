@@ -17,6 +17,20 @@ export const paymentCreate = async (values: any, provider: string, tokenData?: s
   return handleResponse(response);
 }
 
+export const createPhysicalPos = async (values: any, provider: string, tokenData?: string) => {
+  const token = tokenData || localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/paywall/create-physical`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(values)
+  });
+
+  return handleResponse(response);
+} 
+
 export const checkPaymentStatus = async (values: any, provider: string, tokenData?: string) => {
   const token = tokenData || localStorage.getItem('token');
   const response = await fetch(`${baseUrl}/${provider}/check`, {
