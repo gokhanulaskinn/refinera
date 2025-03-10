@@ -39,15 +39,15 @@ export default function GetPaymentContainer() {
   const [physicalPosMessage, setPhysicalPosMessage] = useState<string>('');
   const [physicalPosPolling, setPhysicalPosPolling] = useState<boolean>(false);
 
-  // const [cardInfo, setCardInfo] = useState<PaymentInput>({
-  //   customerName: '',
-  //   customerPhone: '',
-  //   customerIdentity: '',
-  //   cardNumber: '',
-  //   cardExpiry: '',
-  //   cardCvv: '',
-  //   cardAccountHolderName: ''
-  // });
+  const [cardInfo, setCardInfo] = useState<PaymentInput>({
+    customerName: '',
+    customerPhone: '',
+    customerIdentity: '',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvv: '',
+    cardAccountHolderName: ''
+  });
 
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
   //   customerName: 'Mehmet Fatih BUÇAK',
@@ -58,16 +58,6 @@ export default function GetPaymentContainer() {
   //   cardCvv: '123',
   //   cardAccountHolderName: 'Mehmet BUÇAK'
   // });
-
-    const [cardInfo, setCardInfo] = useState<PaymentInput>({
-    customerName: 'Fatih Çolakel',
-    customerPhone: '5374872375',
-    customerIdentity: '26665764484',
-    cardNumber: '5458470188197348',
-    cardExpiry: '08/2027',
-    cardCvv: '672',
-    cardAccountHolderName: 'Fatih Çolakel'
-  });
 
   const nav = useNavigate();
 
