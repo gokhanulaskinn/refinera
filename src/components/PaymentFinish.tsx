@@ -1,4 +1,4 @@
-import { ArrowForwardIos } from '@mui/icons-material';
+import { ArrowForwardIos, Phone } from '@mui/icons-material';
 import { Box, CircularProgress, Dialog, DialogContent, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthProvider';
@@ -10,6 +10,7 @@ import CreditCardNumberInput from './CreditCardNumberInput';
 import ShareLinkDialog from './ShareLinkDialog';
 import { useLocation } from 'react-router-dom';
 import { BucketType } from '../utils/types';
+import PhoneInputArea from './PhoneInput';
 
 type PaymentFinishProps = {
   handleFinish(): void;
@@ -23,16 +24,16 @@ type PaymentFinishProps = {
   physicalPosStatus?: string;
 }
 
-export default function PaymentFinish({ 
-  handleFinish, 
-  handlePhysicalPos, 
-  physicalPosLoading, 
-  physicalPosMessage = 'İşlem devam ediyor...', 
+export default function PaymentFinish({
+  handleFinish,
+  handlePhysicalPos,
+  physicalPosLoading,
+  physicalPosMessage = 'İşlem devam ediyor...',
   physicalPosStatus = '',
-  price, 
-  canFinish, 
-  comissionFee, 
-  totalPrice 
+  price,
+  canFinish,
+  comissionFee,
+  totalPrice
 }: PaymentFinishProps) {
 
   const { user } = useContext(AuthContext);
@@ -53,7 +54,7 @@ export default function PaymentFinish({
       let product = {};
       const type = searchParams.get('type');
       const bucketData = JSON.parse(searchParams.get('bucket') || '[]') as BucketType[];
-      if(type === 'normal') {
+      if (type === 'normal') {
         product = bucketData.map((item: any) => ({
           name: item.itemId,
           quantity: item.quantity
@@ -67,7 +68,7 @@ export default function PaymentFinish({
       const res = await createPaymentLink({
         amount: `${price * 100}`,
         email: user?.email,
-        phone: `90${phoneNumber}`,
+        phone: `${phoneNumber}`,
         product,
       }, (user?.jeweler?.pos.name || '').toLowerCase());
       const url = res.shortUrl;
@@ -188,13 +189,20 @@ export default function PaymentFinish({
         />
         {shareLink && (
           <Box>
-            <CreditCardNumberInput
+            {/* <CreditCardNumberInput
               label="Telefon Numarası"
               inputType='phone'
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.replace(/[^0-9]/g, ''))}
               backgroundColor='#F2F4F7'
+            /> */}
+
+            <PhoneInputArea
+              phoneNumber={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
+              backgroundColor='#F2F4F7'
             />
+            
             <CommonButton
               label="Paylaş"
               color='white'
@@ -215,11 +223,11 @@ export default function PaymentFinish({
         handleCopy={handleCopy}
         handleShareWithWhatsapp={handleShareWithWhatsapp}
       />
-      
+
       {/* Fiziksel POS İşlemi için Dialog */}
-      <Dialog 
-        open={physicalPosLoading} 
-        onClose={() => {}} 
+      <Dialog
+        open={physicalPosLoading}
+        onClose={() => { }}
         maxWidth="sm"
         fullWidth
         PaperProps={{
@@ -240,9 +248,9 @@ export default function PaymentFinish({
             }}
           >
             <CircularProgress size={80} sx={{ color: '#6366F1' }} />
-            <Typography 
-              sx={{ 
-                mt: 3, 
+            <Typography
+              sx={{
+                mt: 3,
                 fontWeight: 600,
                 fontSize: '22px',
                 color: '#333',
@@ -251,8 +259,8 @@ export default function PaymentFinish({
             >
               Fiziksel POS İşlemi Bekleniyor
             </Typography>
-            <Typography 
-              sx={{ 
+            <Typography
+              sx={{
                 mt: 2,
                 fontSize: '16px',
                 color: physicalPosStatus === 'FAILED' ? '#d32f2f' : '#666',
