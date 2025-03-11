@@ -6,8 +6,9 @@ import { ApiList, Jeweler, TableBodyRowType, TableDataType, Transaction } from '
 import CustomTablePagination from '../components/CustomTablePagination'
 import { useNavigate } from 'react-router-dom'
 import { baseUrl, fetcher, formatMoney, getTransactionColor, getTransactionStatus } from '../utils/global'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import BasicMenu from '../components/BasicMenu'
+import { useAlert } from '../hooks/useAlert'
 
 export default function LastUsersContainer() {
 
@@ -18,6 +19,7 @@ export default function LastUsersContainer() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [statusFilter, setStatusFilter] = useState('');
+  const showSnackbar = useAlert();
   const [tableData, setTableData] = useState<TableDataType>({
     head: [
       { id: 'name', label: 'İşlem Sahibi' },
@@ -27,7 +29,8 @@ export default function LastUsersContainer() {
       { id: 'section', label: 'Satış Yapan Mağaza' },
       { id: 'pos', label: 'Pos' },
       { id: 'status', label: 'Durum' },
-      { id: 'detail', label: 'Detay' }
+      { id: 'detail', label: 'Detay' },
+      { id: 'action', label: 'İşlemler' }
     ],
     body: []
   });
@@ -52,7 +55,7 @@ export default function LastUsersContainer() {
       setStatusFilter('ERROR');
     } else if (item === 'Beklemede') {
       setStatusFilter('WAITING');
-    }else if (item === 'Reddedildi') {
+    } else if (item === 'Reddedildi') {
       setStatusFilter('DECLINED');
     } else {
       setStatusFilter('');
@@ -60,6 +63,31 @@ export default function LastUsersContainer() {
 
     setAnchorEl(null);
   }
+
+  const handleCancelPayment = async (paymentId: string) => {
+    try {
+      const response = await fetch(`${baseUrl}/paywall/cancel-physical`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ paymentId })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        showSnackbar('Ödeme başarıyla iptal edildi', 'success');
+        // Tabloyu yenile
+        mutate(`${baseUrl}/transaction?skip=${(page - 1) * recordPerPage}&take=${recordPerPage}&search=${search}&status=${statusFilter}`);
+      } else {
+        showSnackbar(result.message || 'Ödeme iptal edilemedi', 'error');
+      }
+    } catch (error) {
+      showSnackbar('İşlem sırasında bir hata oluştu', 'error');
+    }
+  };
 
   const convertData = (data: ApiList<Transaction>) => {
     const bodyData: TableBodyRowType[] = data.results.map((transaction) => ({
@@ -77,8 +105,18 @@ export default function LastUsersContainer() {
           }
         },
         {
-          value: [formatMoney(((transaction.totalAmount / 100).toFixed(2) || '')) + ' TL'],
-          type: 'badge',
+          value: formatMoney(((transaction.totalAmount / 100).toFixed(2) || '')) + ' TL',
+          type: 'badge'
+        },
+        {
+          value: '',
+          type: 'actions',
+          actions: [
+            {
+              name: 'Satış İptal',
+              action: () => { transaction.pos === 'Physical' && handleCancelPayment(transaction.transactionId || '')}
+            }
+          ]
         }
       ]
     })
