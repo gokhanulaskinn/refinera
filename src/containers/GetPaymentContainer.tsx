@@ -8,9 +8,9 @@ import PaymentFinish from '../components/PaymentFinish';
 import SubmitFormDialog from '../components/SubmitFormDialog';
 import { AuthContext } from '../contexts/AuthProvider';
 import { useAlert } from '../hooks/useAlert';
-import { checkPaymentStatus, paymentCreate, createPhysicalPos } from '../services/seller/SellerServices'; // checkPaymentStatus, paymentCreate, createPhysicalPos eklenmiş
-import { BucketType, EleksePaymentRes, OzanPaymentRes, PaymentInput, PaywallPaymentRes } from '../utils/types';
+import { checkPaymentStatus, createPhysicalPos, getCalculator, paymentCreate } from '../services/seller/SellerServices'; // checkPaymentStatus, paymentCreate, createPhysicalPos eklenmiş
 import { baseUrl } from '../utils/global';
+import { BucketType, EleksePaymentRes, OzanPaymentRes, PaymentInput, PaywallPaymentRes } from '../utils/types';
 
 export default function GetPaymentContainer() {
   const loc = useLocation();
@@ -250,14 +250,28 @@ export default function GetPaymentContainer() {
     return () => clearInterval(interval);
   };
 
+  // useEffect(() => {
+  //   const price = parseFloat(searchParams.get('price') || '0');
+  //   setPrice(price);
+  //   const comissionFee = parseFloat((price * (user?.jeweler?.pos?.rate || 0) / 100).toFixed(2));
+  //   setComissionFee(comissionFee);
+  //   const totalPrice = price + comissionFee;
+  //   setTotalPrice(totalPrice);
+  // }, [searchParams]);
+
   useEffect(() => {
-    const price = parseFloat(searchParams.get('price') || '0');
-    setPrice(price);
-    const comissionFee = parseFloat((price * (user?.jeweler?.pos?.rate || 0) / 100).toFixed(2));
-    setComissionFee(comissionFee);
-    const totalPrice = price + comissionFee;
-    setTotalPrice(totalPrice);
-  }, [searchParams]);
+    const calculate = async () => {
+         const price = parseFloat(searchParams.get('price') || '0');
+        if (price) {
+        const response = await getCalculator(price);       
+
+        setPrice(price);
+        setComissionFee(response.commissionAmount);
+        setTotalPrice(response.totalAmount);
+      }
+    }
+    calculate();
+  }, [searchParams])
 
   useEffect(() => {
     if (
