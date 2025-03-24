@@ -127,3 +127,17 @@ export const deleteBranch = async (id: string) => {
 
   return handleResponse(response);
 }
+
+export const getCalculator = async (amount: number) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${baseUrl}/calculator`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ amount })
+  });
+
+  return handleResponse(response);
+}

@@ -1,19 +1,18 @@
-import { Box, Divider, FormControlLabel, Paper, Switch, TextField, Typography } from '@mui/material'
-import React, { useContext, useEffect } from 'react'
-import CommonButton from './CommonButton'
-import { Add, ArrowForward, ArrowForwardIos, ArrowRight, ArrowRightAltOutlined } from '@mui/icons-material'
-import TextInput from './TextInput';
+import { ArrowForwardIos } from '@mui/icons-material';
+import { Box, Divider, Paper, Typography } from '@mui/material';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MoneyInput from './MoneyInput';
-import { BucketType, CurrencyItem } from '../utils/types';
-import { baseUrl, fetcher, formatMoney } from '../utils/global';
-import CommonSelect from './CommonSelect';
-import PriceControl from './PriceControl';
+import { mutate } from 'swr';
 import { AuthContext } from '../contexts/AuthProvider';
+import { getCalculator } from '../services/seller/SellerServices';
+import { baseUrl, formatMoney } from '../utils/global';
+import { BucketType, CurrencyItem } from '../utils/types';
+import CommonButton from './CommonButton';
+import CommonSelect from './CommonSelect';
 import CountDownProgress from './CountDownProgress';
-import useSWR, { mutate } from 'swr';
-import NumberInput from './NumberInput';
-import { set } from 'lodash';
+import MoneyInput from './MoneyInput';
+import PriceControl from './PriceControl';
+import TextInput from './TextInput';
 
 type PaymentSummaryProps = {
   bucket: BucketType[];
@@ -33,6 +32,7 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
   const [productList, setProductList] = React.useState<string[]>([]);
 
   const { user } = useContext(AuthContext);
+
 
   const hasAltin = items?.find((item) => item.parity === 'ALTIN');
 
@@ -77,15 +77,20 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
   }, [bucket, items, milyenOn, milyenValues])
 
   useEffect(() => {
-    if (user?.jeweler?.pos.rate) {
-      const fee = (sellerTotal || 0) * user.jeweler.pos.rate / 100;
-      setServiceFee(fee);
-      setTotal((sellerTotal || 0) + fee);
+    const calculate = async () => {
+      if (sellerTotal) {
+        const response = await getCalculator(sellerTotal);
+        console.log('response', response.serviceFee);
+        
+
+        setServiceFee(response.commissionAmount);
+        setTotal(response.totalAmount);
+      }
     }
+    calculate();
   }, [sellerTotal])
 
   useEffect(() => {
-
     if (commissionType) {
       if (commissionType === 'percent') {
         setSellerTotal(price + (price * commission / 100));
