@@ -101,6 +101,7 @@ export default function ComissionRatesContainer() {
   }, [users, constans])
 
   const convertData = (data: ApiList<Jeweler>) => {
+
     const bodyData: TableBodyRowType[] = data.results.map((jeweler) => ({
       id: jeweler.id,
       rowData: [
@@ -108,7 +109,7 @@ export default function ComissionRatesContainer() {
         { value: jeweler.pos.name || '', type: 'text' },
         { value: constans?.[jeweler.pos.name as 'Ozan' | 'Elekse' | 'Paywall']?.toString() || '0', type: 'badge' },
         { value: jeweler.pos?.rate?.toString() || '0', type: 'badge' },
-        { value: ((parseFloat(constans?.[activeTab] || '0')) + jeweler.pos.rate || 0).toString() || '0', type: 'badge' }
+        { value: ((parseFloat(constans?.[jeweler.pos.name as 'Ozan' | 'Elekse' | 'Paywall']?.toString() || '0')) + jeweler.pos.rate || 0).toString() || '0', type: 'badge' }
       ]
     }));
 
