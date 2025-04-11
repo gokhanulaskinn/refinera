@@ -155,6 +155,7 @@ export interface PaymentInput {
   cardExpiry: string,
   cardCvv: string,
   cardAccountHolderName: string,
+  isLink?: boolean,
 }
 export interface CurrencyItem {
   parity: string;

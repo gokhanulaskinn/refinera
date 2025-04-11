@@ -36,6 +36,9 @@ import ForgotPassword from './views/ForgotPassword';
 import PaymentCallbackPage from './views/common/PaymentCallbackPage';
 import PaymentSuccessPage from './views/common/PaymentSuccessPage';
 import PaymentFailedPage from './views/common/PaymentFailedPage';
+import LinkFailedPage from './views/common/error';
+import LinkSuccessPage from './views/common/success';
+import PaymentLinkCallbackPage from './views/common/PaymentLinkCallbackPage';
 
 const App = () => {
 
@@ -50,6 +53,9 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/link-pay/:code" element={<ExternalPayment />} />
+                <Route path="/payment/link" element={<PaymentLinkCallbackPage />} />
+                <Route path="/payment/link/success" element={<LinkSuccessPage />} />
+                <Route path="/payment/link/failed" element={<LinkFailedPage />} />
                      
               </Routes>
               <Guard>

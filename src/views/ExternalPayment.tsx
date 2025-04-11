@@ -37,7 +37,8 @@ export default function ExternalPayment() {
     cardNumber: '',
     cardExpiry: '',
     cardCvv: '',
-    cardAccountHolderName: ''
+    cardAccountHolderName: '',
+    isLink: true,
   });
 
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
@@ -47,7 +48,8 @@ export default function ExternalPayment() {
   //   cardNumber: '5269110246368999',
   //   cardExpiry: '08/2028',
   //   cardCvv: '987',
-  //   cardAccountHolderName: 'Mehmet BUÇAK'
+  //   cardAccountHolderName: 'Mehmet BUÇAK',
+  //   isLink: true,
   // });
 
   useEffect(() => {
