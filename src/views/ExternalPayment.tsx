@@ -172,12 +172,14 @@ export default function ExternalPayment() {
         }
       } else if (pos === 'Paywall') {
         if (res?.Body?.RedirectUrl) {
-          setIframe(res?.Body?.RedirectUrl);
+          let redirectUrl = res?.Body?.RedirectUrl;
+          
+          window.location.href = redirectUrl;
+          
           setPaywallPaymentRes({
             redirectUrl: res?.Body?.RedirectUrl,
             merchantuniquecode: res?.Body?.Payment?.MerchantUniqueKey,
           });
-          setIframeOpen(true);
         }
       }
     } catch (error) {
