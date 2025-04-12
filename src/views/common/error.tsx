@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const LinkFailedPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(5);
 
   // Geri sayım başlat ve bitince ana sayfaya yönlendir
   React.useEffect(() => {
@@ -34,7 +34,8 @@ const LinkFailedPage: React.FC = () => {
 
   // Ödeme bilgilerini location state'inden al
   const paymentInfo = location.state || {};
-  const { uniqueCode, paymentId } = paymentInfo;
+  console.log(paymentInfo);
+  const { uniqueCode, paymentId, providerBankErrorMessage, providerErrorMessage } = paymentInfo;
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8, mb: 8 }}>
@@ -66,6 +67,12 @@ const LinkFailedPage: React.FC = () => {
           <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
             Ödeme Başarısız!
           </Typography>
+          {providerBankErrorMessage && (
+            <Typography variant="body2" color="error">
+              <strong> {providerBankErrorMessage}</strong>
+            </Typography>
+          )}
+          
         </Box>
 
         <Typography variant="body1" align="center" sx={{ mb: 3 }}>
@@ -90,10 +97,26 @@ const LinkFailedPage: React.FC = () => {
           </Box>
         )}
 
+        {providerBankErrorMessage && (
+          <Box sx={{ width: '100%', mb: 3 }}>
+            <Typography variant="body2">
+              <strong>Banka Hata:</strong> {providerBankErrorMessage}
+            </Typography>
+          </Box>
+        )}
+
+        {providerErrorMessage && (
+          <Box sx={{ width: '100%', mb: 3 }}>
+            <Typography variant="body2">
+              <strong>Pos Hata:</strong> {providerErrorMessage}
+            </Typography>
+          </Box>
+        )}
+
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           <CircularProgress
             variant="determinate"
-            value={(countdown / 3) * 100}
+            value={(countdown / 5) * 100}
             size={24}
             sx={{ mr: 1, color: red[500] }}
           />
