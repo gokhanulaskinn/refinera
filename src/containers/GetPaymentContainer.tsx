@@ -66,7 +66,6 @@ export default function GetPaymentContainer() {
       let product = {};
       const type = searchParams.get('type');
       const bucketData = JSON.parse(searchParams.get('bucket') || '[]') as BucketType[];
-      console.log(type)
       if (type === 'normal') {
         product = bucketData.map((item: any) => ({
           name: item.itemId,
@@ -261,17 +260,17 @@ export default function GetPaymentContainer() {
 
   useEffect(() => {
     const calculate = async () => {
-         const price = parseFloat(searchParams.get('price') || '0');
-        if (price) {
-        const response = await getCalculator(price);       
+         const newPrice = parseFloat(searchParams.get('price') || '0');
+        if (newPrice) {
+        const response = await getCalculator(newPrice); 
 
-        setPrice(price);
+        setPrice(newPrice);
         setComissionFee(response.commissionAmount);
         setTotalPrice(response.totalAmount);
       }
     }
     calculate();
-  }, [searchParams])
+  }, [searchParams.get('price')])
 
   useEffect(() => {
     if (
