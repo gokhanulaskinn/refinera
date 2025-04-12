@@ -89,7 +89,7 @@ const LinkFailedPage: React.FC = () => {
         )}
 
         {paymentId && (
-          <Box sx={{ width: '100%', mb: 3 }}>
+          <Box sx={{ width: '100%', mb: 1 }}>
             <Typography variant="body2">
               <strong>Ödeme ID:</strong> {paymentId}
             </Typography>
@@ -97,7 +97,7 @@ const LinkFailedPage: React.FC = () => {
         )}
 
         {bankErrorMessage && (
-          <Box sx={{ width: '100%', mb: 3 }}>
+          <Box sx={{ width: '100%', mb: 1 }}>
             <Typography variant="body2">
               <strong>Banka Hata:</strong> {bankErrorMessage}
             </Typography>
@@ -105,7 +105,7 @@ const LinkFailedPage: React.FC = () => {
         )}
 
         {posErrorMessage && (
-          <Box sx={{ width: '100%', mb: 3 }}>
+          <Box sx={{ width: '100%', mb: 1 }}>
             <Typography variant="body2">
               <strong>Pos Hata:</strong> {posErrorMessage}
             </Typography>
