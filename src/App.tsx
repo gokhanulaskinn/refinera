@@ -36,8 +36,8 @@ import ForgotPassword from './views/ForgotPassword';
 import PaymentCallbackPage from './views/common/PaymentCallbackPage';
 import PaymentSuccessPage from './views/common/PaymentSuccessPage';
 import PaymentFailedPage from './views/common/PaymentFailedPage';
-import LinkFailedPage from './views/common/error';
-import LinkSuccessPage from './views/common/success';
+import LinkFailedPage from './views/common/PaymentLinkFailedPage';
+import LinkSuccessPage from './views/common/PaymentLinkSuccessPage';
 import PaymentLinkCallbackPage from './views/common/PaymentLinkCallbackPage';
 
 const App = () => {

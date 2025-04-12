@@ -80,7 +80,6 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
     const calculate = async () => {
       if (sellerTotal) {
         const response = await getCalculator(sellerTotal);
-        console.log('response', response.serviceFee);
         
 
         setServiceFee(response.commissionAmount);
