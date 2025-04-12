@@ -34,8 +34,7 @@ const LinkFailedPage: React.FC = () => {
 
   // Ödeme bilgilerini location state'inden al
   const paymentInfo = location.state || {};
-  console.log(paymentInfo);
-  const { uniqueCode, paymentId, providerBankErrorMessage, providerErrorMessage } = paymentInfo;
+  const { uniqueCode, paymentId, bankErrorMessage, posErrorMessage } = paymentInfo;
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8, mb: 8 }}>
@@ -67,9 +66,9 @@ const LinkFailedPage: React.FC = () => {
           <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
             Ödeme Başarısız!
           </Typography>
-          {providerBankErrorMessage && (
+          {bankErrorMessage && (
             <Typography variant="body2" color="error">
-              <strong> {providerBankErrorMessage}</strong>
+              <strong> {bankErrorMessage}</strong>
             </Typography>
           )}
           
@@ -97,18 +96,18 @@ const LinkFailedPage: React.FC = () => {
           </Box>
         )}
 
-        {providerBankErrorMessage && (
+        {bankErrorMessage && (
           <Box sx={{ width: '100%', mb: 3 }}>
             <Typography variant="body2">
-              <strong>Banka Hata:</strong> {providerBankErrorMessage}
+              <strong>Banka Hata:</strong> {bankErrorMessage}
             </Typography>
           </Box>
         )}
 
-        {providerErrorMessage && (
+        {posErrorMessage && (
           <Box sx={{ width: '100%', mb: 3 }}>
             <Typography variant="body2">
-              <strong>Pos Hata:</strong> {providerErrorMessage}
+              <strong>Pos Hata:</strong> {posErrorMessage}
             </Typography>
           </Box>
         )}

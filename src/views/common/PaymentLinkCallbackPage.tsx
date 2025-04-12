@@ -10,6 +10,8 @@ const PaymentLinkCallbackPage: React.FC = () => {
     const result = params.get('Result');
     const uniqueCode = params.get('UniqueCode');
     const paymentId = params.get('PaymentId');
+    const bankErrorMessage = params.get('providerBankErrorMessage');
+    const posErrorMessage = params.get('providerErrorMessage');
     
 
     setTimeout(() => {
@@ -27,6 +29,8 @@ const PaymentLinkCallbackPage: React.FC = () => {
           state: { 
             uniqueCode, 
             paymentId,
+            bankErrorMessage,
+            posErrorMessage,
             callbackData: location.search 
           } 
         });

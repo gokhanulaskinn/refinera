@@ -10,7 +10,8 @@ const PaymentCallbackPage: React.FC = () => {
     const result = params.get('Result');
     const uniqueCode = params.get('UniqueCode');
     const paymentId = params.get('PaymentId');
-    
+    const bankErrorMessage = params.get('providerBankErrorMessage');
+    const posErrorMessage = params.get('providerErrorMessage');
 
     setTimeout(() => {
       if (result?.toLowerCase() === 'success') {
@@ -27,6 +28,8 @@ const PaymentCallbackPage: React.FC = () => {
           state: { 
             uniqueCode, 
             paymentId,
+            bankErrorMessage,
+            posErrorMessage,
             callbackData: location.search 
           } 
         });
