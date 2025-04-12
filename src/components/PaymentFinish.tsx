@@ -66,7 +66,7 @@ export default function PaymentFinish({
         }
       }
       const res = await createPaymentLink({
-        amount: `${totalPrice * 100}`,
+        amount: `${price * 100}`,
         email: user?.email,
         phone: `${phoneNumber}`,
         product,
