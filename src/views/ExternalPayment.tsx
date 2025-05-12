@@ -63,7 +63,7 @@ export default function ExternalPayment() {
         setToken(token);
         const decodedToken: any = jwtDecode(token);
         const price = decodedToken.amount / 100;
-        const totalCost = price + (price * decodedToken.comission / 100);
+        const totalCost = decodedToken.amount / 100;
         const productData = decodedToken.product;
         setProduct(productData);
         const pos = decodedToken.pos;
@@ -268,7 +268,7 @@ export default function ExternalPayment() {
           mt: 4
         }}
       >
-        {totalPrice.toFixed(2)} TL Ödeme
+        {new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(totalPrice)} TL Ödeme
       </Typography>
       <CustomPaper
         sx={{
