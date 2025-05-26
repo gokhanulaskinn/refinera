@@ -63,7 +63,7 @@ export default function ExternalPayment() {
         setToken(token);
         const decodedToken: any = jwtDecode(token);
         const price = decodedToken.amount / 100;
-        const totalCost = decodedToken.amount / 100;
+        const totalCost = decodedToken.totalAmount / 100;
         const productData = decodedToken.product;
         setProduct(productData);
         const pos = decodedToken.pos;
