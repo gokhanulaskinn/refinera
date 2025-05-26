@@ -96,7 +96,7 @@ export default function ExternalPayment() {
         } else if (pos === 'Paywall') {
           body = {
             merchantuniquecode: paywallPaymentRes?.merchantuniquecode,
-          }
+          } 
         }
         const res = await checkPaymentStatus(body, pos.toLowerCase(), token);
         if (pos === 'Ozan') {
