@@ -39,6 +39,7 @@ import PaymentFailedPage from './views/common/PaymentFailedPage';
 import LinkFailedPage from './views/common/PaymentLinkFailedPage';
 import LinkSuccessPage from './views/common/PaymentLinkSuccessPage';
 import PaymentLinkCallbackPage from './views/common/PaymentLinkCallbackPage';
+import HomePage from './website/HomePage';
 
 const App = () => {
 
@@ -56,12 +57,11 @@ const App = () => {
                 <Route path="/payment/link" element={<PaymentLinkCallbackPage />} />
                 <Route path="/payment/link/success" element={<LinkSuccessPage />} />
                 <Route path="/payment/link/failed" element={<LinkFailedPage />} />
-                     
+                <Route path="/" element={<HomePage />} />
               </Routes>
               <Guard>
                 <Layout>
                   <Routes>
-                    <Route path="/" element={<Root />} />
                     <Route path="/admin/jewelers" element={<Sellers />} />
                     <Route path="/admin/profile" element={<UserProfile />} />
                     <Route path="/admin/jewelers/new" element={<SellerAddEdit />} />
