@@ -15,7 +15,7 @@ export default function HeroSection() {
         overflow: 'visible',
         borderRadius: 3,
         my: 2,
-        minHeight: { xs: 500, md: 700 },
+        minHeight: { xs: 500, md: 600, lg: 700 },
         display: 'flex',
         alignItems: 'center',
       }}
@@ -58,7 +58,7 @@ export default function HeroSection() {
           <Box
             sx={{
               position: { xs: 'static', md: 'absolute' },
-              right: { xs: 0, md: -80 },
+              right: 0,
               zIndex: 2,
               mt: { xs: 4, md: 0 },
               display: { xs: 'none', sm: 'none', md: 'block' },
@@ -69,7 +69,7 @@ export default function HeroSection() {
               src={personImage}
               alt="Adam"
               sx={{
-                height: { xs: 450, md: 700 },
+                height: { xs: 450, md: 600, lg: 700 },
                 display: 'block',
               }}
             />

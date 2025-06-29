@@ -21,6 +21,12 @@ export default function DashboardShowcase() {
             component="img"
             src={dashboardImage}
             alt="Dashboard"
+            sx={{
+              width: '100%',
+              maxWidth: '100%',
+              height: 'auto',
+              objectFit: 'contain',
+            }}
           />
         </Box>
       </Container>

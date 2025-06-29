@@ -1,8 +1,11 @@
 import React from 'react'
-import { AppBar, Toolbar, Box, Typography, Button, useTheme } from '@mui/material';
+import { AppBar, Toolbar, Box, Typography, Button, useTheme, useMediaQuery } from '@mui/material';
 import CommonButton from '../../components/CommonButton';
 import { ReactComponent as Logo } from '../../assets/images/big-logo.svg';
 import { useNavigate } from 'react-router-dom';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const data = [
   {
@@ -54,10 +57,11 @@ function PriceCard({ title, value, up, percent, amount }: any) {
   return (
     <Box
       sx={{
-        display: 'flex',
+        display: 'flex !important',
         flexDirection: 'column',
         alignItems: 'center',
-        minWidth: 120,
+        minWidth: { xs: 100, sm: 120 },
+        height: '100%',
         px: 2,
         py: 1,
         borderRight: '1px solid #223C3B',
@@ -112,36 +116,104 @@ function PriceCard({ title, value, up, percent, amount }: any) {
 export default function Appbar() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+  
+  // Ekran boyutuna göre gösterilecek kart sayısını belirleme
+  let slidesToShow = 6; // Varsayılan tam ekran
+  if (isTablet) slidesToShow = 4; // Tablet boyutunda 4 kart
+  if (isMobile) slidesToShow = 2; // Mobil boyutunda 2 kart
+  
+  const sliderSettings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: slidesToShow,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+    cssEase: "linear",
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
+  
   return (
     <Box>
       <AppBar position="static" sx={{ bgcolor: '#062B2A', boxShadow: 'none', px: 0 }}>
-        <Toolbar sx={{ justifyContent: 'space-between', minHeight: 80, px: { xs: 1, md: 4 } }}>
-          {/* Sol: Logo ve başlık */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Logo style={{ height: 32 }} />
-          </Box>
-          {/* Sağ: Giriş Yap butonu */}
-          <Box>
+        <Toolbar sx={{ minHeight: 80, px:0, mx:0 }}>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            justifyContent: 'space-between',
+            width: '100%',
+            maxWidth: '1440px',
+            mx: 'auto',
+            px: { xs: 2, md: 4 }
+          }}>
+            <Logo style={{ height: 32, width: 'auto' }} />
             <CommonButton
               onClick={() => {
                 navigate('/login');
               }}
-             label="Giriş Yap" color="#fff" sx={{ bgcolor: theme.palette.primary.main, borderRadius: 8, px: 3, py: 1, fontWeight: 700, fontSize: 12, '&:hover': { bgcolor: '#b07d4a' } }} />
+              label="Giriş Yap"
+              color="#fff"
+              sx={{
+                borderRadius: 8,
+                fontSize: 14,
+                maxWidth: 100,
+              }} />
           </Box>
         </Toolbar>
       </AppBar>
       {/* Alt: Para birimi kutuları */}
       <Box sx={{
         width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
         bgcolor: '#011B1C',
         px: { xs: 0.5, md: 2 },
-        gap: 1,
       }}>
-        {data.map((item, i) => (
-          <PriceCard key={item.title} {...item} />
-        ))}
+        <Box sx={{ 
+          maxWidth: '1440px', 
+          mx: 'auto',
+          '.slick-track': { 
+            display: 'flex', 
+            alignItems: 'center',
+            height: '100%'
+          },
+          '.slick-slide': {
+            height: 'auto',
+            '& > div': { height: '100%' }
+          }
+        }}>
+          <Slider {...sliderSettings}>
+            {data.map((item, i) => (
+              <PriceCard key={item.title} {...item} />
+            ))}
+          </Slider>
+        </Box>
       </Box>
     </Box>
   );

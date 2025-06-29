@@ -23,9 +23,9 @@ export default function HomePage() {
         <AboutSection />
         <DashboardShowcase />
         <PartnersSection />
-        {/* <ContactSection /> */}
+        <ContactSection />
       </Box>
-      {/* <Footer /> */}
+      <Footer />
     </>
   )
 }
