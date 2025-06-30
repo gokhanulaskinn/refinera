@@ -22,6 +22,7 @@ type PaymentFinishProps = {
   physicalPosLoading: boolean;
   physicalPosMessage?: string;
   physicalPosStatus?: string;
+  hasIdImages?: boolean;
 }
 
 export default function PaymentFinish({
@@ -33,7 +34,8 @@ export default function PaymentFinish({
   price,
   canFinish,
   comissionFee,
-  totalPrice
+  totalPrice,
+  hasIdImages
 }: PaymentFinishProps) {
 
   const { user } = useContext(AuthContext);
@@ -49,6 +51,12 @@ export default function PaymentFinish({
 
   const handleShareLink = async () => {
     try {
+      // Eğer fiyat 185000 TL'den fazlaysa ve kimlik fotoğrafları yüklenmemişse işlemi engelle
+      if (price > 185000 && !hasIdImages) {
+        showSnacbar('185.000 TL üzeri ödemelerde kimlik fotoğrafı yüklemek zorunludur', 'error');
+        return;
+      }
+      
       setLoading(true);
 
       let product = {};

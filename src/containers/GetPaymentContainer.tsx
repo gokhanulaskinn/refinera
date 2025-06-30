@@ -38,6 +38,7 @@ export default function GetPaymentContainer() {
   const [physicalPosStatus, setPhysicalPosStatus] = useState<string>('');
   const [physicalPosMessage, setPhysicalPosMessage] = useState<string>('');
   const [physicalPosPolling, setPhysicalPosPolling] = useState<boolean>(false);
+  const [hasIdImages, setHasIdImages] = useState<boolean>(false);
 
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
     customerName: '',
@@ -63,6 +64,12 @@ export default function GetPaymentContainer() {
 
   const handleFinish = async () => {
     try {
+      // Eğer fiyat 185000 TL'den fazlaysa ve kimlik fotoğrafları yüklenmemişse işlemi engelle
+      if (price > 185000 && !hasIdImages) {
+        showSnacbar('Kimlik fotoğrafı yüklemek zorunludur', 'error');
+        return;
+      }
+      
       let product = {};
       const type = searchParams.get('type');
       const bucketData = JSON.parse(searchParams.get('bucket') || '[]') as BucketType[];
@@ -115,6 +122,12 @@ export default function GetPaymentContainer() {
 
   const handlePhysicalPos = async () => {
     try {
+      // Eğer fiyat 185000 TL'den fazlaysa ve kimlik fotoğrafları yüklenmemişse işlemi engelle
+      if (price > 185000 && !hasIdImages) {
+        showSnacbar('Kimlik fotoğrafı yüklemek zorunludur', 'error');
+        return;
+      }
+      
       setPhysicalPosLoading(true);
       // Reset messages and status when dialog reopens
       setPhysicalPosMessage('');
@@ -385,7 +398,13 @@ export default function GetPaymentContainer() {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={8}>
           <CustomPaper>
-            <CardInfo cardInfo={cardInfo} setCardInfo={setCardInfo} />
+            <CardInfo 
+              cardInfo={cardInfo} 
+              setCardInfo={setCardInfo} 
+              price={price} 
+              hasIdImages={hasIdImages}
+              setHasIdImages={setHasIdImages}
+            />
           </CustomPaper>
         </Grid>
         <Grid item xs={12} sm={12} md={4}>
@@ -400,6 +419,7 @@ export default function GetPaymentContainer() {
               physicalPosLoading={physicalPosLoading}
               physicalPosMessage={physicalPosMessage}
               physicalPosStatus={physicalPosStatus}
+              hasIdImages={hasIdImages}
             />
           </CustomPaper>
         </Grid>

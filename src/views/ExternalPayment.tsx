@@ -276,7 +276,7 @@ export default function ExternalPayment() {
           mx: 'auto',
         }}
       >
-        <CardInfo cardInfo={cardInfo} setCardInfo={setCardInfo} />
+        <CardInfo cardInfo={cardInfo} setCardInfo={setCardInfo} price={price} />
       </CustomPaper>
       <Box>
         <CommonButton
