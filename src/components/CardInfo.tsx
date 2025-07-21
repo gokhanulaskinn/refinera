@@ -140,6 +140,7 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
             value={cardInfo.cardNumber}
             onChange={(e) => setCardInfo({ ...cardInfo, cardNumber: e.replaceAll(' ', '') })}
             backgroundColor='#F2F4F7'
+            maskedOn={true}
           />
 
         </Grid>

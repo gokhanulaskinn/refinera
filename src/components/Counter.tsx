@@ -2,6 +2,14 @@ import { Add, Remove } from '@mui/icons-material'
 import { Box, IconButton, Typography } from '@mui/material'
 import React from 'react'
 
+const counterInputStyle = `
+  .counter-input::-webkit-outer-spin-button,
+  .counter-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`
+
 type CounterProps = {
   count: number;
   setCount: (count: number) => void;
@@ -10,7 +18,9 @@ type CounterProps = {
 export default function Counter({ count, setCount }: CounterProps) {
 
   return (
-    <Box
+    <>
+      <style>{counterInputStyle}</style>
+      <Box
       onClick={(e) => e.stopPropagation()}
       sx={{
         borderRadius: '4px',
@@ -36,16 +46,36 @@ export default function Counter({ count, setCount }: CounterProps) {
         />
       </IconButton>
 
-      <Typography
-        sx={{
+      <input
+        type="number"
+        className="counter-input"
+        value={count === 0 ? '' : count}
+        placeholder="0"
+        onChange={(e) => {
+          const inputValue = e.target.value;
+          if (inputValue === '') {
+            setCount(0);
+          } else {
+            const numValue = parseInt(inputValue);
+            if (!isNaN(numValue) && numValue >= 0) {
+              setCount(numValue);
+            }
+          }
+        }}
+        onClick={(e) => e.stopPropagation()}
+        style={{
           fontSize: '16px',
           fontWeight: '600',
-          width: '20px',
-          textAlign: 'center'
+          width: '40px',
+          textAlign: 'center',
+          border: 'none',
+          background: 'transparent',
+          outline: 'none',
+          MozAppearance: 'textfield',
+          WebkitAppearance: 'none'
         }}
-      >
-        {count}
-      </Typography>
+        onWheel={(e) => e.currentTarget.blur()}
+      />
       <IconButton
         onClick={(e) => {
           e.stopPropagation();
@@ -57,5 +87,6 @@ export default function Counter({ count, setCount }: CounterProps) {
         />
       </IconButton>
     </Box>
+    </>
   )
 }
