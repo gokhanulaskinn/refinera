@@ -30,6 +30,8 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
   const [sellerTotal, setSellerTotal] = React.useState<number>();
   const [serviceFee, setServiceFee] = React.useState<number>();
   const [productList, setProductList] = React.useState<string[]>([]);
+  const [isCalculating, setIsCalculating] = React.useState<boolean>(false);
+  const [calculationSource, setCalculationSource] = React.useState<'from_amount' | 'from_total_amount' | null>(null);
 
   const { user } = useContext(AuthContext);
 
@@ -78,25 +80,55 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
 
   useEffect(() => {
     const calculate = async () => {
-      if (sellerTotal) {
-        const response = await getCalculator(sellerTotal);
-        
-
-        setServiceFee(response.commissionAmount);
-        setTotal(response.totalAmount);
+      if (sellerTotal !== undefined && !isCalculating && calculationSource === 'from_amount') {
+        setIsCalculating(true);
+        try {
+          const response = await getCalculator(sellerTotal, 'from_amount');
+          
+          setServiceFee(response.commissionAmount);
+          setTotal(response.totalAmount);
+        } catch (error) {
+          console.error('Hesaplama hatası:', error);
+        } finally {
+          setIsCalculating(false);
+          setCalculationSource(null);
+        }
       }
     }
     calculate();
-  }, [sellerTotal])
+  }, [sellerTotal, isCalculating, calculationSource])
+
+  useEffect(() => {
+    const calculate = async () => {
+      if (total !== undefined && !isCalculating && calculationSource === 'from_total_amount') {
+        setIsCalculating(true);
+        try {
+          const response = await getCalculator(total, 'from_total_amount');
+          
+          setServiceFee(response.commissionAmount);
+          setSellerTotal(response.amount);
+        } catch (error) {
+          console.error('Hesaplama hatası:', error);
+        } finally {
+          setIsCalculating(false);
+          setCalculationSource(null);
+        }
+      }
+    }
+    calculate();
+  }, [total, isCalculating, calculationSource])
 
   useEffect(() => {
     if (commissionType) {
       if (commissionType === 'percent') {
+        setCalculationSource('from_amount');
         setSellerTotal(price + (price * commission / 100));
       } else {
+        setCalculationSource('from_amount');
         setSellerTotal(price + commission);
       }
     } else {
+      setCalculationSource('from_amount');
       setSellerTotal(price);
     }
     if (price === 0) {
@@ -227,7 +259,10 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
         </Typography>
         <PriceControl
           price={sellerTotal || 0}
-          setPrice={setSellerTotal}
+          setPrice={(value) => {
+            setCalculationSource('from_amount');
+            setSellerTotal(value);
+          }}
         />
       </Box>
       <Box
@@ -277,24 +312,30 @@ export default function PaymentSummary({ milyenOn, milyenValues, bucket, items, 
           </Typography>
         </Box>
       </Box>
-      <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 2
+        }}
+      >
         <Typography
+          color="text.secondary"
           sx={{
-            fontSize: '18px',
-            fontWeight: '400',
-            color: '#475467'
+            fontSize: '12px',
+            fontWeight: 500
           }}
         >
           Toplam Tutar
         </Typography>
-        <Typography
-          sx={{
-            fontSize: '42px',
-            fontWeight: '500',
+        <PriceControl
+          price={total || 0}
+          setPrice={(value) => {
+            setCalculationSource('from_total_amount');
+            setTotal(value);
           }}
-        >
-          {formatMoney(total?.toFixed(2) || '0')} TL
-        </Typography>
+        />
       </Box>
       <Box>
         <CountDownProgress

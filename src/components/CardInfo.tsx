@@ -4,6 +4,7 @@ import TextInput from './TextInput'
 import CreditCardNumberInput from './CreditCardNumberInput'
 import { PaymentInput } from '../utils/types'
 import uploadIcon from '../assets/icons/document-upload.svg'
+import MaskedCreditCardNumberInput from './MaskedCreditCardNumberInput'
 
 type CardInfoProps = {
   cardInfo: PaymentInput;
@@ -98,6 +99,8 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
     event.stopPropagation();
   };
 
+  console.log(cardInfo)
+
   return (
     <Box>
       <Grid container spacing={2}>
@@ -134,18 +137,17 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
           />
         </Grid>
         <Grid item xs={12}>
-          <CreditCardNumberInput
-            label="Kart Numarası"
+          <MaskedCreditCardNumberInput  
             inputType='number'
+            label="Kart Numarası"
             value={cardInfo.cardNumber}
             onChange={(e) => setCardInfo({ ...cardInfo, cardNumber: e.replaceAll(' ', '') })}
             backgroundColor='#F2F4F7'
-            maskedOn={true}
           />
 
         </Grid>
         <Grid item xs={12} sm={6}>
-          <CreditCardNumberInput
+          <MaskedCreditCardNumberInput
             label="Son Geçerlilik Tarihi"
             inputType='exp'
             value={cardInfo.cardExpiry}
@@ -154,7 +156,7 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <CreditCardNumberInput
+          <MaskedCreditCardNumberInput
             label="CVC / CVV"
             inputType='cvc'
             value={cardInfo.cardCvv}

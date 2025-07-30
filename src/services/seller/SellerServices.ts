@@ -128,7 +128,7 @@ export const deleteBranch = async (id: string) => {
   return handleResponse(response);
 }
 
-export const getCalculator = async (amount: number) => {
+export const getCalculator = async (amount: number, calculationType: 'from_amount' | 'from_total_amount' = 'from_amount') => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${baseUrl}/calculator`, {
     method: 'POST',
@@ -136,7 +136,7 @@ export const getCalculator = async (amount: number) => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
-    body: JSON.stringify({ amount })
+    body: JSON.stringify({ amount, calculationType })
   });
 
   return handleResponse(response);
