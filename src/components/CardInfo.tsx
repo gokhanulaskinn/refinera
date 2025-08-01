@@ -1,5 +1,5 @@
 import { Box, Grid, Typography, Button } from '@mui/material'
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react'
+import React, { useState, useEffect } from 'react'
 import TextInput from './TextInput'
 import CreditCardNumberInput from './CreditCardNumberInput'
 import { PaymentInput } from '../utils/types'
@@ -8,7 +8,7 @@ import MaskedCreditCardNumberInput from './MaskedCreditCardNumberInput'
 
 type CardInfoProps = {
   cardInfo: PaymentInput;
-  setCardInfo: Dispatch<SetStateAction<PaymentInput>>;
+  setCardInfo: (cardInfo: PaymentInput) => void;
   price: number;
   hasIdImages?: boolean;
   setHasIdImages?: (hasImages: boolean) => void;
@@ -32,7 +32,7 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       const reader = new FileReader();
       reader.onloadend = () => {
         setFrontIdPreview(reader.result as string);
-        setCardInfo((prev: PaymentInput) => ({ ...prev, idCardFrontImage: file }));
+        setCardInfo({ ...cardInfo, idCardFrontImage: file });
       };
       reader.readAsDataURL(file);
     }
@@ -44,7 +44,7 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       const reader = new FileReader();
       reader.onloadend = () => {
         setBackIdPreview(reader.result as string);
-        setCardInfo((prev: PaymentInput) => ({ ...prev, idCardBackImage: file }));
+        setCardInfo({ ...cardInfo, idCardBackImage: file });
       };
       reader.readAsDataURL(file);
     }
@@ -58,11 +58,11 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       reader.onloadend = () => {
         if (type === 'front') {
           setFrontIdPreview(reader.result as string);
-          setCardInfo((prev: PaymentInput) => ({ ...prev, idCardFrontImage: file }));
+          setCardInfo({ ...cardInfo, idCardFrontImage: file });
           setIsDraggingFront(false);
         } else {
           setBackIdPreview(reader.result as string);
-          setCardInfo((prev: PaymentInput) => ({ ...prev, idCardBackImage: file }));
+          setCardInfo({ ...cardInfo, idCardBackImage: file });
           setIsDraggingBack(false);
         }
       };
