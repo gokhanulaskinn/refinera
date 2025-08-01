@@ -40,14 +40,24 @@ export default function GetPaymentContainer() {
   const [physicalPosPolling, setPhysicalPosPolling] = useState<boolean>(false);
   const [hasIdImages, setHasIdImages] = useState<boolean>(false);
 
+  // const [cardInfo, setCardInfo] = useState<PaymentInput>({
+  //   customerName: 'Mehmet BUÇAK',
+  //   customerPhone: '1231231231',
+  //   customerIdentity: '11111111110',
+  //   cardNumber: '5269110246368999',
+  //   cardExpiry: '08/2028',
+  //   cardCvv: '987',
+  //   cardAccountHolderName: 'Mehmet BUÇAK'
+  // });
+
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
-    customerName: 'Mehmet BUÇAK',
-    customerPhone: '1231231231',
-    customerIdentity: '11111111110',
-    cardNumber: '5269110246368999',
-    cardExpiry: '08/2028',
-    cardCvv: '987',
-    cardAccountHolderName: 'Mehmet BUÇAK'
+    customerName: '',
+    customerPhone: '',
+    customerIdentity: '',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvv: '',
+    cardAccountHolderName: '',
   });
 
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
