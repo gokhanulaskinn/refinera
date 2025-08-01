@@ -17,6 +17,44 @@ export const paymentCreate = async (values: any, provider: string, tokenData?: s
   return handleResponse(response);
 }
 
+export const paymentCreateWithIdImages = async (values: any, provider: string, tokenData?: string) => {
+  const token = tokenData || localStorage.getItem('token');
+  
+  // FormData oluştur
+  const formData = new FormData();
+  
+  // Kimlik fotoğraflarını FormData'ya ekle
+  if (values.idCardFrontImage) {
+    formData.append('identityFront', values.idCardFrontImage);
+  }
+  if (values.idCardBackImage) {
+    formData.append('identityBack', values.idCardBackImage);
+  }
+  
+  // Diğer verileri FormData'ya ekle (kimlik fotoğrafları hariç)
+  const { idCardFrontImage, idCardBackImage, ...otherValues } = values;
+  Object.keys(otherValues).forEach(key => {
+    if (otherValues[key] !== null && otherValues[key] !== undefined) {
+      if (typeof otherValues[key] === 'object') {
+        formData.append(key, JSON.stringify(otherValues[key]));
+      } else {
+        formData.append(key, otherValues[key]);
+      }
+    }
+  });
+  const response = await fetch(`${baseUrl}/${provider}/create`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`
+      // Content-Type header'ını FormData için belirtmiyoruz, browser otomatik ayarlar
+    },
+    body: formData
+  });
+
+  return handleResponse(response);
+}
+
+
 export const createPhysicalPos = async (values: any, provider: string, tokenData?: string) => {
   const token = tokenData || localStorage.getItem('token');
   const response = await fetch(`${baseUrl}/paywall/create-physical`, {

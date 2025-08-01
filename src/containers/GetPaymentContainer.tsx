@@ -8,7 +8,7 @@ import PaymentFinish from '../components/PaymentFinish';
 import SubmitFormDialog from '../components/SubmitFormDialog';
 import { AuthContext } from '../contexts/AuthProvider';
 import { useAlert } from '../hooks/useAlert';
-import { checkPaymentStatus, createPhysicalPos, getCalculator, paymentCreate } from '../services/seller/SellerServices'; // checkPaymentStatus, paymentCreate, createPhysicalPos eklenmiş
+import { checkPaymentStatus, createPhysicalPos, getCalculator, paymentCreate, paymentCreateWithIdImages } from '../services/seller/SellerServices'; // checkPaymentStatus, paymentCreate, createPhysicalPos, paymentCreateWithIdImages eklenmiş
 import { baseUrl } from '../utils/global';
 import { BucketType, EleksePaymentRes, OzanPaymentRes, PaymentInput, PaywallPaymentRes } from '../utils/types';
 
@@ -41,13 +41,13 @@ export default function GetPaymentContainer() {
   const [hasIdImages, setHasIdImages] = useState<boolean>(false);
 
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
-    customerName: '',
-    customerPhone: '',
-    customerIdentity: '',
-    cardNumber: '',
-    cardExpiry: '',
-    cardCvv: '',
-    cardAccountHolderName: ''
+    customerName: 'Mehmet BUÇAK',
+    customerPhone: '1231231231',
+    customerIdentity: '11111111110',
+    cardNumber: '5269110246368999',
+    cardExpiry: '08/2028',
+    cardCvv: '987',
+    cardAccountHolderName: 'Mehmet BUÇAK'
   });
 
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
@@ -61,6 +61,8 @@ export default function GetPaymentContainer() {
   // });
 
   const nav = useNavigate();
+
+  console.log(posProvider);
 
   const handleFinish = async () => {
     try {
@@ -84,13 +86,21 @@ export default function GetPaymentContainer() {
           quantity: 1
         }
       }
-      const res = await paymentCreate({
-        ...cardInfo,
-        product,
-        amount: price * 100,
-      },
-        (posProvider || '').toLowerCase()
-      );
+      const res = posProvider === 'Paywall'
+        ? await paymentCreateWithIdImages({
+            ...cardInfo,
+            product,
+            amount: price * 100,
+          },
+          (posProvider || '').toLowerCase()
+        )
+        : await paymentCreate({
+            ...cardInfo,
+            product,
+            amount: price * 100,
+          },
+          (posProvider || '').toLowerCase()
+        );
       if (user?.jeweler?.pos.name === 'Ozan') {
         if (res.form3d) {
           setIframe(res.form3d);
