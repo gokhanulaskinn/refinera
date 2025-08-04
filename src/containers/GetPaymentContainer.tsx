@@ -58,6 +58,8 @@ export default function GetPaymentContainer() {
     cardExpiry: '',
     cardCvv: '',
     cardAccountHolderName: '',
+    idCardFrontImage: undefined,
+    idCardBackImage: undefined,
   });
 
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
