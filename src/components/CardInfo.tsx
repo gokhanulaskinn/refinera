@@ -137,8 +137,6 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
     setCardInfo({ ...cardInfo, identityBack: undefined });
   };
 
-  console.log(cardInfo)
-
   return (
     <Box>
       <Grid container spacing={2}>
