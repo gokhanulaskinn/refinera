@@ -7,7 +7,7 @@ import { EleksePaymentRes, OzanPaymentRes, PaymentInput, PaywallPaymentRes } fro
 import { Box, Typography } from '@mui/material'
 import CommonButton from '../components/CommonButton'
 import smalLogo from '../assets/images/small-logo.svg';
-import { checkPaymentStatus, paymentCreate } from '../services/seller/SellerServices'
+import { checkPaymentStatus, paymentCreate, paymentCreateWithIdImages } from '../services/seller/SellerServices'
 import { useAlert } from '../hooks/useAlert'
 import IframeModal from '../components/IframeModal'
 import { getLongUrl } from '../services/commonServices'
@@ -29,6 +29,7 @@ export default function ExternalPayment() {
   const [tokenData, setTokenData] = useState<any>();
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
   const [product, setProduct] = useState<any>();
+  const [hasIdImages, setHasIdImages] = useState<boolean>(false);
 
   const [cardInfo, setCardInfo] = useState<PaymentInput>({
     customerName: '',
@@ -39,6 +40,8 @@ export default function ExternalPayment() {
     cardCvv: '',
     cardAccountHolderName: '',
     isLink: true,
+    identityFront: undefined,
+    identityBack: undefined,
   });
 
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
@@ -50,6 +53,8 @@ export default function ExternalPayment() {
   //   cardCvv: '987',
   //   cardAccountHolderName: 'Mehmet BUÇAK',
   //   isLink: true,
+  //   identityFront: undefined,
+  //   identityBack: undefined,
   // });
 
   useEffect(() => {
@@ -152,14 +157,29 @@ export default function ExternalPayment() {
 
   const handleFinish = async () => {
     try {
-      const res = await paymentCreate({
-        ...cardInfo,
-        product,
-        amount: price * 100,
-      },
-        pos.toLowerCase(),
-        token
-      );
+      // Eğer fiyat 185000 TL'den fazlaysa ve kimlik fotoğrafları yüklenmemişse işlemi engelle
+      if (price > 185000 && !hasIdImages) {
+        showSnacbar('Kimlik fotoğrafı yüklemek zorunludur', 'error');
+        return;
+      }
+      
+      const res = pos === 'Paywall'
+        ? await paymentCreateWithIdImages({
+            ...cardInfo,
+            product,
+            amount: price * 100,
+          },
+          pos.toLowerCase(),
+          token
+        )
+        : await paymentCreate({
+            ...cardInfo,
+            product,
+            amount: price * 100,
+          },
+          pos.toLowerCase(),
+          token
+        );
       if (pos === 'Ozan') {
         if (res.form3d) {
           setIframe(res.form3d);
@@ -276,7 +296,13 @@ export default function ExternalPayment() {
           mx: 'auto',
         }}
       >
-        <CardInfo cardInfo={cardInfo} setCardInfo={setCardInfo} price={price} />
+        <CardInfo 
+          cardInfo={cardInfo} 
+          setCardInfo={setCardInfo} 
+          price={price} 
+          hasIdImages={hasIdImages}
+          setHasIdImages={setHasIdImages}
+        />
       </CustomPaper>
       <Box>
         <CommonButton

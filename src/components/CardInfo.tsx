@@ -1,10 +1,13 @@
-import { Box, Grid, Typography, Button } from '@mui/material'
-import React, { useState, useEffect } from 'react'
+import { Box, Grid, Typography, Button, Stack, IconButton } from '@mui/material'
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react'
 import TextInput from './TextInput'
-import CreditCardNumberInput from './CreditCardNumberInput'
 import { PaymentInput } from '../utils/types'
 import uploadIcon from '../assets/icons/document-upload.svg'
 import MaskedCreditCardNumberInput from './MaskedCreditCardNumberInput'
+import CameraCapture from './CameraCapture'
+import CameraAltIcon from '@mui/icons-material/CameraAlt'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 
 type CardInfoProps = {
   cardInfo: PaymentInput;
@@ -19,6 +22,10 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
   const [backIdPreview, setBackIdPreview] = useState<string | null>(null);
   const [isDraggingFront, setIsDraggingFront] = useState(false);
   const [isDraggingBack, setIsDraggingBack] = useState(false);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [cameraType, setCameraType] = useState<'front' | 'back'>('front');
+  const [isHoveringFront, setIsHoveringFront] = useState(false);
+  const [isHoveringBack, setIsHoveringBack] = useState(false);
   
   useEffect(() => {
     if (setHasIdImages) {
@@ -32,7 +39,7 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       const reader = new FileReader();
       reader.onloadend = () => {
         setFrontIdPreview(reader.result as string);
-        setCardInfo({ ...cardInfo, idCardFrontImage: file });
+        setCardInfo({ ...cardInfo, identityFront: file });
       };
       reader.readAsDataURL(file);
     }
@@ -44,7 +51,7 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       const reader = new FileReader();
       reader.onloadend = () => {
         setBackIdPreview(reader.result as string);
-        setCardInfo({ ...cardInfo, idCardBackImage: file });
+        setCardInfo({ ...cardInfo, identityBack: file });
       };
       reader.readAsDataURL(file);
     }
@@ -58,11 +65,11 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       reader.onloadend = () => {
         if (type === 'front') {
           setFrontIdPreview(reader.result as string);
-          setCardInfo({ ...cardInfo, idCardFrontImage: file });
+          setCardInfo({ ...cardInfo, identityFront: file });
           setIsDraggingFront(false);
         } else {
           setBackIdPreview(reader.result as string);
-          setCardInfo({ ...cardInfo, idCardBackImage: file });
+          setCardInfo({ ...cardInfo, identityBack: file });
           setIsDraggingBack(false);
         }
       };
@@ -99,7 +106,36 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
     event.stopPropagation();
   };
 
-  console.log(cardInfo)
+  // Kamera ile fotoğraf çekme fonksiyonları
+  const handleCameraCapture = (file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (cameraType === 'front') {
+        setFrontIdPreview(reader.result as string);
+        setCardInfo({ ...cardInfo, identityFront: file });
+      } else {
+        setBackIdPreview(reader.result as string);
+        setCardInfo({ ...cardInfo, identityBack: file });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const openCamera = (type: 'front' | 'back') => {
+    setCameraType(type);
+    setCameraOpen(true);
+  };
+
+  // Fotoğraf kaldırma fonksiyonları
+  const removeFrontPhoto = () => {
+    setFrontIdPreview(null);
+    setCardInfo({ ...cardInfo, identityFront: undefined });
+  };
+
+  const removeBackPhoto = () => {
+    setBackIdPreview(null);
+    setCardInfo({ ...cardInfo, identityBack: undefined });
+  };
 
   return (
     <Box>
@@ -190,24 +226,101 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
             onDragEnter={(e) => handleDragEnter(e, 'front')}
             onDragLeave={(e) => handleDragLeave(e, 'front')}
             onDrop={(e) => handleDrop(e, 'front')}
-            onClick={() => document.getElementById('frontIdUpload')?.click()}
+            onClick={() => !frontIdPreview && document.getElementById('frontIdUpload')?.click()}
+            onMouseEnter={() => setIsHoveringFront(true)}
+            onMouseLeave={() => setIsHoveringFront(false)}
           >
             {frontIdPreview ? (
-              <Box
-                component="img"
-                src={frontIdPreview}
-                alt="Kimlik Ön Yüz"
-                sx={{
-                  maxHeight: '100%',
-                  maxWidth: '100%',
-                  objectFit: 'contain'
-                }}
-              />
+              <>
+                <Box
+                  component="img"
+                  src={frontIdPreview}
+                  alt="Kimlik Ön Yüz"
+                  sx={{
+                    maxHeight: '100%',
+                    maxWidth: '100%',
+                    objectFit: 'contain'
+                  }}
+                />
+                {/* Hover Overlay */}
+                {isHoveringFront && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: 1
+                    }}
+                  >
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        document.getElementById('frontIdUpload')?.click();
+                      }}
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        color: '#2E90FA',
+                        '&:hover': {
+                          backgroundColor: 'white'
+                        }
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFrontPhoto();
+                      }}
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        color: '#F04438',
+                        '&:hover': {
+                          backgroundColor: 'white'
+                        }
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                )}
+              </>
             ) : (
               <Box sx={{ pointerEvents: 'none', textAlign: 'center' }}>
                 <Box component="img" src={uploadIcon} alt="Upload" sx={{ width: 40, height: 40 }} />
                 <Typography sx={{ color: '#667085', mt: 2 }}>Kimliğinizin ön yüzünü ekleyin</Typography>
                 <Typography sx={{ color: '#667085', fontSize: '12px' }}>Sürükle bırak veya dosya seç</Typography>
+                <Stack direction="row" spacing={1} sx={{ mt: 2, pointerEvents: 'auto' }}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<CameraAltIcon />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openCamera('front');
+                    }}
+                    sx={{
+                      fontSize: '10px',
+                      py: 0.5,
+                      px: 1,
+                      minWidth: 'auto',
+                      borderColor: '#667085',
+                      color: '#667085',
+                      '&:hover': {
+                        borderColor: '#2E90FA',
+                        color: '#2E90FA'
+                      }
+                    }}
+                  >
+                    Kamera
+                  </Button>
+                </Stack>
               </Box>
             )}
             <input
@@ -239,24 +352,101 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
             onDragEnter={(e) => handleDragEnter(e, 'back')}
             onDragLeave={(e) => handleDragLeave(e, 'back')}
             onDrop={(e) => handleDrop(e, 'back')}
-            onClick={() => document.getElementById('backIdUpload')?.click()}
+            onClick={() => !backIdPreview && document.getElementById('backIdUpload')?.click()}
+            onMouseEnter={() => setIsHoveringBack(true)}
+            onMouseLeave={() => setIsHoveringBack(false)}
           >
             {backIdPreview ? (
-              <Box
-                component="img"
-                src={backIdPreview}
-                alt="Kimlik Arka Yüz"
-                sx={{
-                  maxHeight: '100%',
-                  maxWidth: '100%',
-                  objectFit: 'contain'
-                }}
-              />
+              <>
+                <Box
+                  component="img"
+                  src={backIdPreview}
+                  alt="Kimlik Arka Yüz"
+                  sx={{
+                    maxHeight: '100%',
+                    maxWidth: '100%',
+                    objectFit: 'contain'
+                  }}
+                />
+                {/* Hover Overlay */}
+                {isHoveringBack && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: 1
+                    }}
+                  >
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        document.getElementById('backIdUpload')?.click();
+                      }}
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        color: '#2E90FA',
+                        '&:hover': {
+                          backgroundColor: 'white'
+                        }
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeBackPhoto();
+                      }}
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        color: '#F04438',
+                        '&:hover': {
+                          backgroundColor: 'white'
+                        }
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                )}
+              </>
             ) : (
               <Box sx={{ pointerEvents: 'none', textAlign: 'center' }}>
                 <Box component="img" src={uploadIcon} alt="Upload" sx={{ width: 40, height: 40 }} />
                 <Typography sx={{ color: '#667085', mt: 2 }}>Kimliğinizin arka yüzünü ekleyin</Typography>
                 <Typography sx={{ color: '#667085', fontSize: '12px' }}>Sürükle bırak veya dosya seç</Typography>
+                <Stack direction="row" spacing={1} sx={{ mt: 2, pointerEvents: 'auto' }}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<CameraAltIcon />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openCamera('back');
+                    }}
+                    sx={{
+                      fontSize: '10px',
+                      py: 0.5,
+                      px: 1,
+                      minWidth: 'auto',
+                      borderColor: '#667085',
+                      color: '#667085',
+                      '&:hover': {
+                        borderColor: '#2E90FA',
+                        color: '#2E90FA'
+                      }
+                    }}
+                  >
+                    Kamera
+                  </Button>
+                </Stack>
               </Box>
             )}
             <input
@@ -269,6 +459,14 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
           </Box>
         </Grid>
       </Grid>
+
+      {/* Kamera Modal */}
+      <CameraCapture
+        open={cameraOpen}
+        onClose={() => setCameraOpen(false)}
+        onCapture={handleCameraCapture}
+        title={cameraType === 'front' ? 'Kimliğin Ön Yüzü' : 'Kimliğin Arka Yüzü'}
+      />
     </Box>
   )
 }

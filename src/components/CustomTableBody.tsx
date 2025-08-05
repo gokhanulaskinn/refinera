@@ -1,4 +1,4 @@
-import { Checkbox, TableBody, TableCell, TableRow } from '@mui/material';
+import { Checkbox, TableBody, TableCell, TableRow, Button } from '@mui/material';
 import { TableBodyRowType } from '../utils/types';
 import TableActions from './TableActions';
 import TableBadge from './TableBadge';
@@ -21,6 +21,18 @@ const renderCell = (cell: TableBodyRowType['rowData'][0]) => {
       return <TableActions actions={cell.actions!} />;
     case 'badge':
       return <TableBadge cell={cell} />;
+    case 'button':
+      return (
+        <Button
+          variant="text"
+          size="small"
+          onClick={cell.onClick}
+          disabled={cell.disabled}
+          sx={cell.sx}
+        >
+          {cell.value}
+        </Button>
+      );
     default:
       return null;
   }

@@ -9,6 +9,7 @@ import { baseUrl, fetcher, formatMoney, getTransactionColor, getTransactionStatu
 import useSWR, { mutate } from 'swr'
 import BasicMenu from '../components/BasicMenu'
 import { useAlert } from '../hooks/useAlert'
+import IdImages from '../components/IdImages'
 
 export default function LastUsersContainer() {
 
@@ -19,6 +20,8 @@ export default function LastUsersContainer() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [statusFilter, setStatusFilter] = useState('');
+  const [idImagesOpen, setIdImagesOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const showSnackbar = useAlert();
   const [tableData, setTableData] = useState<TableDataType>({
     head: [
@@ -28,6 +31,7 @@ export default function LastUsersContainer() {
       { id: 'phone', label: 'Telefon Numarası' },
       { id: 'section', label: 'Satış Yapan Mağaza' },
       { id: 'pos', label: 'Pos' },
+      { id: 'identity', label: 'Kimlik' },
       { id: 'status', label: 'Durum' },
       { id: 'detail', label: 'Detay' },
       { id: 'action', label: 'İşlemler' }
@@ -89,6 +93,16 @@ export default function LastUsersContainer() {
     }
   };
 
+  const handleShowIdImages = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    setIdImagesOpen(true);
+  };
+
+  const handleCloseIdImages = () => {
+    setIdImagesOpen(false);
+    setSelectedTransaction(null);
+  };
+
   const convertData = (data: ApiList<Transaction>) => {
     const bodyData: TableBodyRowType[] = data.results.map((transaction) => ({
       rowData: [
@@ -98,6 +112,20 @@ export default function LastUsersContainer() {
         { value: transaction.phone || '', type: 'text' },
         { value: transaction.jeweler.companyName || '', type: 'text' },
         { value: transaction.pos || 'Ozan', type: 'text' },
+        {
+          value: (transaction.identityPhoto || transaction.identityPhotoBack) ? 'Göster' : 'Yok',
+          type: 'button',
+          disabled: !(transaction.identityPhoto || transaction.identityPhotoBack),
+          onClick: () => handleShowIdImages(transaction),
+          sx: {
+            color: (transaction.identityPhoto || transaction.identityPhotoBack) ? 'primary.main' : 'grey.400',
+            fontWeight: 500,
+            cursor: (transaction.identityPhoto || transaction.identityPhotoBack) ? 'pointer' : 'default',
+            '&:hover': (transaction.identityPhoto || transaction.identityPhotoBack) ? {
+              backgroundColor: 'primary.50'
+            } : {}
+          }
+        },
         {
           value: transaction.status ? getTransactionStatus(transaction.status) : '', type: 'badge',
           sx: {
@@ -165,6 +193,13 @@ export default function LastUsersContainer() {
         onClose={handleClose}
         items={['Hepsi', 'Başarılı', 'Başarısız', 'Beklemede']}
         onSelected={handleFilterSelect}
+      />
+      <IdImages
+        open={idImagesOpen}
+        onClose={handleCloseIdImages}
+        identityPhoto={selectedTransaction?.identityPhoto}
+        identityPhotoBack={selectedTransaction?.identityPhotoBack}
+        customerName={selectedTransaction?.transactionOwner}
       />
     </Box>
   )
