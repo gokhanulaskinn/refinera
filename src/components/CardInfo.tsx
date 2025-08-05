@@ -39,7 +39,7 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       const reader = new FileReader();
       reader.onloadend = () => {
         setFrontIdPreview(reader.result as string);
-        setCardInfo((prev: PaymentInput) => ({ ...prev, identityFront: file }));
+        setCardInfo({ ...cardInfo, identityFront: file });
       };
       reader.readAsDataURL(file);
     }
@@ -51,7 +51,7 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       const reader = new FileReader();
       reader.onloadend = () => {
         setBackIdPreview(reader.result as string);
-        setCardInfo((prev: PaymentInput) => ({ ...prev, identityBack: file }));
+        setCardInfo({ ...cardInfo, identityBack: file });
       };
       reader.readAsDataURL(file);
     }
@@ -65,11 +65,11 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
       reader.onloadend = () => {
         if (type === 'front') {
           setFrontIdPreview(reader.result as string);
-          setCardInfo((prev: PaymentInput) => ({ ...prev, identityFront: file }));
+          setCardInfo({ ...cardInfo, identityFront: file });
           setIsDraggingFront(false);
         } else {
           setBackIdPreview(reader.result as string);
-          setCardInfo((prev: PaymentInput) => ({ ...prev, identityBack: file }));
+          setCardInfo({ ...cardInfo, identityBack: file });
           setIsDraggingBack(false);
         }
       };
@@ -112,10 +112,10 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
     reader.onloadend = () => {
       if (cameraType === 'front') {
         setFrontIdPreview(reader.result as string);
-        setCardInfo((prev: PaymentInput) => ({ ...prev, identityFront: file }));
+        setCardInfo({ ...cardInfo, identityFront: file });
       } else {
         setBackIdPreview(reader.result as string);
-        setCardInfo((prev: PaymentInput) => ({ ...prev, identityBack: file }));
+        setCardInfo({ ...cardInfo, identityBack: file });
       }
     };
     reader.readAsDataURL(file);
@@ -129,12 +129,12 @@ export default function CardInfo({ cardInfo, setCardInfo, price, hasIdImages, se
   // Fotoğraf kaldırma fonksiyonları
   const removeFrontPhoto = () => {
     setFrontIdPreview(null);
-    setCardInfo((prev: PaymentInput) => ({ ...prev, identityFront: undefined }));
+    setCardInfo({ ...cardInfo, identityFront: undefined });
   };
 
   const removeBackPhoto = () => {
     setBackIdPreview(null);
-    setCardInfo((prev: PaymentInput) => ({ ...prev, identityBack: undefined }));
+    setCardInfo({ ...cardInfo, identityBack: undefined });
   };
 
   console.log(cardInfo)
