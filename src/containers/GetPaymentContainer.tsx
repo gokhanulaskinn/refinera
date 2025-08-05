@@ -8,7 +8,7 @@ import PaymentFinish from '../components/PaymentFinish';
 import SubmitFormDialog from '../components/SubmitFormDialog';
 import { AuthContext } from '../contexts/AuthProvider';
 import { useAlert } from '../hooks/useAlert';
-import { checkPaymentStatus, createPhysicalPos, getCalculator, paymentCreate, paymentCreateWithIdImages } from '../services/seller/SellerServices'; // checkPaymentStatus, paymentCreate, createPhysicalPos, paymentCreateWithIdImages eklenmiş
+import { checkPaymentStatus, createPhysicalPos, getCalculator, paymentCreate } from '../services/seller/SellerServices'; // checkPaymentStatus, paymentCreate, createPhysicalPos eklenmiş
 import { baseUrl } from '../utils/global';
 import { BucketType, EleksePaymentRes, OzanPaymentRes, PaymentInput, PaywallPaymentRes } from '../utils/types';
 
@@ -76,8 +76,6 @@ export default function GetPaymentContainer() {
 
   const nav = useNavigate();
 
-  console.log(posProvider);
-
   const handleFinish = async () => {
     try {
       // Eğer fiyat 185000 TL'den fazlaysa ve kimlik fotoğrafları yüklenmemişse işlemi engelle
@@ -100,21 +98,13 @@ export default function GetPaymentContainer() {
           quantity: 1
         }
       }
-      const res = posProvider === 'Paywall'
-        ? await paymentCreateWithIdImages({
-            ...cardInfo,
-            product,
-            amount: price * 100,
-          },
-          (posProvider || '').toLowerCase()
-        )
-        : await paymentCreate({
-            ...cardInfo,
-            product,
-            amount: price * 100,
-          },
-          (posProvider || '').toLowerCase()
-        );
+      const res = await paymentCreate({
+        ...cardInfo,
+        product,
+        amount: price * 100,
+      },
+        (posProvider || '').toLowerCase()
+      );
       if (user?.jeweler?.pos.name === 'Ozan') {
         if (res.form3d) {
           setIframe(res.form3d);

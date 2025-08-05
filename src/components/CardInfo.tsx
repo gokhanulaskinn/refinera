@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit'
 
 type CardInfoProps = {
   cardInfo: PaymentInput;
-  setCardInfo: Dispatch<SetStateAction<PaymentInput>>;
+  setCardInfo: (cardInfo: PaymentInput) => void;
   price: number;
   hasIdImages?: boolean;
   setHasIdImages?: (hasImages: boolean) => void;
