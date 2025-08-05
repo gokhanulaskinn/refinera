@@ -40,8 +40,8 @@ export default function ExternalPayment() {
     cardCvv: '',
     cardAccountHolderName: '',
     isLink: true,
-    idCardFrontImage: undefined,
-    idCardBackImage: undefined,
+    identityFront: undefined,
+    identityBack: undefined,
   });
 
   // const [cardInfo, setCardInfo] = useState<PaymentInput>({
@@ -53,8 +53,8 @@ export default function ExternalPayment() {
   //   cardCvv: '987',
   //   cardAccountHolderName: 'Mehmet BUÇAK',
   //   isLink: true,
-  //   idCardFrontImage: undefined,
-  //   idCardBackImage: undefined,
+  //   identityFront: undefined,
+  //   identityBack: undefined,
   // });
 
   useEffect(() => {

@@ -155,8 +155,8 @@ export interface PaymentInput {
   cardExpiry: string,
   cardCvv: string,
   cardAccountHolderName: string,
-  idCardFrontImage?: File,
-  idCardBackImage?: File,
+  identityFront?: File,
+  identityBack?: File,
   isLink?: boolean,
 }
 
@@ -208,6 +208,8 @@ export interface Transaction {
   phone: string;
   pos: string;
   transactionId: string;
+  identityPhoto?: string;
+  identityPhotoBack?: string;
   referenceId: string;
   status: Status;
   jewelerId: string;
@@ -253,11 +255,13 @@ export type TableBodyRowType = {
 
 export type TableRowCellType = {
   value: string | string[];
-  type: 'text' | 'options' | 'actions' | 'badge';
+  type: 'text' | 'options' | 'actions' | 'badge' | 'button';
   id?: string;
   onSelected?: (id: any) => void;
   variant?: { id: string; label: string, bgColor?: string, textColor?: string }[];
   actions?: { name: string, action: any }[];
+  onClick?: () => void;
+  disabled?: boolean;
   sx?: SxProps
 }
 

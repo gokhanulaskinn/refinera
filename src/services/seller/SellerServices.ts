@@ -24,15 +24,15 @@ export const paymentCreateWithIdImages = async (values: any, provider: string, t
   const formData = new FormData();
   
   // Kimlik fotoğraflarını FormData'ya ekle
-  if (values.idCardFrontImage) {
-    formData.append('identityFront', values.idCardFrontImage);
+  if (values.identityFront) {
+    formData.append('identityFront', values.identityFront);
   }
-  if (values.idCardBackImage) {
-    formData.append('identityBack', values.idCardBackImage);
+  if (values.identityBack) {
+    formData.append('identityBack', values.identityBack);
   }
   
   // Diğer verileri FormData'ya ekle (kimlik fotoğrafları hariç)
-  const { idCardFrontImage, idCardBackImage, ...otherValues } = values;
+  const { identityFront, identityBack, ...otherValues } = values;
   Object.keys(otherValues).forEach(key => {
     if (otherValues[key] !== null && otherValues[key] !== undefined) {
       if (typeof otherValues[key] === 'object') {
