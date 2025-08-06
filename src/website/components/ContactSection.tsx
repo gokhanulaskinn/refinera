@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Container, Typography, Grid, Button } from '@mui/material';
 import homeBg from '../../assets/images/home-header-bg.png';
 import TextInput from '../../components/TextInput';
+import { useAlert } from '../../hooks/useAlert';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -11,15 +12,59 @@ export default function ContactSection() {
     phone: '',
     message: ''
   });
+  const [loading, setLoading] = useState(false);
+  const showSnackbar = useAlert();
 
   const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form gönderildi:', formData);
-    // Form gönderimi işlemi burada yapılabilir
+    
+    // Form validation
+    if (!formData.name || !formData.surname || !formData.email || !formData.phone || !formData.message) {
+      showSnackbar('Lütfen tüm alanları doldurunuz', 'error');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const requestData = {
+        firstName: formData.name,
+        lastName: formData.surname,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message
+      };
+
+      const response = await fetch('/api/context/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData)
+      });
+
+      if (response.ok) {
+        showSnackbar('Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.', 'success');
+        setFormData({
+          name: '',
+          surname: '',
+          email: '',
+          phone: '',
+          message: ''
+        });
+      } else {
+        const errorData = await response.json();
+        showSnackbar(errorData.message || 'Mesaj gönderilirken bir hata oluştu', 'error');
+      }
+    } catch (error) {
+      showSnackbar('Bağlantı hatası. Lütfen daha sonra tekrar deneyin.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -179,6 +224,7 @@ export default function ContactSection() {
                 type="submit"
                 variant="contained"
                 color="primary"
+                disabled={loading}
                 sx={{
                   borderRadius: '60px',
                   textTransform: 'none',
@@ -186,7 +232,7 @@ export default function ContactSection() {
                   py: 1,
                 }}
               >
-                Gönder
+                {loading ? 'Gönderiliyor...' : 'Gönder'}
               </Button>
             </Box>
           </form>

@@ -190,7 +190,7 @@ export default function Appbar() {
         </Toolbar>
       </AppBar>
       {/* Alt: Para birimi kutuları */}
-      <Box sx={{
+      {/* <Box sx={{
         width: '100%',
         bgcolor: '#011B1C',
         px: { xs: 0.5, md: 2 },
@@ -214,7 +214,7 @@ export default function Appbar() {
             ))}
           </Slider>
         </Box>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

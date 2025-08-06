@@ -5,6 +5,10 @@ import gold from '../../assets/images/gold.png';
 import albaraka from '../../assets/images/albaraka.png';
 import param from '../../assets/images/param.png';
 import elekse from '../../assets/images/elekse.png';
+import twoSWorks from '../../assets/images/2sworks-logo.png';
+import bsa from '../../assets/images/bsa-logo.png';
+import harem from '../../assets/images/harem-logo.png';
+import paywall from '../../assets/images/paywall-logo.svg';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -15,6 +19,10 @@ const partners = [
   { src: albaraka, alt: 'Albaraka' },
   { src: param, alt: 'Param' },
   { src: elekse, alt: 'Elekse' },
+  { src: twoSWorks, alt: '2sWorks' },
+  { src: bsa, alt: 'BSA' },
+  { src: harem, alt: 'Harem' },
+  { src: paywall, alt: 'Paywall' },
 ];
 
 export default function PartnersSection() {

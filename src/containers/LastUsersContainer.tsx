@@ -31,6 +31,7 @@ export default function LastUsersContainer() {
       { id: 'phone', label: 'Telefon Numarası' },
       { id: 'section', label: 'Satış Yapan Mağaza' },
       { id: 'pos', label: 'Pos' },
+      { id: 'datetime', label: 'Tarih & Saat' },
       { id: 'identity', label: 'Kimlik' },
       { id: 'status', label: 'Durum' },
       { id: 'detail', label: 'Detay' },
@@ -112,6 +113,20 @@ export default function LastUsersContainer() {
         { value: transaction.phone || '', type: 'text' },
         { value: transaction.jeweler.companyName || '', type: 'text' },
         { value: transaction.pos || 'Ozan', type: 'text' },
+        { 
+          value: new Date(transaction.createdAt).toLocaleDateString('tr-TR', {
+            day: 'numeric',
+            month: 'short', 
+            year: 'numeric'
+          }) + '\n' + new Date(transaction.createdAt).toLocaleTimeString('tr-TR', {
+            hour: '2-digit',
+            minute: '2-digit'
+          }), 
+          type: 'text',
+          sx: {
+            whiteSpace: 'pre-line'
+          }
+        },
         {
           value: (transaction.identityPhoto || transaction.identityPhotoBack) ? 'Göster' : 'Yok',
           type: 'button',
